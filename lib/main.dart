@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 
 import 'package:turisteando_ando/screens/frmSetLocation.dart'; // Importacion del frame de Set Location
+import 'package:turisteando_ando/screens/frmMapa.dart'; // Importacion del frame de Set Location
 
 void main() {
   runApp(const MyApp());
@@ -20,9 +21,9 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       //home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      initialRoute: 'frmSetLocation',
+      initialRoute: 'frmMapa',
       routes: {
-        'frmSetLocation' : ( _ ) => frmSetLocation()
+        'frmMapa' : ( _ ) => frmMapa()
       },
     );
   }

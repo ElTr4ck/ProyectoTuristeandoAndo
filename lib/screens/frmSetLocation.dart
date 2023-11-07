@@ -58,7 +58,7 @@ class frmSetLocation extends StatelessWidget {
                         ],
                       ),
                       Padding(
-                        padding: EdgeInsets.all(16.0),
+                        padding: const EdgeInsets.all(16.0),
                         child: TextFormField(
                           decoration: const InputDecoration(
                             hintText: 'Ingrese su ubicación',
@@ -71,7 +71,7 @@ class frmSetLocation extends StatelessWidget {
                         style: ElevatedButton.styleFrom(
                           primary: const Color(0xFF114C5F),
                           onPrimary: Colors.white,
-                          minimumSize: Size(300, 50), // Ajusta el ancho (200) y el alto (50) del botón
+                          minimumSize: const Size(300, 50), // Ajusta el ancho (200) y el alto (50) del botón
                           padding: const EdgeInsets.all(16.0), // Relleno
                           shape: RoundedRectangleBorder(
                             borderRadius: BorderRadius.circular(10.0), // Borde redondeado
