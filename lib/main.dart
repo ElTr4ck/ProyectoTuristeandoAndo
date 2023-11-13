@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:turisteando_ando/screens/frmCuestionario.dart';
 
 import 'package:turisteando_ando/screens/frmSetLocation.dart'; // Importacion del frame de Set Location
 import 'package:turisteando_ando/screens/frmMapa.dart'; // Importacion del frame de Set Location
@@ -21,9 +22,11 @@ class MyApp extends StatelessWidget {
         useMaterial3: true,
       ),
       //home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      initialRoute: 'frmMapa',
+      initialRoute: 'frmSetLocation',
       routes: {
-        'frmMapa' : ( _ ) => frmMapa()
+        'frmSetLocation': ( _ ) => frmSetLocation(),
+        'frmMapa' : ( _ ) => frmMapa(),
+        'frmCuestionario' : ( _ ) => frmCuestionario()
       },
     );
   }

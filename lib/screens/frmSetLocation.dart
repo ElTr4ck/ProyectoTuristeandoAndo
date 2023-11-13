@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+import 'package:turisteando_ando/screens/frmCuestionario.dart';
 
 class frmSetLocation extends StatelessWidget {
   @override
@@ -7,14 +9,9 @@ class frmSetLocation extends StatelessWidget {
       home: Scaffold(
         body: Stack(
           children: [
-            // Fondo de pantalla
-            Container(
-              decoration: const BoxDecoration(
-                image: DecorationImage(
-                  image: AssetImage('lib/assets/mapita.png'),
-                  fit: BoxFit.cover,
-                ),
-              ),
+            // MAPA DE GOOGLE MAPS
+            const Scaffold(
+              body: GoogleMap(),
             ),
             // Contenido en la parte inferior
             Column(
@@ -44,17 +41,19 @@ class frmSetLocation extends StatelessWidget {
                       const Row(
                         mainAxisAlignment: MainAxisAlignment.start, // Alinea los textos a la izquierda
                         children: [
-                          Padding(padding: EdgeInsets.fromLTRB(16, 16, 0, 0),
+                          Flexible(child: Padding(
+                            padding: EdgeInsets.fromLTRB(16, 12, 5, 0),
                             child: Text(
-                                'Tu ubicación marcada',
+                                'Esto nos ayudará a darte recomendaciones personalizadas.\nPuedes optar por ingresar una ubicación manualmente o dejarnos mostrarte sugerencias mediante tu ubicación actual.',
                                 style: TextStyle(
-                                fontSize: 16,
+                                fontSize: 13,
                                 color: Colors.black,
                                   fontFamily: 'Nunito',
-                                  fontWeight: FontWeight.normal
+                                  fontWeight: FontWeight.w100,
                                 ),
                               ),
-                          ),
+                          ),)
+                          
                         ],
                       ),
                       Padding(
@@ -78,7 +77,7 @@ class frmSetLocation extends StatelessWidget {
                           ),
                         ), //Style
                         onPressed: () {
-                          // Lógica para continuar
+                          Navigator.push(context, MaterialPageRoute(builder: (context) => frmCuestionario()));
                         },
                         child: const Text('Continuar',
                           style: TextStyle(

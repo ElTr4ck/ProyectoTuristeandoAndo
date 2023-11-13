@@ -2,25 +2,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
+class frmCuestionario extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-      home: Scaffold(
-        /*appBar: AppBar(
-          title: Text('Lista de Elementos'),
-          backgroundColor: Colors.white, // Color de fondo blanco
-        ),*/
-        body: ElementList(),
-      ),
+    return Scaffold(
+      body: ElementList()
     );
   }
-}
+} 
 
 class ElementList extends StatefulWidget {
   @override
@@ -47,7 +36,7 @@ class _ElementListState extends State<ElementList> {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Text(
+              const Text(
                 'Personaliza tus preferencias',
                 style: TextStyle(
                   fontSize: 25,
@@ -58,8 +47,8 @@ class _ElementListState extends State<ElementList> {
                 textAlign: TextAlign.center,
               ),
               Container(
-                margin: EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Text(
+                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                child: const Text(
                   'Elige tus tipos de lugares favoritos y disfruta de recomendaciones personalizadas',
                   style: TextStyle(
                     fontFamily: 'Nunito',
@@ -78,8 +67,8 @@ class _ElementListState extends State<ElementList> {
             children: [
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
-                  primary: const Color(0xFF114C5F),
-                  onPrimary: Colors.white,
+                  backgroundColor: const Color(0xFF114C5F),
+                  foregroundColor: Colors.white,
                   minimumSize: Size(400, 60), // Ajusta el ancho (200) y el alto (50) del botón
                   padding: const EdgeInsets.all(16.0), // Relleno
                   shape: RoundedRectangleBorder(
@@ -89,7 +78,7 @@ class _ElementListState extends State<ElementList> {
                 onPressed: () {
                   // Lógica para el botón "Recordármelo más tarde"
                 },
-                child: const Text('Finalizar',
+                child: const Text('Continuar',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -97,7 +86,7 @@ class _ElementListState extends State<ElementList> {
                   ),
                 ),
               ),
-              SizedBox(height: 16),
+              const SizedBox(height: 16),
               ElevatedButton(
                 style: ElevatedButton.styleFrom(
                   primary: const Color(0xFF9CD2D3),
