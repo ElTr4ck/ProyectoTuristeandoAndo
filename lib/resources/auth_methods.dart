@@ -42,7 +42,7 @@ class AuthMethods {
     } on FirebaseAuthException catch (e) {
       print(e);
       if (e.code == 'email-already-in-use') {
-        res = 'Este nombre de usuario ya esta en uso';
+        res = 'Este correo ya esta en uso';
       }
       if (e.code == 'invalid-email') {
         res = 'email invalido';
@@ -86,9 +86,9 @@ class AuthMethods {
       Uint8List? file}) async {
     String res = "Some error occurred";
     try {
-      if (email.isNotEmpty &&
-          password.isNotEmpty &&
-          address.isNotEmpty &&
+      if (email.isNotEmpty ||
+          password.isNotEmpty ||
+          address.isNotEmpty ||
           name.isNotEmpty) {
         /*User? user = _auth.currentUser;
         user?.updatePassword(password);
