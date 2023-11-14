@@ -1,8 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:geolocator/geolocator.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:turisteando_ando/screens/frmCuestionario.dart';
 
 class frmSetLocation extends StatelessWidget {
+
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
@@ -10,8 +12,24 @@ class frmSetLocation extends StatelessWidget {
         body: Stack(
           children: [
             // MAPA DE GOOGLE MAPS
-            const Scaffold(
-              body: GoogleMap(),
+            FutureBuilder<LatLng>(
+              future: Localizador().getCurrentLocation(), 
+              builder: (context, snapshot){
+                if(snapshot.connectionState == ConnectionState.waiting){
+                  //Mientras esperamos la resolucion del future
+                  return CircularProgressIndicator(); //TODO: Aqui hay que mejorarlo
+                }
+                else if(snapshot.hasError){
+                  // Si hay error en el future
+                  return Text('Error: ${snapshot.error}');
+                }
+                else{
+                  //Si el future se resuelve correctamente
+                  LatLng currentLocation = snapshot.data!;
+                  return GoogleMap(initialCameraPosition: CameraPosition(target: currentLocation, zoom: 16));
+                }
+              }
+            
             ),
             // Contenido en la parte inferior
             Column(
@@ -56,13 +74,17 @@ class frmSetLocation extends StatelessWidget {
                           
                         ],
                       ),
-                      Padding(
-                        padding: const EdgeInsets.all(16.0),
-                        child: TextFormField(
-                          decoration: const InputDecoration(
-                            hintText: 'Ingrese su ubicación',
-                            fillColor: Colors.white,
-                            filled: true,
+                      const Padding(
+                        padding: EdgeInsets.all(16.0),
+                        child: TextField(
+                          decoration: InputDecoration(
+                            hintText: 'Ingresa tu ubicación',
+                            prefixIcon: Icon(
+                                Icons.search,
+                                color: Color(0xFF114C5F)
+                            ),
+                            border: InputBorder.none,
+                            
                           ),
                         ),
                       ),
@@ -112,4 +134,25 @@ class frmSetLocation extends StatelessWidget {
   }
 }
 
+//Esta clase nos sirve para los permisos de ubicacion
 
+class Localizador {
+  Future<LatLng> determinatePosition() async{
+    LocationPermission permission;
+    permission = await Geolocator.checkPermission(); // Se checa si el permiso ya esta habilitado
+    if(permission == LocationPermission.denied){
+      permission = await Geolocator.requestPermission(); // En caso de que no este habilitado, se solicita
+      if(permission == LocationPermission.denied){ // Esto es en caso de que se niegue el permiso de localizacion a la aplicacion
+        return const LatLng(19.4326, -99.1332); // Coordenadas del zocalo CDMX
+      }
+    }
+    Position posicion = await Geolocator.getCurrentPosition(); //TODO: Faltaria un try y catch de esto por si la app no puede obtener la ubicacion
+    LatLng latLng = LatLng(posicion.latitude, posicion.longitude);
+    return latLng;
+  }
+  // Este metodo retorna la ubicacion actual del ususario
+  Future<LatLng> getCurrentLocation() async {
+    LatLng position = await determinatePosition();
+    return position;
+  }
+}

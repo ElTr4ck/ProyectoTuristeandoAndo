@@ -22,7 +22,7 @@ class frmMapa extends StatelessWidget {
               children: <Widget>[
                 Container(
                   color: Colors.white.withOpacity(0.5) ,
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
