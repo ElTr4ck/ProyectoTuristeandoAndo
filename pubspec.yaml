@@ -85,18 +85,6 @@ flutter:
         - asset: lib/fonts/Nunito-ExtraBold.ttf
         - asset: lib/fonts/Nunito-Medium.ttf
         - asset: lib/fonts/Nunito-Light.ttf
-    - family: Montserrat
-      fonts: 
-        - asset: lib/fonts/MontserratRomanBold.ttf
-          weight: 700
-        - asset: lib/fonts/MontserratRomanRegular.ttf
-          weight: 400
-    - family: Poppins
-      fonts: 
-        - asset: lib/fonts/PoppinsBold.ttf
-          weight: 700
-        - asset: lib/fonts/PoppinsRegular.ttf
-          weight: 400
 
   # To add assets to your application, add an assets section, like this:
   # assets:
