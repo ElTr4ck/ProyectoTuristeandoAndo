@@ -1,10 +1,16 @@
-import 'dart:async';
+
 import 'package:flutter/foundation.dart';
-import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_google_maps_webservices/places.dart';
+import 'package:geolocator/geolocator.dart';
 import 'dart:ui';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
+
+import 'package:google_maps_widget/google_maps_widget.dart';
+
+import 'frmSetLocation.dart';
+
+final GoogleMapsPlaces places = GoogleMapsPlaces(apiKey: "AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM");
 
 void main() {
   runApp(const MyApp());
@@ -25,7 +31,7 @@ class MyApp extends StatelessWidget {
       ),
       //home: const MyHomePage(title: 'Flutter Demo Home Page'),
       initialRoute: 'rutaNav',
-      routes: {'rutaNav': (_) => rutaUno()},
+      routes: {'rutaNav': (_) => RutaUno()},
     );
   }
 }
@@ -78,20 +84,284 @@ class _MyHomePageState extends State<MyHomePage> {
   }
 }
 
-class rutaUno extends StatelessWidget {
-  /*static String id = 'maps_page';
-  Completer<GoogleMapController> _controller = Completer();
-  final GlobalKey<ScaffoldState> _scafoldKey = GlobalKey<ScaffoldState>();
-  static final CameraPosition _cameraPosition = CameraPosition(
-    target: LatLng(37.427961335588664, -127.085749655962),
-    zoom: 14.4746,
-  );
+class SelectLocationScreen extends StatefulWidget{
+  _SelectLocationScreenState createState() => _SelectLocationScreenState();
+}
 
-  static const CameraPosition _kLake = CameraPosition(
-      bearing: 192.8334901395799,
-      target: LatLng(37.43296265331129, -122.08832357078792),
-      tilt: 59.440717697143555,
-      zoom: 19.151926040649414);*/
+class _SelectLocationScreenState extends State<SelectLocationScreen>{
+  LatLng _currentLocation = LatLng(0, 0);
+  final TextEditingController _searchController = TextEditingController();
+  Set<Marker> _markers ={};
+  GoogleMapController? _mapController;
+
+  void initState() {
+    super.initState();
+    _determinePosition();
+  }
+
+  void _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Los servicios de ubicación no están habilitados, no podemos obtener la ubicación.
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Los permisos están denegados.
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Los permisos están permanentemente denegados.
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition();
+    _updateCameraPosition(LatLng(position.latitude, position.longitude));
+  }
+
+  void _searchPlace(String placeName) async {
+    print("BUSQUEDAA");
+    try {
+      PlacesSearchResponse response = await places.searchByText(placeName);
+
+      if (_mapController == null) {
+        print("El controlador del mapa no está disponible.");
+        return;
+      }
+      if (response.status == "OK" && response.results.isNotEmpty) {
+        PlacesSearchResult place = response.results.first;
+
+        LatLng newLocation = LatLng(place.geometry!.location.lat, place.geometry!.location.lng);
+        setState(() {
+          _currentLocation = newLocation;
+          _markers.clear();
+          _markers.add(
+              Marker(
+                markerId: const MarkerId("Ubicacion"),
+                position: newLocation,
+                infoWindow: InfoWindow(title: place.name),
+              )
+          );
+          _mapController!.animateCamera(
+            CameraUpdate.newLatLng(newLocation),
+          )
+              .then((Result) {
+            print("Camara Bien");
+          }).catchError((e) {
+            if (kDebugMode) {
+              print("Error en camara");
+            }
+          });
+        });
+      } else {
+        //errores
+        print('No se encontraron lugares');
+      }
+    } catch (e) {
+      print('Error al interactuar con el mapa');
+      // Manejo adicional del error aquí
+    }
+  }
+
+  // Este método actualiza la cámara del mapa para centrarse en la nueva ubicación.
+  void _updateCameraPosition(LatLng location) {
+    if (_mapController != null) {
+      _mapController!.animateCamera(CameraUpdate.newLatLng(location));
+    }
+    setState(() {
+      _currentLocation = location;
+      _markers.add(Marker(
+        markerId: MarkerId('currentLocation'),
+        position: location,
+        infoWindow: InfoWindow(title: 'Tu Ubicación Actual'),
+      ));
+    });
+  }
+
+  void _handleLongPress(LatLng position){
+    setState(() {
+      _currentLocation = position;
+      _markers.clear();
+      _markers.add(
+          Marker(
+            markerId: const MarkerId("newMarker"),
+            position: position,
+            infoWindow: const InfoWindow(title: "Ubicacion"),
+          )
+      );
+      _mapController!.animateCamera(
+
+        CameraUpdate.newLatLng(position),
+      );
+    });
+  }
+
+  void _selectLocation(LatLng location) {
+    setState(() {
+      _currentLocation = location;
+    });
+    // Aquí también puedes cerrar la pantalla y pasar la ubicación seleccionada de vuelta
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: Text("Selecciona una Ubicación"),
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child:TextField(
+             controller: _searchController,
+             decoration: InputDecoration(
+               hintText: 'Buscar lugar',
+               suffixIcon: IconButton(
+                 icon: Icon(Icons.search),
+                 onPressed: (){
+                   _searchPlace(_searchController.text);
+                 },
+               ),
+             ),
+             onSubmitted: _searchPlace,
+            )
+          ),
+          Expanded(child:
+          GoogleMap(
+            onMapCreated: (controller) => _mapController = controller,
+            onTap: _selectLocation,
+            initialCameraPosition: CameraPosition(
+              target: LatLng(0, 0), // Posición inicial, podría ser la ubicación actual
+              zoom: 14,
+            ),
+            markers: _markers,
+            onLongPress: _handleLongPress,
+            myLocationButtonEnabled: false,
+            myLocationEnabled: true,
+          )
+          )
+        ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          if (_currentLocation != null) {
+            Navigator.pop(context, _currentLocation);
+          }
+        },
+        child: Icon(Icons.check),
+      ),
+    );
+  }
+}
+
+class RutaUno extends StatefulWidget{
+  _RutaUnoState createState() =>_RutaUnoState();
+}
+
+class _RutaUnoState extends State<RutaUno> {
+  GoogleMapController? _mapController;
+  LatLng _currentLocation = LatLng(0, 0);
+
+  void initState() {
+    super.initState();
+    _determinePosition();
+  }
+
+  void _determinePosition() async {
+    bool serviceEnabled;
+    LocationPermission permission;
+
+    serviceEnabled = await Geolocator.isLocationServiceEnabled();
+    if (!serviceEnabled) {
+      // Los servicios de ubicación no están habilitados, no podemos obtener la ubicación.
+      return;
+    }
+
+    permission = await Geolocator.checkPermission();
+    if (permission == LocationPermission.denied) {
+      permission = await Geolocator.requestPermission();
+      if (permission == LocationPermission.denied) {
+        // Los permisos están denegados.
+        return;
+      }
+    }
+
+    if (permission == LocationPermission.deniedForever) {
+      // Los permisos están permanentemente denegados.
+      return;
+    }
+
+    Position position = await Geolocator.getCurrentPosition();
+    _updateCameraPosition(LatLng(position.latitude, position.longitude));
+  }
+
+  // Este método actualiza la cámara del mapa para centrarse en la nueva ubicación.
+  void _updateCameraPosition(LatLng location) {
+    if (_mapController != null) {
+      _mapController!.animateCamera(CameraUpdate.newLatLng(location));
+    }
+    setState(() {
+      _currentLocation = location;
+    });
+  }
+
+  void _onMapCreated(GoogleMapController controller) {
+    _mapController = controller;
+    if(_currentLocation.latitude != 0 && _currentLocation.longitude != 0){
+      controller.animateCamera(
+        CameraUpdate.newLatLng(_currentLocation),
+      );
+    }
+  }
+
+  void _handleLongPress(LatLng position){
+    setState(() {
+      _currentLocation = position;
+      _mapController!.animateCamera(
+
+        CameraUpdate.newLatLng(position),
+      );
+    });
+  }
+
+  void _getCurrentLocation() async{
+    try {
+      LatLng currentLocation = await Localizador().getCurrentLocation();
+      setState(() {
+        _currentLocation = currentLocation;
+      });
+    } catch (e) {
+      if (kDebugMode) {
+        print("Error al obtener la ubicación");
+      }
+    }
+  }
+
+  Future<void> _selectLocation() async {
+    LatLng selectedLocation = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SelectLocationScreen()),
+    );
+    if (selectedLocation != null) {
+      setState(() {
+        _currentLocation = selectedLocation;
+        // Actualizar el marcador
+
+        // Actualizar el texto del botón "Tu ubicación"
+        // ...
+      });
+      _updateCameraPosition(selectedLocation); // Para centrar el mapa en la nueva ubicación
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -99,13 +369,6 @@ class rutaUno extends StatelessWidget {
       home: Scaffold(
         //key: _scafoldKey,
         body: Stack(children: [
-          /*GoogleMap(
-            mapType: MapType.hybrid,
-            //initialCameraPosition: _cameraPosition,
-            onMapCreated: (GoogleMapController controller) {
-              //_controller.complete(controller);
-            },
-          ),*/
           Positioned(
             top: 50.0,
             left: 50.0,
@@ -117,26 +380,16 @@ class rutaUno extends StatelessWidget {
             ),
           ),
           // Fondo de pantalla
-          Container(
-            height: MediaQuery.of(context).size.height,
-            width: MediaQuery.of(context).size.width,
-            decoration: const BoxDecoration(
-              image: DecorationImage(
-                image: AssetImage('lib/assets/mapita.png'),
-                fit: BoxFit.cover,
+          GoogleMap(
+            onMapCreated: _onMapCreated,
+              mapType: MapType.terrain,
+              initialCameraPosition: CameraPosition(
+                target: _currentLocation,
+                zoom: 14
               ),
-            ),
-            alignment: Alignment.topCenter,
-            child: Container(
-                child: new ClipRect(
-              child: new BackdropFilter(
-                filter: new ImageFilter.blur(sigmaX: 3.5, sigmaY: 3.5),
-                child: Container(
-                    width: MediaQuery.of(context).size.width,
-                    height: 100,
-                    color: Color.fromARGB(255, 73, 72, 72).withOpacity(0.1)),
-              ),
-            )),
+              onLongPress: _handleLongPress,
+            myLocationButtonEnabled: false,
+            myLocationEnabled: true,
           ),
           Container(
               //padding: const EdgeInsets.all(16.0),
@@ -153,7 +406,7 @@ class rutaUno extends StatelessWidget {
                           padding: EdgeInsets.only(
                               left: 16.0, right: 16.0, top: 9.0),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: _selectLocation,
                             style: ButtonStyle(
                               backgroundColor: MaterialStateColor.resolveWith(
                                   (states) => Colors.white),
@@ -167,15 +420,7 @@ class rutaUno extends StatelessWidget {
                             //Obtener nombre y coordenadas del lugar A con api
                             child: Align(
                                 alignment: Alignment.centerLeft,
-                                child: const Text(
-                                  'Tu ubicacion',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                    fontFamily: 'Nunito',
-                                  ),
-                                )),
+                                ),
                           ),
                         )),
                     Container(
@@ -185,7 +430,15 @@ class rutaUno extends StatelessWidget {
                           padding: EdgeInsets.only(
                               left: 16.0, right: 16.0, top: 7.0),
                           child: TextButton(
-                            onPressed: () {},
+                            onPressed: () async{
+                              LatLng selectedLocation = await Navigator.push(
+                                context,
+                                MaterialPageRoute(builder: (context)=> SelectLocationScreen()),
+                              );
+                              if (selectedLocation != null){
+                                //Hacer algo con la ubicacion
+                              }
+                            },
                             style: ButtonStyle(
                               backgroundColor: MaterialStateColor.resolveWith(
                                   (states) => Colors.white),
