@@ -1,14 +1,12 @@
-
+import 'dart:convert';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_google_maps_webservices/places.dart';
 import 'package:geolocator/geolocator.dart';
 import 'dart:ui';
-
+import 'package:http/http.dart' as http;
 import 'package:google_maps_widget/google_maps_widget.dart';
-
-import 'frmSetLocation.dart';
 
 final GoogleMapsPlaces places = GoogleMapsPlaces(apiKey: "AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM");
 
@@ -245,7 +243,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen>{
             ),
             markers: _markers,
             onLongPress: _handleLongPress,
-            myLocationButtonEnabled: false,
+            myLocationButtonEnabled: true,
             myLocationEnabled: true,
           )
           )
@@ -270,6 +268,10 @@ class RutaUno extends StatefulWidget{
 class _RutaUnoState extends State<RutaUno> {
   GoogleMapController? _mapController;
   LatLng _currentLocation = LatLng(0, 0);
+  LatLng _secondLocation = LatLng(0, 0); // Para la segunda ubicación
+  String secondLocationName = 'Buscar ubicación'; // Texto inicial del segundo botón
+  String buttonText = 'Tu ubicacion';
+  String travelTimeButton = "0"; // Valor inicial
 
   void initState() {
     super.initState();
@@ -333,34 +335,81 @@ class _RutaUnoState extends State<RutaUno> {
     });
   }
 
-  void _getCurrentLocation() async{
-    try {
-      LatLng currentLocation = await Localizador().getCurrentLocation();
-      setState(() {
-        _currentLocation = currentLocation;
-      });
-    } catch (e) {
-      if (kDebugMode) {
-        print("Error al obtener la ubicación");
-      }
-    }
-  }
-
   Future<void> _selectLocation() async {
     LatLng selectedLocation = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SelectLocationScreen()),
     );
     if (selectedLocation != null) {
+      String placeName = await getPlaceName(selectedLocation); // Obtén el nombre del lugar
+
       setState(() {
         _currentLocation = selectedLocation;
-        // Actualizar el marcador
-
-        // Actualizar el texto del botón "Tu ubicación"
-        // ...
+        buttonText = placeName; // buttonText es la variable que almacena el texto del botón
       });
-      _updateCameraPosition(selectedLocation); // Para centrar el mapa en la nueva ubicación
+
+      _updateCameraPosition(selectedLocation); // Centra el mapa en la nueva ubicación
     }
+  }
+
+  Future<void> _searchAndSelectSecondLocation() async {
+    LatLng newLocation = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SelectLocationScreen()), // Asegúrate de que este widget permita seleccionar una ubicación
+    );
+
+    if (newLocation != null) {
+      String placeName = await getPlaceName(newLocation); // Obtén el nombre del lugar
+
+      setState(() {
+        _secondLocation = newLocation;
+        secondLocationName = placeName; // Actualiza el texto del segundo botón
+      });
+    }
+  }
+
+  Future<String> getPlaceName(LatLng coordinates) async {
+    String googleApiKey = 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
+    String url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.latitude},${coordinates.longitude}&key=$googleApiKey';
+
+    try {
+      var response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        var jsonResponse = json.decode(response.body);
+        if (jsonResponse['results'] != null && jsonResponse['results'].length > 0) {
+          // Asume que el primer resultado es el nombre del lugar más relevante
+          return jsonResponse['results'][0]['formatted_address'];
+        } else {
+          return "Nombre del Lugar no encontrado";
+        }
+      } else {
+        return "Error de respuesta: ${response.statusCode}";
+      }
+    } catch (e) {
+      return "Error al obtener el nombre del lugar: $e";
+    }
+  }
+
+  Future<Map<String, dynamic>> getDirections(LatLng start, LatLng end) async {
+    String url = 'https://maps.googleapis.com/maps/api/directions/json?origin=${start.latitude},${start.longitude}&destination=${end.latitude},${end.longitude}&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
+
+    var response = await http.get(Uri.parse(url));
+    if (response.statusCode == 200) {
+      return json.decode(response.body);
+    } else {
+      throw Exception('Error al obtener las direcciones');
+    }
+  }
+
+  void _showRoute() async {
+    var directions = await getDirections(_currentLocation, _secondLocation);
+    // Procesa la respuesta para mostrar la ruta en el mapa
+    // y obtén la duración del viaje
+    var duration = directions['routes'][0]['legs'][0]['duration']['text'];
+    setState(() {
+      // Actualiza el texto del botón con la duración del viaje
+      travelTimeButton = duration;
+    });
   }
 
   @override
@@ -401,66 +450,56 @@ class _RutaUnoState extends State<RutaUno> {
                   children: [
                     Container(
                         width: MediaQuery.of(context).size.width,
-                        //  alignment: Alignment.bottomLeft,
                         child: Padding(
                           padding: EdgeInsets.only(
                               left: 16.0, right: 16.0, top: 9.0),
                           child: TextButton(
                             onPressed: _selectLocation,
+                            child: Text(
+                              buttonText,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 0, 0, 0),
+                                fontFamily: 'Nunito',
+                              ),
+                            ),
                             style: ButtonStyle(
                               backgroundColor: MaterialStateColor.resolveWith(
-                                  (states) => Colors.white),
+                                      (states) => Colors.white),
                               shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              )),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  )),
                             ),
-
-                            //Obtener nombre y coordenadas del lugar A con api
-                            child: Align(
-                                alignment: Alignment.centerLeft,
-                                ),
                           ),
                         )),
                     Container(
                         width: MediaQuery.of(context).size.width,
-                        //  alignment: Alignment.bottomLeft,
                         child: Padding(
                           padding: EdgeInsets.only(
-                              left: 16.0, right: 16.0, top: 7.0),
+                              left: 16.0, right: 16.0, top: 9.0),
                           child: TextButton(
-                            onPressed: () async{
-                              LatLng selectedLocation = await Navigator.push(
-                                context,
-                                MaterialPageRoute(builder: (context)=> SelectLocationScreen()),
-                              );
-                              if (selectedLocation != null){
-                                //Hacer algo con la ubicacion
-                              }
-                            },
+                            onPressed: _searchAndSelectSecondLocation,
+                            child: Text(
+                              secondLocationName,
+                              style: TextStyle(
+                                fontSize: 10,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 0, 0, 0),
+                                fontFamily: 'Nunito',
+                              ),
+                            ),
                             style: ButtonStyle(
                               backgroundColor: MaterialStateColor.resolveWith(
-                                  (states) => Colors.white),
+                                      (states) => Colors.white),
                               shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
+                                  RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(10.0),
-                              )),
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  )),
                             ),
-
-                            //Obtener nombre del lugar B con api
-                            child: Align(
-                                alignment: Alignment.centerLeft,
-                                child: const Text(
-                                  'Jugos Lupita',
-                                  style: TextStyle(
-                                    fontSize: 10,
-                                    fontWeight: FontWeight.bold,
-                                    color: Color.fromARGB(255, 0, 0, 0),
-                                    fontFamily: 'Nunito',
-                                  ),
-                                )),
                           ),
                         )),
                     Container(
@@ -504,17 +543,17 @@ class _RutaUnoState extends State<RutaUno> {
                                             color: const Color(0xFF114C5F),
                                             size: 20.0,
                                           ),
-                                          Text(
-                                            //Tiempo de transporte auto
-                                            '46min',
-                                            style: TextStyle(
-                                              fontSize: 10,
-                                              fontWeight: FontWeight.bold,
-                                              color:
+                                          ElevatedButton(onPressed: _showRoute,
+                                              child: Text(
+                                                travelTimeButton,
+                                                style: TextStyle(
+                                                  fontSize: 10,
+                                                  fontWeight: FontWeight.bold,
+                                                  color:
                                                   Color.fromARGB(255, 0, 0, 0),
-                                              fontFamily: 'Nunito',
-                                            ),
-                                          )
+                                                  fontFamily: 'Nunito',
+                                                ),
+                                              ))
                                         ])),
                                   ),
                                 )),
@@ -677,19 +716,8 @@ class _RutaUnoState extends State<RutaUno> {
               ),
             ),
           ]),
-        ]
-
-            /*  floatingActionButton: FloatingActionButton.extended(
-        onPressed: _goToTheLake,
-        label: const Text('To the lake!'),
-        icon: const Icon(Icons.directions_boat),*/
-            ),
+        ]),
       ),
     );
   }
-
-  /*Future<void> _goToTheLake() async {
-    final GoogleMapController controller = await _controller.future;
-    await controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
-  }*/
 }
