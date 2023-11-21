@@ -4,6 +4,7 @@ import 'package:ahora_si_maps/pantallas/ubicacion_usuario.dart';
 import 'package:ahora_si_maps/pantallas/buscar_lugares.dart';
 import 'package:ahora_si_maps/pantallas/lugares_cercanos.dart';
 import 'package:ahora_si_maps/pantallas/rutas.dart';
+import 'package:ahora_si_maps/pantallas/busquedaGPF.dart';
 class InicioPantalla extends StatefulWidget {
   const InicioPantalla({super.key});
 
@@ -35,7 +36,7 @@ class _InicioPantallaState extends State<InicioPantalla> {
               }, child: const Text("Ubicación actual")),
               ElevatedButton(onPressed: (){
                 Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
-                  return SearchPlacesScreen();
+                  return MyApp();
                 }));
               }, child: const Text("Busca lugares")),
               ElevatedButton(onPressed: (){

@@ -3,13 +3,16 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ahora_si_maps/modelo/polyline_response.dart';
+//import 'package:ahora_si_maps/modelo/polyline_response.dart';
 import 'package:geolocator/geolocator.dart';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_webservice/places.dart';
 import 'package:google_api_headers/google_api_headers.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+import 'package:google_maps_routes/google_maps_routes.dart';
+
+
 
 class PolylineScreen extends StatefulWidget {
   const PolylineScreen({Key? key}) : super(key: key);
@@ -39,9 +42,9 @@ class _PolylineScreenState extends State<PolylineScreen> {
   double destinolat = 0.0;
   double destinolon = 0.0;
 
-  PolylineResponse polylineResponse = PolylineResponse();
+  //PolylineResponse polylineResponse = PolylineResponse();
 
-  Set<Polyline> polylinePoints = {};
+  //Set<Polyline> polylinePoints = {};
 
   final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
@@ -51,6 +54,18 @@ class _PolylineScreenState extends State<PolylineScreen> {
 
   final Mode _mode = Mode.overlay;
 
+  List<LatLng> points = [
+    LatLng(19.36663909454925, -98.96088344601702),
+    LatLng(19.50481109220203, -99.14636592039268)
+    //LatLng(45.851254420031296, 14.624331708344428),
+    //LatLng(45.84794984187217, 14.605434384742317)
+  ];
+
+  MapsRoutes route = new MapsRoutes();
+  DistanceCalculator distanceCalculator = new DistanceCalculator();
+  String googleApiKey = 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
+  String totalDistances = 'No route';
+
 
   @override
   Widget build(BuildContext context) {
@@ -59,7 +74,7 @@ class _PolylineScreenState extends State<PolylineScreen> {
       body: Stack(
         children: [
           GoogleMap(
-            polylines: polylinePoints,
+            polylines: route.routes,
             zoomControlsEnabled: false,
             initialCameraPosition: initialPosition,
             markers: markersList,
@@ -207,9 +222,26 @@ class _PolylineScreenState extends State<PolylineScreen> {
     Position position = await _determinePosition();
     double latitude = position.latitude;
     double longitude = position.longitude;
-    origin = LatLng(latitude, longitude);
-    destination = LatLng(destinationlat, destinationlon);
-    var response = await http.post(Uri.parse("https://maps.googleapis.com/maps/api/directions/json?key=" +
+    //origin = LatLng(latitude, longitude);
+    //destination = LatLng(destinationlat, destinationlon);
+    List<LatLng> points = [
+      LatLng(latitude, longitude),
+      LatLng(destinationlat, destinationlon)
+      //LatLng(45.851254420031296, 14.624331708344428),
+      //LatLng(45.84794984187217, 14.605434384742317)
+    ];
+    await route.drawRoute(points, 'Test routes',
+        Color.fromRGBO(130, 78, 210, 1.0), googleApiKey,
+        travelMode: TravelModes.walking);
+    setState(() {
+      totalDistance =
+          distanceCalculator.calculateRouteDistance(points, decimals: 1);
+
+
+      //totalTime =
+
+    });
+    /*var response = await http.post(Uri.parse("https://maps.googleapis.com/maps/api/directions/json?key=" +
         apiKey +
         "&units=metric&origin=" +
         origin.latitude.toString() +
@@ -236,7 +268,7 @@ class _PolylineScreenState extends State<PolylineScreen> {
       ],width: 3,color: Colors.red));
     }
 
-    setState(() {});
+    setState(() {});*/
   }
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
@@ -320,7 +352,7 @@ class _PolylineScreenState extends State<PolylineScreen> {
     setState(() {});
 
     googleMapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat2, lng2), 14.0));
-    polylinePoints.clear();
+    //polylinePoints.clear();
     drawPolyline(lat2, lng2);
 
   }

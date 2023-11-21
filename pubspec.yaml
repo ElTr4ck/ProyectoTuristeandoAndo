@@ -41,6 +41,7 @@ dependencies:
   awesome_snackbar_content: ^0.0.8
   http: ^0.13.4
   flutter_google_places: ^0.3.0
+  google_maps_routes: ^1.1.2
 
 
 dev_dependencies:
