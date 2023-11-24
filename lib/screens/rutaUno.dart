@@ -100,7 +100,6 @@ class _SelectLocationScreenState extends State<SelectLocationScreen>{
   void _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
-
     serviceEnabled = await Geolocator.isLocationServiceEnabled();
     if (!serviceEnabled) {
       // Los servicios de ubicación no están habilitados, no podemos obtener la ubicación.
@@ -122,6 +121,11 @@ class _SelectLocationScreenState extends State<SelectLocationScreen>{
     }
 
     Position position = await Geolocator.getCurrentPosition();
+    LatLng currentLantLng = LatLng(position.latitude, position.longitude);
+
+    setState(() {
+      _currentLocation=currentLantLng;
+    });
     _updateCameraPosition(LatLng(position.latitude, position.longitude));
   }
 
@@ -260,6 +264,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen>{
     );
   }
 }
+final Set<Marker> _markers={};
 
 class RutaUno extends StatefulWidget{
   _RutaUnoState createState() =>_RutaUnoState();
@@ -303,10 +308,14 @@ class _RutaUnoState extends State<RutaUno> {
     }
 
     Position position = await Geolocator.getCurrentPosition();
+    LatLng currentLantLng = LatLng(position.latitude, position.longitude);
+
+    setState(() {
+      _currentLocation=currentLantLng;
+    });
     _updateCameraPosition(LatLng(position.latitude, position.longitude));
   }
 
-  // Este método actualiza la cámara del mapa para centrarse en la nueva ubicación.
   void _updateCameraPosition(LatLng location) {
     if (_mapController != null) {
       _mapController!.animateCamera(CameraUpdate.newLatLng(location));
@@ -325,29 +334,33 @@ class _RutaUnoState extends State<RutaUno> {
     }
   }
 
-  void _handleLongPress(LatLng position){
-    setState(() {
-      _currentLocation = position;
-      _mapController!.animateCamera(
-
-        CameraUpdate.newLatLng(position),
-      );
-    });
-  }
 
   Future<void> _selectLocation() async {
     LatLng selectedLocation = await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SelectLocationScreen()),
     );
+    print("Ubicación seleccionada: $selectedLocation"); // Agregar esta línea para depuración
     if (selectedLocation != null) {
       String placeName = await getPlaceName(selectedLocation); // Obtén el nombre del lugar
 
+      //Eliminar
       setState(() {
-        _currentLocation = selectedLocation;
-        buttonText = placeName; // buttonText es la variable que almacena el texto del botón
+        _markers.removeWhere((marker) => marker.markerId==MarkerId('inicialLocation'));
       });
 
+      Marker updatedMarker = Marker(
+        markerId: MarkerId('inicialLocation'),
+        position: selectedLocation,
+        infoWindow: InfoWindow(title: 'Ubicacion de inicio'),
+      );
+
+      setState(() {
+        _currentLocation = selectedLocation;
+        buttonText = placeName;
+        // buttonText es la variable que almacena el texto del botón
+        _markers.add(updatedMarker);
+      });
       _updateCameraPosition(selectedLocation); // Centra el mapa en la nueva ubicación
     }
   }
@@ -361,9 +374,16 @@ class _RutaUnoState extends State<RutaUno> {
     if (newLocation != null) {
       String placeName = await getPlaceName(newLocation); // Obtén el nombre del lugar
 
+      Marker searchedLocationMarker = Marker(
+        markerId: MarkerId('searchedLocation'),
+        position: newLocation,
+        infoWindow: InfoWindow(title: 'Ubicacion final'),
+      );
+
       setState(() {
         _secondLocation = newLocation;
         secondLocationName = placeName; // Actualiza el texto del segundo botón
+        _markers.add(searchedLocationMarker);
       });
     }
   }
@@ -390,26 +410,127 @@ class _RutaUnoState extends State<RutaUno> {
     }
   }
 
-  Future<Map<String, dynamic>> getDirections(LatLng start, LatLng end) async {
-    String url = 'https://maps.googleapis.com/maps/api/directions/json?origin=${start.latitude},${start.longitude}&destination=${end.latitude},${end.longitude}&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
+  Future getDirections(LatLng start, LatLng end, String mode) async {
+    String baseUrl = "https://maps.googleapis.com/maps/api/directions/json";
+    String url = "$baseUrl?origin=${start.latitude},${start.longitude}&destination=${end.latitude},${end.longitude}&mode=$mode&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM";
 
     var response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
       return json.decode(response.body);
     } else {
-      throw Exception('Error al obtener las direcciones');
+      // Manejo de errores
+      print('Error al obtener las direcciones: ${response.statusCode}');
+      return null;
     }
   }
 
   void _showRoute() async {
-    var directions = await getDirections(_currentLocation, _secondLocation);
-    // Procesa la respuesta para mostrar la ruta en el mapa
-    // y obtén la duración del viaje
-    var duration = directions['routes'][0]['legs'][0]['duration']['text'];
+    var directions = await getDirections(_currentLocation, _secondLocation,'driving');
+    String encodedPolyline = directions['routes'][0]['overview_polyline']['points'];
+    showRouteOnMap(encodedPolyline);
+  }
+
+  void _showRoutePie() async {
+    var directions = await getDirections(_currentLocation, _secondLocation,'walking');
+    String encodedPolyline = directions['routes'][0]['overview_polyline']['points'];
+    showRouteOnMap(encodedPolyline);
+  }
+
+  void _showRouteTrans() async {
+    var directions = await getDirections(_currentLocation, _secondLocation,'transit');
+    String encodedPolyline = directions['routes'][0]['overview_polyline']['points'];
+    showRouteOnMap(encodedPolyline);
+  }
+
+  Set<Polyline> _polylines = {};
+
+  void showRouteOnMap(String encodedPolyline) {
+    Polyline polyline = Polyline(
+      polylineId: PolylineId("route"),
+      points: _decodePoly(encodedPolyline),
+      width: 5,
+      color: Colors.orangeAccent,
+    );
+
     setState(() {
-      // Actualiza el texto del botón con la duración del viaje
-      travelTimeButton = duration;
+      _polylines.clear();
+      _polylines.add(polyline);
     });
+  }
+
+  List<LatLng> _decodePoly(String encoded) {
+    List<LatLng> points = [];
+    int index = 0, len = encoded.length;
+    int lat = 0, lng = 0;
+
+    while (index < len) {
+      int b, shift = 0, result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlat = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+      lat += dlat;
+
+      shift = 0;
+      result = 0;
+      do {
+        b = encoded.codeUnitAt(index++) - 63;
+        result |= (b & 0x1f) << shift;
+        shift += 5;
+      } while (b >= 0x20);
+      int dlng = ((result & 1) != 0 ? ~(result >> 1) : (result >> 1));
+      lng += dlng;
+
+      LatLng p = new LatLng((lat / 1E5).toDouble(), (lng / 1E5).toDouble());
+      points.add(p);
+    }
+
+    return points;
+  }
+
+  Future<void> drawRoute() async {
+    LatLng startLocation= _currentLocation; // Tu ubicación de inicio
+    LatLng endLocation= _secondLocation; // Tu ubicación de destino
+
+    // Suponiendo que tienes una función para obtener las direcciones
+    var directions = await getDirections(startLocation, endLocation, "driving"); // o "walking"
+
+    // Obtener el polilíneo codificado de la respuesta
+    String encodedPolyline = directions['routes'][0]['overview_polyline']['points'];
+
+    // Dibujar la ruta en el mapa
+    showRouteOnMap(encodedPolyline);
+  }
+
+  Future<String> calculateTravelTime(LatLng start, LatLng end, String mode) async {
+    try {
+      var directions = await getDirections(start, end, mode);
+      if (directions['routes'] != null && directions['routes'].isNotEmpty) {
+        // El tiempo total de viaje está en la primera 'leg' de la ruta
+        var duration = directions['routes'][0]['legs'][0]['duration']['text'];
+        return duration; // Esto devolverá una cadena como "15 mins"
+      } else {
+        return "No disponible";
+      }
+    } catch (e) {
+      print('Error al calcular el tiempo de viaje: $e');
+      return "Error";
+    }
+  }
+
+  void _updateTravelTime() async {
+    String travelTime = await calculateTravelTime(_currentLocation, _secondLocation, "driving");
+    setState(() {
+      travelTimeButton = travelTime; // Actualiza el estado con el tiempo de viaje
+    });
+  }
+
+  void onLocationSelected(LatLng start, LatLng end) {
+    _currentLocation = start;
+    _secondLocation = end;
+    _updateTravelTime();
   }
 
   @override
@@ -431,15 +552,17 @@ class _RutaUnoState extends State<RutaUno> {
           // Fondo de pantalla
           GoogleMap(
             onMapCreated: _onMapCreated,
+              markers: Set<Marker>.of(_markers),
               mapType: MapType.terrain,
+              polylines: Set<Polyline>.of(_polylines),
               initialCameraPosition: CameraPosition(
                 target: _currentLocation,
                 zoom: 14
               ),
-              onLongPress: _handleLongPress,
             myLocationButtonEnabled: false,
             myLocationEnabled: true,
           ),
+
           Container(
               //padding: const EdgeInsets.all(16.0),
               width: MediaQuery.of(context).size.width,
@@ -516,7 +639,7 @@ class _RutaUnoState extends State<RutaUno> {
                                       left: 16.0, right: 16.0, top: 7.0),
                                   child: ElevatedButton(
                                     //Transporte
-                                    onPressed: () {},
+                                    onPressed:_showRoute,
                                     style: ButtonStyle(
                                       backgroundColor: MaterialStateProperty
                                           .resolveWith<Color?>(
@@ -534,7 +657,6 @@ class _RutaUnoState extends State<RutaUno> {
                                             BorderRadius.circular(10.0),
                                       )),
                                     ),
-
                                     child: Align(
                                         alignment: Alignment.center,
                                         child: Row(children: [
@@ -543,17 +665,17 @@ class _RutaUnoState extends State<RutaUno> {
                                             color: const Color(0xFF114C5F),
                                             size: 20.0,
                                           ),
-                                          ElevatedButton(onPressed: _showRoute,
-                                              child: Text(
-                                                travelTimeButton,
-                                                style: TextStyle(
-                                                  fontSize: 10,
-                                                  fontWeight: FontWeight.bold,
-                                                  color:
-                                                  Color.fromARGB(255, 0, 0, 0),
-                                                  fontFamily: 'Nunito',
-                                                ),
-                                              ))
+                                          Text(
+                                            //Tiempo de transporte publico
+                                              travelTimeButton,
+                                            style: TextStyle(
+                                              fontSize: 10,
+                                              fontWeight: FontWeight.bold,
+                                              color:
+                                              Color.fromARGB(255, 0, 0, 0),
+                                              fontFamily: 'Nunito',
+                                            ),
+                                          )
                                         ])),
                                   ),
                                 )),
@@ -565,7 +687,7 @@ class _RutaUnoState extends State<RutaUno> {
                                       left: 8.0, right: 8.0, top: 7.0),
                                   child: ElevatedButton(
                                     //Transporte
-                                    onPressed: () {},
+                                    onPressed: _showRouteTrans,
                                     style: ButtonStyle(
                                       backgroundColor: MaterialStateProperty
                                           .resolveWith<Color?>(
@@ -614,8 +736,7 @@ class _RutaUnoState extends State<RutaUno> {
                                       left: 8.0, right: 8.0, top: 7.0),
                                   child: ElevatedButton(
                                     //Transporte
-                                    onPressed: () {},
-
+                                    onPressed: _showRoutePie,
                                     style: ButtonStyle(
                                       backgroundColor: MaterialStateProperty
                                           .resolveWith<Color?>(
