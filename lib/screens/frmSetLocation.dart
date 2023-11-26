@@ -83,7 +83,12 @@ class FrmSetLocation extends StatelessWidget {
                                   left: 30.h, right: 20.h, bottom: 10.h),
                               buttonTextStyle: theme.textTheme.titleLarge!,
                               onPressed: () {
-                                Navigator.pushReplacement(context, AppRoutes.frmCuestionario as Route<Object?>);
+                                Navigator.pushNamed(context, AppRoutes.frmCuestionario);
+                                /*
+                                Navigator.pushReplacement(
+                                  context, 
+                                  MaterialPageRoute(builder: (context) => AppRoutes.routes[AppRoutes.frmCuestionario]!(context))
+                                );*/
                               }),
                           CustomElevatedButton(
                               height: 41.v,
@@ -144,7 +149,7 @@ class FrmSetLocation extends StatelessWidget {
                                   left: 30.h, right: 20.h, bottom: 10.h),
                               buttonTextStyle: theme.textTheme.titleLarge!,
                               onPressed: () {
-                                AppRoutes.frmCuestionario;
+                                Navigator.pushNamed(context, AppRoutes.frmCuestionario);
                               }),
                           CustomElevatedButton(
                               height: 41.v,
