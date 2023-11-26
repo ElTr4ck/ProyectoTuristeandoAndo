@@ -12,7 +12,7 @@ class frmMapa extends StatelessWidget {
             Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('lib/assets/fondito2.png'), // Ruta de la imagen de fondo
+                  image: AssetImage('lib/assets/images/fondito2.png'), // Ruta de la imagen de fondo
                   fit: BoxFit.cover,
                 ),
               ),
