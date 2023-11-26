@@ -22,7 +22,7 @@ class SignupController extends GetxController {
           email: email, password: password, name: name, lastName: lastName);
 
       auth.setInitialScreen(auth.firebaseUser);
-      auth.sendVerificationEmail();
+      //auth.sendVerificationEmail();
     } on SignupEmailFailure catch (e) {
       Get.showSnackbar(GetSnackBar(
         message: e.message,

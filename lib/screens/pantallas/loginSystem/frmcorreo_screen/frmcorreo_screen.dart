@@ -2,10 +2,24 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/repositories/auth/controlers/mail_verification.dart';
+import 'package:turisteando_ando/repositories/auth/controlers/signout_controller.dart';
+import 'package:turisteando_ando/screens/pantallas/loginSystem/frmwelcome_screen/frmwelcome_screen.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 
-class FrmcorreoScreen extends StatelessWidget {
+class FrmcorreoScreen extends StatefulWidget {
   const FrmcorreoScreen({Key? key}) : super(key: key);
+
+  @override
+  State<FrmcorreoScreen> createState() => _FrmcorreoScreenState();
+}
+
+class _FrmcorreoScreenState extends State<FrmcorreoScreen> {
+  final controllerSignOut = Get.put(SignoutController());
+
+  void signOut() async {
+    await controllerSignOut.signout();
+    Get.to(FrmwelcomeScreen());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -57,11 +71,12 @@ class FrmcorreoScreen extends StatelessWidget {
   Widget _buildRegresarAInicio(BuildContext context) {
     return CustomElevatedButton(
         height: 40.v,
-        text: "Regresar a inicio",
+        text: "Sign out",
         margin: EdgeInsets.only(left: 30.h, right: 30.h, bottom: 41.v),
         buttonTextStyle: CustomTextStyles.titleMediumNunitoOnPrimary18,
         onPressed: () {
-          onTapRegresarAInicio(context);
+          signOut();
+          //onTapRegresarAInicio(context);
         });
   }
 
