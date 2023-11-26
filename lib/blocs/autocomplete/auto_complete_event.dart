@@ -15,3 +15,10 @@ class LoadAutoComplete extends AutoCompleteEvent {
   @override
   List<Object> get props => [searchInput];
 }
+
+class AutoCompleteSelected extends AutoCompleteEvent {
+  final String selectedText;
+
+  AutoCompleteSelected({required this.selectedText});
+}
+

@@ -19,7 +19,9 @@ class PlaceBloc extends Bloc<PlaceEvent, PlaceState> {
   Stream<PlaceState> mapEventToState(PlaceEvent event) async* {
     if(event is LoadPlace){
       yield* _mapLoadPlaceToState(event);
-
+    }
+    else if(event is LoadGeoPlace){
+      yield PlaceLoading();
     }
   }
 

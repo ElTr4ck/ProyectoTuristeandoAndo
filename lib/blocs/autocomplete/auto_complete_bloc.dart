@@ -22,6 +22,9 @@ class AutoCompleteBloc extends Bloc<AutoCompleteEvent, AutoCompleteState> {
     if (event is LoadAutoComplete) {
       yield* _mapLoadAutocompleteToState(event);
     }
+    else if(event is AutoCompleteSelected){
+      yield* _mapAutoCompleteSelectedToState(event);
+    }
   }
 
   Stream<AutoCompleteState> _mapLoadAutocompleteToState(
@@ -33,4 +36,9 @@ class AutoCompleteBloc extends Bloc<AutoCompleteEvent, AutoCompleteState> {
 
     yield AutoCompleteLoaded(autocomplete: autocomplete);
   }
+
+  Stream<AutoCompleteState> _mapAutoCompleteSelectedToState(AutoCompleteSelected event) async* {
+  yield AutoCompleteSelectedState(selectedText: event.selectedText);
+}
+
 }

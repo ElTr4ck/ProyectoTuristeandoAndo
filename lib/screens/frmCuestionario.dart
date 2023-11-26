@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
 
-class frmCuestionario extends StatelessWidget {
+class FrmCuestionario extends StatelessWidget {
+  const FrmCuestionario({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

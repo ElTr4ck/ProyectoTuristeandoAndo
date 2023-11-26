@@ -19,3 +19,10 @@ class AutoCompleteLoaded extends AutoCompleteState {
 }
 
 final class AutoCompleteError extends AutoCompleteState {}
+
+class AutoCompleteSelectedState extends AutoCompleteState {
+  final String selectedText;
+
+  AutoCompleteSelectedState({required this.selectedText});
+}
+
