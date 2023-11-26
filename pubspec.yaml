@@ -32,23 +32,40 @@ dependencies:
     sdk: flutter
   
   google_maps_flutter: ^2.5.0
-  cached_network_image: ^3.2.1
-  intl: ^0.18.0
+  geolocator: ^9.0.2
+  geocoding: ^2.1.0
+  flutter_google_places: ^0.3.0
+  awesome_snackbar_content: ^0.0.8
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
+  #google_places_flutter: ^2.0.6
+  #flutter_google_maps_webservices: ^1.1.1
+  http: ^0.13.1
+  uuid: ^3.0.7
+  json_serializable: ^6.7.1
+  google_maps_widget: ^1.0.5+1
+  
 
   font_awesome_flutter: ^10.6.0  # Verifica la última versión en pub.dev
   flutter_scrollbar: ^1.0.0
+  flutter_rating_bar: ^4.0.1
+  google_api_headers: ^1.6.0
+  flutter_bloc: ^7.3.3
+  equatable: ^2.0.5
+  bloc: ^7.0.2
+  intl: ^0.18.1
+  cached_network_image: ^3.3.0
+  flutter_svg: ^1.1.6
   flutter_lints: ^2.0.0
   firebase_storage: ^11.5.0
   firebase_auth: ^4.13.0
   cloud_firestore: ^4.13.0
   firebase_core: ^2.22.0
-  flutter_svg: ^2.0.9
   image_picker: ^1.0.4
+  get: ^4.6.5
 
 dev_dependencies:
   flutter_test:
@@ -66,10 +83,10 @@ dev_dependencies:
 
 # The following section is specific to Flutter packages.
 flutter:
-  uses-material-design: true
-  assets:
-     - assets/
-     - assets/images/
+
+  assets: 
+    - lib/assets/
+    - lib/assets/images/
 
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
@@ -78,13 +95,13 @@ flutter:
   fonts:
     - family: Nunito
       fonts:
-        - asset: lib/fonts/Nunito-Black.ttf
-        - asset: lib/fonts/Nunito-BlackItalic.ttf
-        - asset: lib/fonts/Nunito-Bold.ttf
-        - asset: lib/fonts/Nunito-BoldItalic.ttf
-        - asset: lib/fonts/Nunito-ExtraBold.ttf
-        - asset: lib/fonts/Nunito-Medium.ttf
-        - asset: lib/fonts/Nunito-Light.ttf
+        - asset: lib/assets/fonts/Nunito-Black.ttf
+        - asset: lib/assets/fonts/Nunito-BlackItalic.ttf
+        - asset: lib/assets/fonts/Nunito-Bold.ttf
+        - asset: lib/assets/fonts/Nunito-BoldItalic.ttf
+        - asset: lib/assets/fonts/Nunito-ExtraBold.ttf
+        - asset: lib/assets/fonts/Nunito-Medium.ttf
+        - asset: lib/assets/fonts/Nunito-Light.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:

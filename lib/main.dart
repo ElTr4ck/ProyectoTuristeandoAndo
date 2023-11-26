@@ -1,9 +1,12 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:turisteando_ando/resources/wraper.dart';
-import 'package:turisteando_ando/screens/frmCuestionario.dart';
-import 'package:turisteando_ando/screens/frmSetLocation.dart'; // Importacion del frame de Set Location
-import 'package:turisteando_ando/screens/frmMapa.dart'; // Importacion del frame de Set Location
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:get/get.dart';
+import 'package:turisteando_ando/blocs/autocomplete/auto_complete_bloc.dart';
+import 'package:turisteando_ando/blocs/place/place_bloc.dart';
+import 'package:turisteando_ando/core/app_export.dart';
+import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
+import 'package:turisteando_ando/repositories/places/PlacesRepository.dart';
 
 import 'firebase_options.dart';
 import 'package:firebase_core/firebase_core.dart';
@@ -13,7 +16,8 @@ void main() async {
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  );
+  ).then((FirebaseApp value) => Get.put(AuthMethods()));
+  ThemeHelper().changeTheme('primary');
   runApp(const MyApp());
 }
 
@@ -23,70 +27,89 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-        debugShowCheckedModeBanner: false,
-        title: 'Turisteando Ando',
-        theme: ThemeData(
-          colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-          useMaterial3: true,
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<PlacesRepository>(
+          create: (_) => PlacesRepository(),
         ),
-        home: Wrapper()
+      ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+              create: (context) => AutoCompleteBloc(
+                  placesRepository: context.read<PlacesRepository>())
+                ..add(LoadAutoComplete())),
+          BlocProvider(
+              create: (context) => PlaceBloc(
+                  placesRepository: context.read<PlacesRepository>())),
+        ],
+        child: MaterialApp(
+          theme: theme,
+          debugShowCheckedModeBanner: false,
+          title: 'Turisteando Ando',
 
-        //home: const MyHomePage(title: 'Flutter Demo Home Page'),
-        /*initialRoute: 'frmSetLocation',
-      routes: {
-        'frmSetLocation': (_) => frmSetLocation(),
-        'frmMapa': (_) => frmMapa(),
-        'frmCuestionario': (_) => frmCuestionario()
-      },*/
-        );
+          /* theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),*/
+          //home: const MyHomePage(title: 'Flutter Demo Home Page'),
+          //initialRoute: AppRoutes.frmwelcomeScreen,
+          navigatorKey: Get.key,
+          home: const ProgressIndicator(),
+          routes: AppRoutes.routes,
+        ),
+      ),
+    );
   }
 }
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
+class ProgressIndicator extends StatefulWidget {
+  const ProgressIndicator({super.key});
 
   @override
-  State<MyHomePage> createState() => _MyHomePageState();
+  State<ProgressIndicator> createState() => _ProgressIndicatorState();
 }
 
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
+class _ProgressIndicatorState extends State<ProgressIndicator>
+    with TickerProviderStateMixin {
+  late AnimationController controller;
 
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
+  @override
+  void initState() {
+    controller = AnimationController(
+      /// [AnimationController]s can be created with `vsync: this` because of
+      /// [TickerProviderStateMixin].
+      vsync: this,
+      duration: const Duration(milliseconds: 500),
+    )..addListener(() {
+        setState(() {});
+      });
+    controller.repeat(reverse: true);
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller.dispose();
+    super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
       body: Center(
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          crossAxisAlignment: CrossAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+            CircularProgressIndicator(
+              backgroundColor: Color(0xff9CD2D3),
+              value: controller.value,
+              semanticsLabel: 'Circular progress indicator',
             ),
           ],
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }

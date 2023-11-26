@@ -12,7 +12,7 @@ class frmMapa extends StatelessWidget {
             Container(
               decoration: const BoxDecoration(
                 image: DecorationImage(
-                  image: AssetImage('lib/assets/fondito2.png'), // Ruta de la imagen de fondo
+                  image: AssetImage('lib/assets/images/fondito2.png'), // Ruta de la imagen de fondo
                   fit: BoxFit.cover,
                 ),
               ),
@@ -22,7 +22,7 @@ class frmMapa extends StatelessWidget {
               children: <Widget>[
                 Container(
                   color: Colors.white.withOpacity(0.5) ,
-                  padding: EdgeInsets.all(16.0),
+                  padding: const EdgeInsets.all(16.0),
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: <Widget>[
