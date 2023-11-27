@@ -16,7 +16,7 @@ class NearByPlacesScreen extends StatefulWidget {
 class _NearByPlacesScreenState extends State<NearByPlacesScreen> {
 
   String apiKey = "AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM";
-  String radius = "100";
+  String radius = "10000";
 
 
 
@@ -50,11 +50,13 @@ class _NearByPlacesScreenState extends State<NearByPlacesScreen> {
 
   void getNearbyPlaces() async {
 
+    double latitud = 19.431881994977104;
+    double longitud = -99.1857233911346;
     Position position = await _determinePosition();
     double latitude = position.latitude;
     double longitude = position.longitude;
-    var url = Uri.parse('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + latitude.toString() + ','
-        + longitude.toString() + '&radius=' + radius + '&key=' + apiKey
+    var url = Uri.parse('https://maps.googleapis.com/maps/api/place/nearbysearch/json?location=' + latitud.toString() + ','
+        + longitud.toString() + '&radius=' + radius + '&types=tourist_attraction' + '&key=' + apiKey
     );
 
     var response = await http.post(url);

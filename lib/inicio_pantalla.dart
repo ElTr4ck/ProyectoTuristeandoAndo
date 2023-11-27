@@ -35,9 +35,9 @@ class _InicioPantallaState extends State<InicioPantalla> {
                 }));
               }, child: const Text("Ubicación actual")),
               ElevatedButton(onPressed: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+                /*Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
                   return MyApp();
-                }));
+                }));*/
               }, child: const Text("Busca lugares")),
               ElevatedButton(onPressed: (){
                 Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){

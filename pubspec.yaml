@@ -39,10 +39,17 @@ dependencies:
   google_maps_flutter: ^2.5.0
   geolocator: ^8.0.1
   awesome_snackbar_content: ^0.0.8
-  http: ^0.13.4
-  flutter_google_places: ^0.3.0
+  http: ^1.1.0
+  google_places_flutter: ^2.0.6
   google_maps_routes: ^1.1.2
+  flutter_google_maps_webservices: ^1.1.1
+  google_maps_widget: ^1.0.5+1
+  carousel_slider: ^4.2.1
+  flogger: ^0.0.8
 
+dependency_overrides:
+  http: ^1.1.0
+  rxdart: ^0.27.2
 
 dev_dependencies:
   flutter_test:

@@ -1,4 +1,4 @@
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
+/*import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
@@ -101,4 +101,4 @@ class _SearchPlacesScreenState extends State<SearchPlacesScreen> {
     googleMapController.animateCamera(CameraUpdate.newLatLngZoom(LatLng(lat, lng), 14.0));
 
   }
-}
+}*/
