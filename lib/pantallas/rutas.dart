@@ -192,7 +192,7 @@ class _PolylineScreenState extends State<PolylineScreen> {
             left: 0,
             right: 0,
             child: Container(
-              height: 170,
+              height: 190,
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.8),
                 boxShadow: [
@@ -589,7 +589,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
   Widget build(BuildContext context) {
     return CarouselSlider(
       options: CarouselOptions(
-        height: 140.0,
+        height: 160.0,
         enlargeCenterPage: true,
         autoPlay: true,
         aspectRatio: 16 / 9,
