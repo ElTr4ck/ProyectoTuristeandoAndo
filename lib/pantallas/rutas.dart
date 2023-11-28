@@ -3,7 +3,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:ahora_si_maps/pantallas/rutaUno.dart';
+import 'package:turisteando_ando/pantallas/rutaUno.dart';
 import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:google_places_flutter/model/prediction.dart';
 import 'package:geolocator/geolocator.dart';
@@ -14,7 +14,7 @@ import 'package:http/http.dart' as http;
 import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:google_maps_routes/google_maps_routes.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:ahora_si_maps/pantallas/rutaUno.dart';
+import 'package:turisteando_ando/pantallas/rutaUno.dart';
 
 class PolylineScreen extends StatefulWidget {
   const PolylineScreen({Key? key}) : super(key: key);

@@ -1,7 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
-import 'package:ahora_si_maps/modelo/nearby_response.dart';
+import 'package:turisteando_ando/modelo/nearby_response.dart';
 import 'package:geolocator/geolocator.dart';
 
 import 'package:http/http.dart' as http;

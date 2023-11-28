@@ -97,6 +97,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.1.0"
+  carousel_slider:
+    dependency: "direct main"
+    description:
+      name: carousel_slider
+      sha256: "9c695cc963bf1d04a47bd6021f68befce8970bcd61d24938e1fb0918cf5d9c42"
+      url: "https://pub.dev"
+    source: hosted
+    version: "4.2.1"
   characters:
     dependency: transitive
     description:
@@ -209,6 +217,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "7.0.0"
+  flogger:
+    dependency: "direct main"
+    description:
+      name: flogger
+      sha256: "59f031a7860c3a4dcf214b15be4e4d43d644af02bec3946a0926b8f512cf95bd"
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.0.8"
   flutter:
     dependency: "direct main"
     description: flutter
@@ -230,6 +246,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "3.3.1"
+  flutter_google_maps_webservices:
+    dependency: "direct main"
+    description:
+      name: flutter_google_maps_webservices
+      sha256: "0a1ad0619d5a8ec37b4a8a47776c26fe7491f5a3b8031a5191607ea1a4996ead"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.1"
   flutter_google_places:
     dependency: "direct main"
     description:
@@ -254,6 +278,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.17"
+  flutter_polyline_points:
+    dependency: transitive
+    description:
+      name: flutter_polyline_points
+      sha256: "02699e69142f51a248d784b6e3eec524194467fca5f7c4da19699ce2368b6980"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   flutter_rating_bar:
     dependency: "direct main"
     description:
@@ -440,6 +472,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.5.4+2"
+  google_maps_routes:
+    dependency: "direct main"
+    description:
+      name: google_maps_routes
+      sha256: "6bfff0deefe49f1e1d0d12f0b119bb56afb772469160b88d2b725d85048b8ddf"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.1.2"
   google_maps_webservice:
     dependency: transitive
     description:
@@ -456,6 +496,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.5+1"
+  google_places_flutter:
+    dependency: "direct main"
+    description:
+      name: google_places_flutter
+      sha256: "02b81fee590a694a096ea5a7882b31b7cef69994a88833ed02318cadb3343a20"
+      url: "https://pub.dev"
+    source: hosted
+    version: "2.0.6"
   html:
     dependency: transitive
     description:
@@ -468,10 +516,10 @@ packages:
     dependency: "direct main"
     description:
       name: http
-      sha256: "5895291c13fa8a3bd82e76d5627f69e0d85ca6a30dcac95c4ea19a5d555879c2"
+      sha256: "759d1a329847dd0f39226c688d3e06a6b8679668e350e2891a6474f8b4bb8525"
       url: "https://pub.dev"
     source: hosted
-    version: "0.13.6"
+    version: "1.1.0"
   http_parser:
     dependency: transitive
     description:
@@ -721,13 +769,13 @@ packages:
     source: hosted
     version: "1.2.3"
   rxdart:
-    dependency: transitive
+    dependency: "direct overridden"
     description:
       name: rxdart
-      sha256: "2ef8b4e91cb3b55d155e0e34eeae0ac7107974e451495c955ac04ddee8cc21fd"
+      sha256: "0c7c0cedd93788d996e33041ffecda924cc54389199cde4e6a34b440f50044cb"
       url: "https://pub.dev"
     source: hosted
-    version: "0.26.0"
+    version: "0.27.7"
   sanitize_html:
     dependency: transitive
     description:
