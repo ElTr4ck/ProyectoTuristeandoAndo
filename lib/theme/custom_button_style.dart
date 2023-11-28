@@ -1,5 +1,4 @@
-import 'dart:ui';
-import 'package:ramirez_ayala_s_application16/core/app_export.dart';
+import 'package:turisteando_ando/core/app_export.dart';
 import 'package:flutter/material.dart';
 
 /// A class that offers pre-defined button styles for customizing button appearance.

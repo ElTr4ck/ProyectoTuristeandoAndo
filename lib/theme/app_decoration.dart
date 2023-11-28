@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ramirez_ayala_s_application16/core/app_export.dart';
+import 'package:turisteando_ando/core/app_export.dart';
 
 class AppDecoration {
   // Fill decorations
@@ -23,6 +23,9 @@ class AppDecoration {
       );
   static BoxDecoration get fillYellow => BoxDecoration(
         color: appTheme.yellow700,
+      );
+  static BoxDecoration get fillTeal => BoxDecoration(
+        color: appTheme.teal100,
       );
 
   // Gradient decorations
@@ -88,6 +91,18 @@ class AppDecoration {
 }
 
 class BorderRadiusStyle {
+  // Circle borders
+  static BorderRadius get circleBorder29 => BorderRadius.circular(
+        29.h,
+      );
+
+  // Rounded borders
+  static BorderRadius get roundedBorder12 => BorderRadius.circular(
+        12.h,
+      );
+  static BorderRadius get roundedBorder40 => BorderRadius.circular(
+        40.h,
+      );
   // Circle borders
   static BorderRadius get circleBorder12 => BorderRadius.circular(
         12.h,

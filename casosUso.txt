@@ -1,0 +1,4 @@
+- Para el boton del frmCuestionario es obligatorio seleccionar una ubicacion manual en caso de que se quiera usar
+el boton de continuar, ya que es un campo obligatorio
+- Para el frmCuestionario para usar el botón de continuar, se debe de seleccionar al menos un elemento de la lista para poder continuar.
+- Si el ususario no acepta los permisos de ubicación, será mejor cerrar la aplicacion

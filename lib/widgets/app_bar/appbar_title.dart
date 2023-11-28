@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:ramirez_ayala_s_application16/core/app_export.dart';
+import 'package:turisteando_ando/core/app_export.dart';
 
 // ignore: must_be_immutable
 class AppbarTitle extends StatelessWidget {
@@ -27,11 +27,15 @@ class AppbarTitle extends StatelessWidget {
       child: Padding(
         padding: margin ?? EdgeInsets.zero,
         child: Container(
+          width: 306.h,
           decoration: AppDecoration.outlineBlack,
           child: Text(
             text,
-            style: CustomTextStyles.headlineLarge30.copyWith(
-              color: appTheme.black900,
+            maxLines: null,
+            overflow: TextOverflow.ellipsis,
+            style: CustomTextStyles.headlineSmallPoppins.copyWith(
+              color: theme.colorScheme.onPrimaryContainer,
+              height: 1.41,
             ),
           ),
         ),

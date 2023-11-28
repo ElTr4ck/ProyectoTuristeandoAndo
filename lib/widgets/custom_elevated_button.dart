@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ramirez_ayala_s_application16/core/app_export.dart';
-import 'package:ramirez_ayala_s_application16/widgets/base_button.dart';
+import 'package:turisteando_ando/core/app_export.dart';
+import 'package:turisteando_ando/widgets/base_button.dart';
 
 class CustomElevatedButton extends BaseButton {
   CustomElevatedButton({
