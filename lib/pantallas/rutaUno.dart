@@ -279,12 +279,13 @@ class RutaUno extends StatefulWidget{
 class _RutaUnoState extends State<RutaUno> {
 
   GoogleMapController? _mapController;
-  LatLng _currentLocation = LatLng(19.434394864500188, -99.13458543861476);
+  LatLng _currentLocation = LatLng(0, 0);
   LatLng _secondLocation = LatLng(0, 0); // Para la segunda ubicación
   String secondLocationName = 'Buscar ubicación'; // Texto inicial del segundo botón
   String buttonText = 'Tu ubicacion';
   String travelTimeButton = "0"; // Valor inicial
   double km = 0.0;
+  int x = 0;
 
 
   /*void initState() {
@@ -352,6 +353,40 @@ class _RutaUnoState extends State<RutaUno> {
     Position position = await _determinePosition();
     double latitude = position.latitude;
     double longitude = position.longitude;
+    LatLng selectedLocation = await Navigator.push(
+      context,
+      MaterialPageRoute(builder: (context) => SelectLocationScreen()),
+    );
+    print("Ubicación seleccionada: $selectedLocation"); // Agregar esta línea para depuración
+    if (selectedLocation != null) {
+      String placeName = await getPlaceName(selectedLocation); // Obtén el nombre del lugar
+
+      //Eliminar
+      setState(() {
+        _markers.removeWhere((marker) => marker.markerId==MarkerId('inicialLocation'));
+      });
+
+      Marker updatedMarker = Marker(
+        markerId: MarkerId('inicialLocation'),
+        position: selectedLocation,
+        infoWindow: InfoWindow(title: 'Ubicacion de inicio'),
+      );
+
+      setState(() {
+        _currentLocation = selectedLocation;
+        buttonText = placeName;
+        // buttonText es la variable que almacena el texto del botón
+        _polylines.clear();
+        _markers.add(updatedMarker);
+      });
+      _updateCameraPosition(selectedLocation); // Centra el mapa en la nueva ubicación
+    }
+  }
+
+  Future<void> _selectLocationDefault() async {
+    Position position = await _determinePosition();
+    double latitude = position.latitude;
+    double longitude = position.longitude;
     LatLng selectedLocation = LatLng(latitude, longitude);/*await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SelectLocationScreen()),
@@ -375,9 +410,95 @@ class _RutaUnoState extends State<RutaUno> {
         _currentLocation = selectedLocation;
         buttonText = placeName;
         // buttonText es la variable que almacena el texto del botón
+        _polylines.clear();
+        //_markers.clear();
         _markers.add(updatedMarker);
       });
       _updateCameraPosition(selectedLocation); // Centra el mapa en la nueva ubicación
+    }
+  }
+
+  Future<void> _searchAndSelectSecondLocationDefault() async {
+
+    LatLng defaults = LatLng(0, 0);
+    String url = 'https://places.googleapis.com/v1/places:searchText';
+    // Los datos que enviarás en el cuerpo de la solicitud POST
+    Map<String, dynamic> requestData = {
+      "textQuery": widget.predictionDescription as String
+    };
+
+    // Las cabeceras de la solicitud
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'X-Goog-Api-Key': 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM', // Reemplaza 'API_KEY' con tu clave real
+      'X-Goog-FieldMask': 'places.location',
+    };
+
+    // Realiza la solicitud POST
+    try {
+      var response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(requestData),
+        headers: headers,
+      );
+
+      // Verifica el código de estado de la respuesta
+      if (response.statusCode == 200) {
+        // La solicitud fue exitosa, puedes manejar la respuesta aquí
+        //print('Respuesta exitosa: ${response.body}');
+        Map<String, dynamic> jsonData = json.decode(response.body);
+        //print('${jsonData["places"][0]["location"]["latitude"]}');
+        double lat = double.parse('${jsonData["places"][0]["location"]["latitude"]}');
+        //print('${jsonData["places"][0]["location"]["longitude"]}');
+        double lon = double.parse('${jsonData["places"][0]["location"]["longitude"]}');
+        defaults = LatLng(lat, lon);
+        //print('AQUI ESTOY $lat');
+        //print('${jsonData["places"][0]["formattedAddress"]}');
+      } else {
+        // Hubo un error en la solicitud, puedes manejarlo aquí
+        print('Error en la solicitud: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Maneja las excepciones que puedan ocurrir durante la solicitud
+      print('Error: $e');
+    }
+
+    try {
+      var response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(requestData),
+        headers: headers,
+      );
+
+      if (response.statusCode == 200) {
+        Map<String, dynamic> jsonData = json.decode(response.body);
+      } else {
+        print('Error en la solicitud: ${response.statusCode}');
+      }
+    } catch (e) {
+      print('Error: $e');
+    }
+
+    LatLng newLocation = defaults;
+    print('AQUI ESTOY $newLocation');
+
+    if (newLocation != null) {
+      String placeName = await getPlaceName(newLocation); // Obtén el nombre del lugar
+      Marker searchedLocationMarker = Marker(
+        markerId: MarkerId('searchedLocation'),
+        position: newLocation,
+        infoWindow: InfoWindow(title: 'Ubicacion final'),
+      );
+
+      setState(() {
+        _secondLocation = newLocation;
+        print(newLocation.latitude);
+        print(newLocation.longitude);
+        secondLocationName = placeName; // Actualiza el texto del segundo botón
+        _polylines.clear();
+        //_markers.clear();
+        _markers.add(searchedLocationMarker);
+      });
     }
   }
 
@@ -400,6 +521,8 @@ class _RutaUnoState extends State<RutaUno> {
         print(newLocation.latitude);
         print(newLocation.longitude);
         secondLocationName = placeName; // Actualiza el texto del segundo botón
+        _polylines.clear();
+        //_markers.clear();
         _markers.add(searchedLocationMarker);
       });
     }
@@ -459,7 +582,7 @@ class _RutaUnoState extends State<RutaUno> {
     showRouteOnMap(encodedPolyline);
   }
 
-  Set<Polyline> _polylines = {};
+  final Set<Polyline> _polylines = {};
 
   void showRouteOnMap(String encodedPolyline) {
     Polyline polyline = Polyline(
@@ -553,9 +676,13 @@ class _RutaUnoState extends State<RutaUno> {
   @override
   void initState() {
     super.initState();
-    _selectLocation();
+    _markers.clear();
+    _polylines.clear();
+    _selectLocationDefault();
+    _searchAndSelectSecondLocationDefault();
   }
   Widget build(BuildContext context) {
+    print(widget.predictionDescription);
     return MaterialApp(
 
       home: Scaffold(
@@ -817,7 +944,7 @@ class _RutaUnoState extends State<RutaUno> {
                   ])),
 
           // Contenido en la parte inferior
-          Column(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+          /*Column(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
             Container(
               color: Colors.white,
               child: Column(
@@ -871,7 +998,7 @@ class _RutaUnoState extends State<RutaUno> {
                 ],
               ),
             ),
-          ]),
+          ]),*/
         ]),
       ),
     );

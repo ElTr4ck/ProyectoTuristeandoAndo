@@ -438,6 +438,7 @@ class _PolylineScreenState extends State<PolylineScreen> {
           controller.selection = TextSelection.fromPosition(
               TextPosition(offset: prediction.description?.length ?? 0));
           Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+            //String aux = '${prediction.lat}, ${prediction.lng}';
             return MyApp(prediction.description as String);
           }));
         },
