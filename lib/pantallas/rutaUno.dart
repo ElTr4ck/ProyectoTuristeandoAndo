@@ -673,6 +673,55 @@ class _RutaUnoState extends State<RutaUno> {
     _updateTravelTime();
   }
 
+  Widget buildButtonHome(IconData icon, Color color) {
+    return IconButton(
+      icon: Icon(
+        icon,
+        color: color,
+      ),
+      onPressed: () {
+        // Coloca aquí la acción que quieres que ocurra al presionar el botón
+        print('Acción del botón');
+      },
+    );
+  }
+  Widget buildButtonMap(IconData icon, Color color) {
+    return IconButton(
+      icon: Icon(
+        icon,
+        color: color,
+      ),
+      onPressed: () {
+        // Coloca aquí la acción que quieres que ocurra al presionar el botón
+        print('Acción del botón');
+      },
+    );
+  }
+  Widget buildButtonFav(IconData icon, Color color) {
+    return IconButton(
+      icon: Icon(
+        icon,
+        color: color,
+      ),
+      onPressed: () {
+        // Coloca aquí la acción que quieres que ocurra al presionar el botón
+        print('Acción del botón');
+      },
+    );
+  }
+  Widget buildButtonUsser(IconData icon, Color color) {
+    return IconButton(
+      icon: Icon(
+        icon,
+        color: color,
+      ),
+      onPressed: () {
+        // Coloca aquí la acción que quieres que ocurra al presionar el botón
+        print('Acción del botón');
+      },
+    );
+  }
+
   @override
   void initState() {
     super.initState();
@@ -944,6 +993,22 @@ class _RutaUnoState extends State<RutaUno> {
                   ])),
 
           // Contenido en la parte inferior
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              padding: EdgeInsets.all(10.0),
+              color: Colors.white, // Puedes ajustar el color según tus preferencias
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  buildButtonHome(Icons.home, Colors.grey),
+                  buildButtonMap(Icons.map, Color(0xFF114C5F)),
+                  buildButtonFav(Icons.monitor_heart, Colors.grey),
+                  buildButtonUsser(Icons.person, Colors.grey),
+                ],
+              ),
+            ),
+          ),
           /*Column(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
             Container(
               color: Colors.white,
