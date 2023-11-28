@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
+import 'package:turisteando_ando/pantallas/rutas.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminfolugar_screen/frminfolugar_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmmarcadores_screen/frmmarcadores_screen.dart';
@@ -40,7 +41,7 @@ class FrminicioContainerScreen extends StatelessWidget {
       case BottomBarEnum.Iconlycurvedhome:
         return AppRoutes.frminicioPage;
       case BottomBarEnum.Iconlylightticket:
-        return AppRoutes.frminicioPage; //TODO: Aqui va lo del mapa
+        return AppRoutes.rutas; //TODO: Aqui va lo del mapa
       case BottomBarEnum.Iconlylightoutlineheart:
         return AppRoutes.frmmarcadoresScreen;
       case BottomBarEnum.Iconlylightprofile:
@@ -61,6 +62,8 @@ class FrminicioContainerScreen extends StatelessWidget {
         return FrminfolugarScreen();
       case AppRoutes.frmnewreseAScreen:
         return FrmnewreseAScreen();
+      case AppRoutes.rutas:
+        return PolylineScreen();
       default:
         return DefaultWidget();
     }

@@ -11,10 +11,8 @@ import 'package:http/http.dart' as http;
 //import 'package:google_maps_webservice/places.dart';
 //import 'package:google_api_headers/google_api_headers.dart';
 //import 'package:flutter_google_places/flutter_google_places.dart';
-import 'package:awesome_snackbar_content/awesome_snackbar_content.dart';
 import 'package:google_maps_routes/google_maps_routes.dart';
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:turisteando_ando/pantallas/rutaUno.dart';
 
 class PolylineScreen extends StatefulWidget {
   const PolylineScreen({Key? key}) : super(key: key);
