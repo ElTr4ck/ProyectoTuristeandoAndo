@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
-import 'package:ramirez_ayala_s_application16/core/app_export.dart';
+import 'package:turisteando_ando/core/app_export.dart';
 
 class CustomRatingBar extends StatelessWidget {
   CustomRatingBar({

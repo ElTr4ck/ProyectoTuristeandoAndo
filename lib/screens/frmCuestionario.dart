@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:turisteando_ando/core/app_export.dart';
 
 class FrmCuestionario extends StatelessWidget {
   const FrmCuestionario({super.key});
@@ -78,7 +78,7 @@ class _ElementListState extends State<ElementList> {
                   ),
                 ), //Style
                 onPressed: () {
-                  // Lógica para el botón "Recordármelo más tarde"
+                  Navigator.pushReplacementNamed(context, AppRoutes.frminicioContainerScreen);
                 },
                 child: const Text('Continuar',
                   style: TextStyle(

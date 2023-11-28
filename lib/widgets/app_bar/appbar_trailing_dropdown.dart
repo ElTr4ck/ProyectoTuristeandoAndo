@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:ramirez_ayala_s_application16/core/app_export.dart';
-import 'package:ramirez_ayala_s_application16/widgets/custom_drop_down.dart';
+import 'package:turisteando_ando/core/app_export.dart';
+import 'package:turisteando_ando/widgets/custom_drop_down.dart';
 
 // ignore: must_be_immutable
 class AppbarTrailingDropdown extends StatelessWidget {

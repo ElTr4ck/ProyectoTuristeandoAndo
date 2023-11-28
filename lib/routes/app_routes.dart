@@ -1,13 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:turisteando_ando/presentation/frminicio_container_screen/frminicio_container_screen.dart';
-import 'package:turisteando_ando/presentation/frmporvisitar_screen/frmporvisitar_screen.dart';
-import 'package:turisteando_ando/presentation/frmmarcadores_screen/frmmarcadores_screen.dart';
-import 'package:turisteando_ando/presentation/frmmarcmapa_screen/frmmarcmapa_screen.dart';
-import 'package:turisteando_ando/presentation/frminfolugar_screen/frminfolugar_screen.dart';
-import 'package:turisteando_ando/presentation/frmrese_a_tab_container_screen/frmrese_a_tab_container_screen.dart';
-import 'package:turisteando_ando/presentation/frmnewrese_a_screen/frmnewrese_a_screen.dart';
-import 'package:turisteando_ando/presentation/frmreportarrese_a_screen/frmreportarrese_a_screen.dart';
-import 'package:turisteando_ando/presentation/app_navigation_screen/app_navigation_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_container_screen/frminicio_container_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frmporvisitar_screen/frmporvisitar_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frmmarcadores_screen/frmmarcadores_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frmmarcmapa_screen/frmmarcmapa_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frminfolugar_screen/frminfolugar_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_a_tab_container_screen/frmrese_a_tab_container_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frmnewrese_a_screen/frmnewrese_a_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frmreportarrese_a_screen/frmreportarrese_a_screen.dart';
 import 'package:turisteando_ando/screens/frmSetLocation.dart';
 import 'package:turisteando_ando/screens/frmCuestionario.dart';
 import 'package:turisteando_ando/screens/pantallas/loginSystem/frmwelcome_screen/frmwelcome_screen.dart';
@@ -63,22 +62,39 @@ class AppRoutes {
 
   static Map<String, WidgetBuilder> routes = {
     frminicioContainerScreen: (context) => FrminicioContainerScreen(),
+
     frmporvisitarScreen: (context) => FrmporvisitarScreen(),
+
     frmmarcadoresScreen: (context) => FrmmarcadoresScreen(),
+
     frmmarcmapaScreen: (context) => FrmmarcmapaScreen(),
+
     frminfolugarScreen: (context) => FrminfolugarScreen(),
+
     frmreseATabContainerScreen: (context) => FrmreseATabContainerScreen(),
+
     frmnewreseAScreen: (context) => FrmnewreseAScreen(),
+
     frmreportarreseAScreen: (context) => FrmreportarreseAScreen(),
+
     appNavigationScreen: (context) => AppNavigationScreen(),
+
     frmwelcomeScreen: (context) => FrmwelcomeScreen(),
+
     frmloginScreen: (context) => FrmloginScreen(),
+
     frmcontraseAScreen: (context) => FrmcontraseAScreen(),
+
     frmcorreoScreen: (context) => FrmcorreoScreen(),
+
     frmcambiocontScreen: (context) => FrmcambiocontScreen(),
+
     frmregistroScreen: (context) => FrmregistroScreen(),
+
     frminvitadoScreen: (context) => FrminvitadoScreen(),
+
     frmSetLocation: (context) => FrmSetLocation(),
+    
     frmCuestionario: (context) => FrmCuestionario(),
   };
 }

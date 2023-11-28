@@ -9,7 +9,7 @@ class CustomTextStyles {
   // Body text style
   static get bodyLargeMontserratBluegray100cc =>
       theme.textTheme.bodyLarge!.montserrat.copyWith(
-        color: appTheme.blueGray100Cc,
+        color: appTheme.blueGray100,
       );
   // Headline style
   static get headlineSmallPoppins => theme.textTheme.headlineSmall!.poppins;
@@ -19,7 +19,7 @@ class CustomTextStyles {
         fontWeight: FontWeight.w600,
       );
   static get titleLargeBlack90022 => theme.textTheme.titleLarge!.copyWith(
-        color: appTheme.white900,
+        color: appTheme.whiteA700,
         fontSize: 25.fSize,
         background: white,
       );

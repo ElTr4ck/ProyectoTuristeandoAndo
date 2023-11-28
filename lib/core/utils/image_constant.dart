@@ -82,8 +82,6 @@ class ImageConstant {
 
   static String imgGroup92 = '$imagePath/img_group_92.png';
 
-  static String imgVector = '$imagePath/img_vector.svg';
-
   static String imgRectangle1116x95 = '$imagePath/img_rectangle_1_116x95.png';
 
   static String imgRectangle2116x95 = '$imagePath/img_rectangle_2_116x95.png';
