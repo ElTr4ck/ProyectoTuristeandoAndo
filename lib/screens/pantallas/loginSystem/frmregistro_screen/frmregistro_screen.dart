@@ -72,7 +72,7 @@ class FrmregistroScreen extends StatelessWidget {
         centerTitle: true,
         title: AppbarTitle(
             text:
-                " ⠀⠀Estás a unos pasos de una \n ⠀⠀experiencia turística más \n ⠀⠀ ⠀⠀ ⠀⠀ personal!"));
+                "Estás a unos pasos de una \n experiencia turística más \n personal!"));
   }
 
   /// Section Widget NOMBRE

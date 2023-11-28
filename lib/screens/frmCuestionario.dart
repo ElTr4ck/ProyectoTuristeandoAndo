@@ -5,7 +5,9 @@ import 'package:get/get.dart';
 import 'package:turisteando_ando/repositories/auth/controlers/signout_controller.dart';
 import 'package:turisteando_ando/screens/pantallas/loginSystem/frmwelcome_screen/frmwelcome_screen.dart';
 
-class frmCuestionario extends StatelessWidget {
+class FrmCuestionario extends StatelessWidget {
+  const FrmCuestionario({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(body: ElementList());

@@ -15,4 +15,8 @@ class LoadPlace extends PlaceEvent {
   @override
   List<Object> get props => [placeId];
 }
+
+class LoadGeoPlace extends PlaceEvent {
+  const LoadGeoPlace();
+}
   

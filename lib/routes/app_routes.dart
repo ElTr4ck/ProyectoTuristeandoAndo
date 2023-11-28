@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:turisteando_ando/screens/frmSetLocation2.dart';
+import 'package:turisteando_ando/screens/frmSetLocation.dart';
+import 'package:turisteando_ando/screens/frmCuestionario.dart';
 import 'package:turisteando_ando/screens/pantallas/loginSystem/frmwelcome_screen/frmwelcome_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/loginSystem/frmlogin_screen/frmlogin_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/loginSystem/frmcontrase_a_screen/frmcontrase_a_screen.dart';
@@ -26,7 +27,9 @@ class AppRoutes {
 
   static const String appNavigationScreen = '/app_navigation_screen';
 
-  static const String frmSetLocation = '/frmSetLocation2.dart';
+  static const String frmSetLocation = '/frmSetLocation.dart';
+
+  static const String frmCuestionario = '/frmCuestionario.dart';
 
   static Map<String, WidgetBuilder> routes = {
     frmwelcomeScreen: (context) => FrmwelcomeScreen(),
@@ -38,5 +41,6 @@ class AppRoutes {
     frminvitadoScreen: (context) => FrminvitadoScreen(),
     appNavigationScreen: (context) => AppNavigationScreen(),
     frmSetLocation: (context) => FrmSetLocation(),
+    frmCuestionario: (context) => FrmCuestionario(),
   };
 }
