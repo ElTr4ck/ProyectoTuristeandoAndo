@@ -1,4 +1,12 @@
 import 'package:flutter/material.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_container_screen/frminicio_container_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frmporvisitar_screen/frmporvisitar_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frmmarcadores_screen/frmmarcadores_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frmmarcmapa_screen/frmmarcmapa_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frminfolugar_screen/frminfolugar_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_a_tab_container_screen/frmrese_a_tab_container_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frmnewrese_a_screen/frmnewrese_a_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frmreportarrese_a_screen/frmreportarrese_a_screen.dart';
 import 'package:turisteando_ando/screens/frmSetLocation.dart';
 import 'package:turisteando_ando/screens/frmCuestionario.dart';
 import 'package:turisteando_ando/screens/pantallas/loginSystem/frmwelcome_screen/frmwelcome_screen.dart';
@@ -31,7 +39,37 @@ class AppRoutes {
 
   static const String frmCuestionario = '/frmCuestionario.dart';
 
+  static const String frminicioPage = '/frminicio_page';
+
+  static const String frminicioContainerScreen = '/frminicio_container_screen';
+
+  static const String frmporvisitarScreen = '/frmporvisitar_screen';
+
+  static const String frmmarcadoresScreen = '/frmmarcadores_screen';
+
+  static const String frmmarcmapaScreen = '/frmmarcmapa_screen';
+
+  static const String frminfolugarScreen = '/frminfolugar_screen';
+
+  static const String frmreseAPage = '/frmrese_a_page';
+
+  static const String frmreseATabContainerScreen =
+      '/frmrese_a_tab_container_screen';
+
+  static const String frmnewreseAScreen = '/frmnewrese_a_screen';
+
+  static const String frmreportarreseAScreen = '/frmreportarrese_a_screen';
+
   static Map<String, WidgetBuilder> routes = {
+    frminicioContainerScreen: (context) => FrminicioContainerScreen(),
+    frmporvisitarScreen: (context) => FrmporvisitarScreen(),
+    frmmarcadoresScreen: (context) => FrmmarcadoresScreen(),
+    frmmarcmapaScreen: (context) => FrmmarcmapaScreen(),
+    frminfolugarScreen: (context) => FrminfolugarScreen(),
+    frmreseATabContainerScreen: (context) => FrmreseATabContainerScreen(),
+    frmnewreseAScreen: (context) => FrmnewreseAScreen(),
+    frmreportarreseAScreen: (context) => FrmreportarreseAScreen(),
+    appNavigationScreen: (context) => AppNavigationScreen(),
     frmwelcomeScreen: (context) => FrmwelcomeScreen(),
     frmloginScreen: (context) => FrmloginScreen(),
     frmcontraseAScreen: (context) => FrmcontraseAScreen(),
@@ -39,7 +77,6 @@ class AppRoutes {
     frmcambiocontScreen: (context) => FrmcambiocontScreen(),
     frmregistroScreen: (context) => FrmregistroScreen(),
     frminvitadoScreen: (context) => FrminvitadoScreen(),
-    appNavigationScreen: (context) => AppNavigationScreen(),
     frmSetLocation: (context) => FrmSetLocation(),
     frmCuestionario: (context) => FrmCuestionario(),
   };

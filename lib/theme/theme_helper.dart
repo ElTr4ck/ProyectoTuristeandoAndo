@@ -1,4 +1,3 @@
-import 'dart:ui';
 import 'package:flutter/material.dart';
 import '../../core/app_export.dart';
 
@@ -48,10 +47,10 @@ class ThemeHelper {
       visualDensity: VisualDensity.standard,
       colorScheme: colorScheme,
       textTheme: TextThemes.textTheme(colorScheme),
-      scaffoldBackgroundColor: colorScheme.onPrimary,
+      scaffoldBackgroundColor: colorScheme.onPrimary.withOpacity(1),
       elevatedButtonTheme: ElevatedButtonThemeData(
         style: ElevatedButton.styleFrom(
-          backgroundColor: colorScheme.primary,
+          backgroundColor: colorScheme.errorContainer,
           shape: RoundedRectangleBorder(
             borderRadius: BorderRadius.circular(12.h),
           ),
@@ -63,9 +62,9 @@ class ThemeHelper {
         ),
       ),
       dividerTheme: DividerThemeData(
-        thickness: 1,
-        space: 1,
-        color: colorScheme.primaryContainer,
+        thickness: 2,
+        space: 2,
+        color: appTheme.gray20001,
       ),
     );
   }
@@ -80,35 +79,71 @@ class ThemeHelper {
 /// Class containing the supported text theme styles.
 class TextThemes {
   static TextTheme textTheme(ColorScheme colorScheme) => TextTheme(
-        bodyLarge: TextStyle(
-          color: colorScheme.onPrimaryContainer.withOpacity(0.6),
-          fontSize: 16.fSize,
-          fontFamily: 'Poppins',
+        bodyMedium: TextStyle(
+          color: appTheme.black900,
+          fontSize: 13.fSize,
+          fontFamily: 'Nunito',
           fontWeight: FontWeight.w400,
         ),
-        headlineSmall: TextStyle(
-          color: colorScheme.onPrimaryContainer,
-          fontSize: 24.fSize,
+        bodySmall: TextStyle(
+          color: colorScheme.onPrimary.withOpacity(1),
+          fontSize: 12.fSize,
+          fontFamily: 'Nunito',
+          fontWeight: FontWeight.w200,
+        ),
+        headlineLarge: TextStyle(
+          color: appTheme.black900,
+          fontSize: 32.fSize,
           fontFamily: 'Montserrat',
+          fontWeight: FontWeight.w500,
+        ),
+        headlineMedium: TextStyle(
+          color: appTheme.black900,
+          fontSize: 26.fSize,
+          fontFamily: 'Montserrat',
+          fontWeight: FontWeight.w500,
+        ),
+        headlineSmall: TextStyle(
+          color: appTheme.black900,
+          fontSize: 25.fSize,
+          fontFamily: 'Montserrat',
+          fontWeight: FontWeight.w500,
+        ),
+        labelLarge: TextStyle(
+          color: appTheme.gray600,
+          fontSize: 12.fSize,
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w500,
+        ),
+        labelMedium: TextStyle(
+          color: colorScheme.primary,
+          fontSize: 11.fSize,
+          fontFamily: 'Inter',
+          fontWeight: FontWeight.w600,
+        ),
+        labelSmall: TextStyle(
+          color: appTheme.gray5002,
+          fontSize: 9.fSize,
+          fontFamily: 'Poppins',
           fontWeight: FontWeight.w700,
         ),
         titleLarge: TextStyle(
-          color: colorScheme.onPrimary,
+          color: colorScheme.primary,
           fontSize: 20.fSize,
           fontFamily: 'Montserrat',
-          fontWeight: FontWeight.w700,
+          fontWeight: FontWeight.w600,
         ),
         titleMedium: TextStyle(
-          color: appTheme.teal200,
+          color: colorScheme.primary,
           fontSize: 16.fSize,
-          fontFamily: 'Montserrat',
+          fontFamily: 'Nunito',
           fontWeight: FontWeight.w700,
         ),
         titleSmall: TextStyle(
-          color: appTheme.gray50,
+          color: colorScheme.onPrimaryContainer,
           fontSize: 14.fSize,
-          fontFamily: 'Poppins',
-          fontWeight: FontWeight.w700,
+          fontFamily: 'Montserrat',
+          fontWeight: FontWeight.w500,
         ),
       );
 }
@@ -118,11 +153,15 @@ class ColorSchemes {
   static final primaryColorScheme = ColorScheme.light(
     // Primary colors
     primary: Color(0XFF114C5F),
-    primaryContainer: Color(0XFFE5E5E5),
+    primaryContainer: Color(0XFFD9D9D9),
+
+    // Error colors
+    errorContainer: Color(0XFF4C5652),
+    onError: Color(0XFF343434),
 
     // On colors(text colors)
-    onPrimary: Color(0XFFFFFFFF),
-    onPrimaryContainer: Color(0XFF273330),
+    onPrimary: Color(0XC4FFFFFF),
+    onPrimaryContainer: Color(0XFF232323),
   );
 }
 
@@ -131,23 +170,48 @@ class PrimaryColors {
   // Black
   Color get black900 => Color(0XFF000000);
 
-  // White
-  Color get white900 => Color(0XFFFFFFFF);
+  // BlueAc
+  Color get blueA4000c => Color(0X0C176FF2);
 
-  // BlueGrayCc
-  Color get blueGray100Cc => Color(0XCCCCCCCC);
+  // BlueGray
+  Color get blueGray100 => Color(0XFFCCCCCA);
+  Color get blueGray50 => Color(0XFFF1F1F1);
+  Color get blueGray800 => Color(0XFF37474F);
+
+  // Cyan
+  Color get cyan900 => Color(0XFF01526C);
 
   // Gray
-  Color get gray200 => Color(0XFFEFEFEF);
-  Color get gray50 => Color(0XFFFCFCFC);
-  Color get gray600 => Color(0XFF717171);
+  Color get gray100 => Color(0XFFF4F4F4);
+  Color get gray10001 => Color(0XFFF6F6F6);
+  Color get gray10002 => Color(0XFFF5F5F5);
+  Color get gray200 => Color(0XFFEEEEEE);
+  Color get gray20001 => Color(0XFFEBEBEB);
+  Color get gray400 => Color(0XFFB7B7B7);
+  Color get gray50 => Color(0XFFF3F8FE);
+  Color get gray5001 => Color(0XFFFFFBFB);
+  Color get gray5002 => Color(0XFFFCFCFC);
+  Color get gray600 => Color(0XFF777777);
+  Color get gray700 => Color(0XFF5F5F5F);
+  Color get gray900 => Color(0XFF1D1D1F);
+
+  // Lime
+  Color get lime100 => Color(0XFFF2E6CF);
 
   // Red
+  Color get red400 => Color(0XFFEC5655);
   Color get red500 => Color(0XFFFF4B3A);
+  Color get red900 => Color(0XFFC41515);
 
   // Teal
   Color get teal100 => Color(0XFF9CD2D3);
-  Color get teal200 => Color(0XFF90D2D3);
+  Color get teal400 => Color(0XFF228BAC);
+
+  // White
+  Color get whiteA700 => Color(0XFFFDFDFD);
+
+  // Yellow
+  Color get yellow700 => Color(0XFFFFC531);
 }
 
 PrimaryColors get appTheme => ThemeHelper().themeColor();
