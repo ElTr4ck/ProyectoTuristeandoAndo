@@ -75,19 +75,25 @@ class AuthMethods extends GetxController {
         String photoUrl =
             await StorageMethods().uploadImageToStorage('profilePics', file);
         */
-      List<Marcador> marcadores = List.empty();
+      Marcador marcador = Marcador();
       model.User user = model.User(
-          name: name,
-          lastName: lastName,
-          email: email,
-          uid: cred.user!.uid,
-          photo:
-              'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-          marcadores: marcadores);
+        name: name,
+        lastName: lastName,
+        email: email,
+        uid: cred.user!.uid,
+        photo:
+            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
+      );
       await _firestore
           .collection('usuarios')
           .doc(cred.user!.uid)
           .set(user.toJson());
+
+      await _firestore
+          .collection('usuarios')
+          .doc(cred.user!.uid)
+          .collection('marcadores')
+          .add(marcador.toJson());
 
       /*_firebaseUser.value != null
           ? Get.offAll(() => const LoginScreen())
@@ -135,19 +141,24 @@ class AuthMethods extends GetxController {
         String photoUrl =
             await StorageMethods().uploadImageToStorage('profilePics', file);
         */
-      List<Marcador> marcadores = List.empty();
+      Marcador marcador = Marcador();
       model.User user = model.User(
-          name: name,
-          lastName: lastName,
-          email: email,
-          uid: userCredential.user!.uid,
-          photo:
-              'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-          marcadores: marcadores);
+        name: name,
+        lastName: lastName,
+        email: email,
+        uid: userCredential.user!.uid,
+        photo:
+            'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
+      );
       await _firestore
           .collection('usuarios')
           .doc(userCredential.user!.uid)
           .set(user.toJson());
+      await _firestore
+          .collection('usuarios')
+          .doc(userCredential.user!.uid)
+          .collection('marcadores')
+          .add(marcador.toJson());
     } on FirebaseAuthException catch (e) {
       final exp = SignupEmailFailure.code(e.code);
       print('FIREBASE AUTH EXCEPTION-${exp.message}');

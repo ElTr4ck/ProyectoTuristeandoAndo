@@ -4,8 +4,8 @@ class Marcador {
   final String x;
   final String y;
   const Marcador({
-    required this.x,
-    required this.y,
+    this.x = "",
+    this.y = "",
   });
   //json to object
   Map<String, dynamic> toJson() => {
