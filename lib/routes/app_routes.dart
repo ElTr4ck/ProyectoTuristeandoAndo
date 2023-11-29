@@ -73,37 +73,21 @@ class AppRoutes {
 
   static Map<String, WidgetBuilder> routes = {
     frminicioContainerScreen: (context) => FrminicioContainerScreen(),
-
     frmporvisitarScreen: (context) => FrmporvisitarScreen(),
-
     frmmarcadoresScreen: (context) => FrmmarcadoresScreen(),
-
     frmmarcmapaScreen: (context) => FrmmarcmapaScreen(),
-
     frminfolugarScreen: (context) => FrminfolugarScreen(),
-
     frmreseATabContainerScreen: (context) => FrmreseATabContainerScreen(),
-
     frmnewreseAScreen: (context) => FrmnewreseAScreen(),
-
     frmreportarreseAScreen: (context) => FrmreportarreseAScreen(),
-
     appNavigationScreen: (context) => AppNavigationScreen(),
-
     frmwelcomeScreen: (context) => FrmwelcomeScreen(),
-
     frmloginScreen: (context) => FrmloginScreen(),
-
     frmcontraseAScreen: (context) => FrmcontraseAScreen(),
-
     frmcorreoScreen: (context) => FrmcorreoScreen(),
-
     frmcambiocontScreen: (context) => FrmcambiocontScreen(),
-
     frmregistroScreen: (context) => FrmregistroScreen(),
-
     frminvitadoScreen: (context) => FrminvitadoScreen(),
-
     frmSetLocation: (context) => FrmSetLocation(),
 
     frmCuestionario: (context) => FrmCuestionario(),
@@ -115,5 +99,3 @@ class AppRoutes {
     //rutasUno: (context) => RutaUno(predictionDescription: predictionDescription) //TODO: Aqui que onda jaja
   };
 }
-
-

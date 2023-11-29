@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/pantallas/rutas.dart';
+import 'package:turisteando_ando/repositories/auth/controlers/signout_controller.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminfolugar_screen/frminfolugar_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmmarcadores_screen/frmmarcadores_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmnewrese_a_screen/frmnewrese_a_screen.dart';
 import 'package:turisteando_ando/widgets/custom_bottom_bar.dart';
 
+import '../../loginSystem/frmwelcome_screen/frmwelcome_screen.dart';
+
 // ignore_for_file: must_be_immutable
 class FrminicioContainerScreen extends StatelessWidget {
   FrminicioContainerScreen({Key? key}) : super(key: key);
+  final controller = Get.put(SignoutController());
+  void signout() async {
+    await controller.signout();
+    Get.to(FrmwelcomeScreen());
+  }
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 
@@ -31,7 +40,8 @@ class FrminicioContainerScreen extends StatelessWidget {
   /// Section Widget
   Widget _buildBottomBar(BuildContext context) {
     return CustomBottomBar(onChanged: (BottomBarEnum type) {
-      Navigator.pushReplacementNamed(navigatorKey.currentContext!, getCurrentRoute(type));
+      Navigator.pushReplacementNamed(
+          navigatorKey.currentContext!, getCurrentRoute(type));
     });
   }
 

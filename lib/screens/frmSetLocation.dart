@@ -7,9 +7,14 @@ import 'package:turisteando_ando/widgets/barraBusquedaUbicacion.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 import 'package:turisteando_ando/widgets/gmap.dart';
 
-class FrmSetLocation extends StatelessWidget {
+class FrmSetLocation extends StatefulWidget {
   const FrmSetLocation({super.key});
 
+  @override
+  State<FrmSetLocation> createState() => _FrmSetLocationState();
+}
+
+class _FrmSetLocationState extends State<FrmSetLocation> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
@@ -83,7 +88,8 @@ class FrmSetLocation extends StatelessWidget {
                                   left: 30.h, right: 20.h, bottom: 10.h),
                               buttonTextStyle: theme.textTheme.titleLarge!,
                               onPressed: () {
-                                Navigator.pushNamed(context, AppRoutes.frmCuestionario);
+                                Navigator.pushNamed(
+                                    context, AppRoutes.frmCuestionario);
                                 /*
                                 Navigator.pushReplacement(
                                   context, 
@@ -125,7 +131,9 @@ class FrmSetLocation extends StatelessWidget {
                           GestureDetector(
                             onTap: () {
                               //Regresar al evento de placeLoading
-                              context.read<PlaceBloc>().add(const LoadGeoPlace());
+                              context
+                                  .read<PlaceBloc>()
+                                  .add(const LoadGeoPlace());
                             },
                             child: Container(
                               margin:
@@ -149,23 +157,22 @@ class FrmSetLocation extends StatelessWidget {
                                   left: 30.h, right: 20.h, bottom: 10.h),
                               buttonTextStyle: theme.textTheme.titleLarge!,
                               onPressed: () {
-                                Navigator.pushNamed(context, AppRoutes.frmCuestionario);
+                                Navigator.pushNamed(
+                                    context, AppRoutes.frmCuestionario);
                               }),
                           CustomElevatedButton(
                               height: 41.v,
                               text: "Usar mi ubicación actual",
                               margin: EdgeInsets.only(left: 30.h, right: 20.h),
                               buttonStyle: CustomButtonStyles.fillTeal,
-                              onPressed: () {}
-                          )
+                              onPressed: () {})
                         ],
                       ),
                     ),
                   ),
                 ],
               );
-            }
-            else{
+            } else {
               return const Text('Algo ha salido mal :(');
             }
           },
