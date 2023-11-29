@@ -1,5 +1,3 @@
-import 'dart:js';
-
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/pantallas/rutaUno.dart';
 import 'package:turisteando_ando/pantallas/rutas.dart';

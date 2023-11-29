@@ -16,6 +16,7 @@ class FrmloginScreen extends StatelessWidget {
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   final controller = Get.put(LoginController());
   void logIn() {
+    print('LogIn');
     controller.loginUser(
       email: emailController.text,
       password: contrasenaController.text,

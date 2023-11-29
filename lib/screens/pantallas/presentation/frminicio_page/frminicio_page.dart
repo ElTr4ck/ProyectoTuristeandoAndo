@@ -1,3 +1,7 @@
+import 'package:get/get.dart';
+import 'package:turisteando_ando/repositories/auth/controlers/signout_controller.dart';
+import 'package:turisteando_ando/screens/pantallas/loginSystem/frmwelcome_screen/frmwelcome_screen.dart';
+
 import '../frminicio_page/widgets/ninety_item_widget.dart';
 import '../frminicio_page/widgets/recommended_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -13,6 +17,13 @@ class FrminicioPage extends StatelessWidget {
 
   TextEditingController searchController = TextEditingController();
 
+  final controller = Get.put(SignoutController());
+
+  void signout() async {
+    await controller.signout();
+    Get.to(FrmwelcomeScreen());
+  }
+
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
@@ -26,8 +37,7 @@ class FrminicioPage extends StatelessWidget {
                     padding: EdgeInsets.symmetric(vertical: 30.v),
                     child: ListView(
                       children: [
-                        Column(
-                          children: [
+                        Column(children: [
                           SizedBox(height: 2.v),
                           Align(
                               alignment: Alignment.centerRight,
@@ -36,16 +46,35 @@ class FrminicioPage extends StatelessWidget {
                                   child: Row(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
+                                        TextButton(
+                                          onPressed: () {
+                                            signout();
+                                          },
+                                          style: TextButton.styleFrom(
+                                            padding: const EdgeInsets.only(right: 50),
+                                          ),
+                                          child: const Text(
+                                            'Cerrar sesión',
+                                            style: TextStyle(
+                                              color: Colors.red, // Color rojo
+                                              fontSize:
+                                                  14.0, // Tamaño de fuente
+                                              fontWeight:
+                                                  FontWeight.bold, // Negrita
+                                            ),
+                                          ),
+                                        ),
                                         Text("Bienvenido",
                                             style: CustomTextStyles
                                                 .bodyMediumMontserrat),
                                         Padding(
-                                            padding: EdgeInsets.only(left: 41.h),
+                                            padding:
+                                                EdgeInsets.only(left: 41.h),
                                             child: CustomDropDown(
                                                 width: 93.h,
                                                 icon: Container(
-                                                    margin:
-                                                        EdgeInsets.only(left: 6.h),
+                                                    margin: EdgeInsets.only(
+                                                        left: 6.h),
                                                     child: CustomImageView(
                                                         imagePath: ImageConstant
                                                             .imgArrowdown,

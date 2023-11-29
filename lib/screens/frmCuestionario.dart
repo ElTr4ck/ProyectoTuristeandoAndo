@@ -36,12 +36,6 @@ class _ElementListState extends State<ElementList> {
     ElementItem("Alimentos", "Recuerda que panza llena, corazón contento.",
         Icons.fastfood),
   ];
-  final controller = Get.put(SignoutController());
-
-  void signout() async {
-    await controller.signout();
-    Get.to(FrmwelcomeScreen());
-  }
 
   @override
   Widget build(BuildContext context) {
