@@ -1,44 +1,54 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
+import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 import 'package:turisteando_ando/widgets/custom_text_form_field.dart';
 
 class FrmcontraseAScreen extends StatelessWidget {
   FrmcontraseAScreen({Key? key}) : super(key: key);
-
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController textFieldOutlineCorreo = TextEditingController();
+  void sendResetEmail() async {
+    await AuthMethods().resetPassword(textFieldOutlineCorreo.text);
+  }
 
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
     return SafeArea(
         child: Scaffold(
-            body: Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.symmetric(horizontal: 16.h, vertical: 20.v),
-                child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      _buildSeventeen(context),
-                      SizedBox(height: 43.v),
-                      _buildTextFieldOutline(context),
-                      SizedBox(height: 51.v),
-                      CustomElevatedButton(
-                          text: "Enviar",
-                          margin: EdgeInsets.only(left: 46.h, right: 47.h),
-                          buttonStyle: CustomButtonStyles.fillPrimaryTL16,
-                          onPressed: () {
-                            onTapEnviar(context);
-                          }),
-                      SizedBox(height: 14.v),
-                      CustomElevatedButton(
-                          text: "Cancelar",
-                          margin: EdgeInsets.only(left: 46.h, right: 47.h),
-                          buttonStyle: CustomButtonStyles.fillTeal,
-                          onPressed: () {
-                            onTapCancelar(context);
-                          })
-                    ]))));
+            body: Form(
+                key: _formKey,
+                child: Container(
+                    width: double.maxFinite,
+                    padding:
+                        EdgeInsets.symmetric(horizontal: 16.h, vertical: 20.v),
+                    child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          _buildSeventeen(context),
+                          SizedBox(height: 43.v),
+                          _buildTextFieldOutline(context),
+                          SizedBox(height: 51.v),
+                          CustomElevatedButton(
+                              text: "Enviar",
+                              margin: EdgeInsets.only(left: 46.h, right: 47.h),
+                              buttonStyle: CustomButtonStyles.fillPrimaryTL16,
+                              onPressed: () {
+                                if (_formKey.currentState!.validate()) {
+                                  sendResetEmail();
+                                  onTapEnviar(context);
+                                }
+                              }),
+                          SizedBox(height: 14.v),
+                          CustomElevatedButton(
+                              text: "Cancelar",
+                              margin: EdgeInsets.only(left: 46.h, right: 47.h),
+                              buttonStyle: CustomButtonStyles.fillTeal,
+                              onPressed: () {
+                                onTapCancelar(context);
+                              })
+                        ])))));
   }
 
   /// Section Widget
@@ -63,7 +73,7 @@ class FrmcontraseAScreen extends StatelessWidget {
               child: Container(
                   margin: EdgeInsets.symmetric(horizontal: 26.h),
                   padding:
-                  EdgeInsets.symmetric(horizontal: 22.h, vertical: 6.v),
+                      EdgeInsets.symmetric(horizontal: 22.h, vertical: 6.v),
                   decoration: AppDecoration.fillGray.copyWith(
                       borderRadius: BorderRadiusStyle.roundedBorder12),
                   child: Column(
@@ -88,6 +98,16 @@ class FrmcontraseAScreen extends StatelessWidget {
   /// Section Widget CORREO
   Widget _buildTextFieldOutline(BuildContext context) {
     return CustomTextFormField(
+        validator: (value) {
+          if (value!.isEmpty) {
+            return "Campo obligatorio";
+          } else if (!RegExp(
+                  r"^[a-zA-Z0-9.a-zA-Z0-9.!#$%&'*+-/=?^_`{|}~]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
+              .hasMatch(value!)) {
+            return "Email invalido";
+          }
+          return null;
+        },
         controller: textFieldOutlineCorreo,
         hintText: "Correo electronico",
         textInputAction: TextInputAction.done,
@@ -96,13 +116,15 @@ class FrmcontraseAScreen extends StatelessWidget {
             child: CustomImageView(
                 imagePath: ImageConstant.imgVector, height: 25.v, width: 22.h)),
         prefixConstraints: BoxConstraints(maxHeight: 59.v),
-        borderDecoration:///************************
-          TextFormFieldStyleHelper.custom
-    );
+        borderDecoration:
+
+            ///************************
+            TextFormFieldStyleHelper.custom);
   }
 
   /// Navigates to the frmcorreoScreen when the action is triggered.
   onTapEnviar(BuildContext context) {
+    Navigator.pop(context);
     Navigator.pushNamed(context, AppRoutes.frmcorreoScreen);
   }
 

@@ -1,3 +1,4 @@
+
 class NearbyPlacesResponse {
   List<Results>? results;
   String? status;
@@ -251,4 +252,5 @@ class PlusCode {
     data['global_code'] = this.globalCode;
     return data;
   }
+
 }

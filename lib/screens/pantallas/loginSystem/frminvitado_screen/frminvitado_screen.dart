@@ -1,12 +1,27 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:turisteando_ando/core/app_export.dart';
+import 'package:turisteando_ando/repositories/auth/controlers/signout_controller.dart';
+import 'package:turisteando_ando/screens/pantallas/loginSystem/frmwelcome_screen/frmwelcome_screen.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 
-class FrminvitadoScreen extends StatelessWidget {
+class FrminvitadoScreen extends StatefulWidget {
   const FrminvitadoScreen({Key? key})
       : super(
           key: key,
         );
+
+  @override
+  State<FrminvitadoScreen> createState() => _FrminvitadoScreenState();
+}
+
+class _FrminvitadoScreenState extends State<FrminvitadoScreen> {
+  final controller = Get.put(SignoutController());
+
+  void signOut() async {
+    await controller.signout();
+    Get.to(FrmwelcomeScreen());
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -67,6 +82,9 @@ class FrminvitadoScreen extends StatelessWidget {
   /// Section Widget
   Widget _buildContinueButton(BuildContext context) {
     return CustomElevatedButton(
+      onPressed: () {
+        signOut();
+      },
       height: 40.v,
       text: "Continuar",
       margin: EdgeInsets.only(
