@@ -1,6 +1,7 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:turisteando_ando/repositories/auth/firestore_methods.dart';
 import 'package:turisteando_ando/repositories/exeptions/signup_email_failure.dart';
 import 'dart:typed_data';
 import 'package:turisteando_ando/repositories/auth/storage_methods.dart';
@@ -75,7 +76,7 @@ class AuthMethods extends GetxController {
         String photoUrl =
             await StorageMethods().uploadImageToStorage('profilePics', file);
         */
-      Marcador marcador = Marcador();
+
       model.User user = model.User(
         name: name,
         lastName: lastName,
@@ -88,12 +89,6 @@ class AuthMethods extends GetxController {
           .collection('usuarios')
           .doc(cred.user!.uid)
           .set(user.toJson());
-
-      await _firestore
-          .collection('usuarios')
-          .doc(cred.user!.uid)
-          .collection('marcadores')
-          .add(marcador.toJson());
 
       /*_firebaseUser.value != null
           ? Get.offAll(() => const LoginScreen())
@@ -141,7 +136,6 @@ class AuthMethods extends GetxController {
         String photoUrl =
             await StorageMethods().uploadImageToStorage('profilePics', file);
         */
-      Marcador marcador = Marcador();
       model.User user = model.User(
         name: name,
         lastName: lastName,
@@ -154,11 +148,6 @@ class AuthMethods extends GetxController {
           .collection('usuarios')
           .doc(userCredential.user!.uid)
           .set(user.toJson());
-      await _firestore
-          .collection('usuarios')
-          .doc(userCredential.user!.uid)
-          .collection('marcadores')
-          .add(marcador.toJson());
     } on FirebaseAuthException catch (e) {
       final exp = SignupEmailFailure.code(e.code);
       print('FIREBASE AUTH EXCEPTION-${exp.message}');

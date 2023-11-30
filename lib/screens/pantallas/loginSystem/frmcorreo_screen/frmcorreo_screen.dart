@@ -55,7 +55,7 @@ class _FrmcorreoScreenState extends State<FrmcorreoScreen> {
                             SizedBox(
                                 width: 244.h,
                                 child: Text(
-                                    "Hemos enviado un enlace para restablecer tu contraseña. \n Ingresa y sigue las instrucciones para completar el proceso.",
+                                    "Hemos enviado un enlace para confirmar tu correo electrónico. \n Ingresa y sigue las instrucciones para completar el proceso.",
                                     maxLines: 6,
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.center,
