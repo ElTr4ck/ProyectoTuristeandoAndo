@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:turisteando_ando/screens/pantallas/mapa_simple.dart';
-import 'package:turisteando_ando/screens/pantallas/ubicacion_usuario.dart';
-import 'package:turisteando_ando/screens/pantallas/buscar_lugares.dart';
-import 'package:turisteando_ando/screens/pantallas/lugares_cercanos.dart';
-import 'package:turisteando_ando/screens/pantallas/rutas.dart';
+import 'package:turisteando_ando/pantallas/mapa_simple.dart';
+import 'package:turisteando_ando/pantallas/ubicacion_usuario.dart';
+import 'package:turisteando_ando/pantallas/buscar_lugares.dart';
+import 'package:turisteando_ando/pantallas/lugares_cercanos.dart';
+import 'package:turisteando_ando/pantallas/rutas.dart';
+import 'package:turisteando_ando/pantallas/busquedaGPF.dart';
 class InicioPantalla extends StatefulWidget {
   const InicioPantalla({super.key});
 
@@ -34,9 +35,9 @@ class _InicioPantallaState extends State<InicioPantalla> {
                 }));
               }, child: const Text("Ubicación actual")),
               ElevatedButton(onPressed: (){
-                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
-                  return const SearchPlacesScreen();
-                }));
+                /*Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+                  return MyApp();
+                }));*/
               }, child: const Text("Busca lugares")),
               ElevatedButton(onPressed: (){
                 Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
@@ -48,6 +49,7 @@ class _InicioPantallaState extends State<InicioPantalla> {
                   return const PolylineScreen();
                 }));
               }, child: const Text("Rutas"))
+
             ],
         ),
       ),

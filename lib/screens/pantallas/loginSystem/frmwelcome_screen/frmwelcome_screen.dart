@@ -1,9 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
+import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 
 class FrmwelcomeScreen extends StatelessWidget {
   const FrmwelcomeScreen({Key? key}) : super(key: key);
+  void logInAnonymously() async {
+    await AuthMethods().logInAnonymously();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -60,11 +64,12 @@ class FrmwelcomeScreen extends StatelessWidget {
               width: 117.h,
               margin: EdgeInsets.only(bottom: 1.v),
               decoration: AppDecoration.outlineBlack,
-              child: Text(
-                  "⠀⠀⠀¿No tienes \n⠀⠀ cuenta?",
-                  maxLines: null,
-                  overflow: TextOverflow.ellipsis,
-                  style: CustomTextStyles.titleMediumOnPrimary17)),
+              child: Center(
+                child: Text("¿No tienes \n cuenta?",
+                    maxLines: null,
+                    overflow: TextOverflow.ellipsis,
+                    style: CustomTextStyles.titleMediumOnPrimary17),
+              )),
           Padding(
               padding: EdgeInsets.only(left: 11.h),
               child: Column(children: [
@@ -72,11 +77,12 @@ class FrmwelcomeScreen extends StatelessWidget {
                     onTap: () {
                       onTapTxtRegistrate(context);
                     },
-                    child:
-                        Text("⠀⠀⠀Registrate", style: theme.textTheme.titleMedium)),
+                    child: Text("⠀⠀⠀Registrate",
+                        style: theme.textTheme.titleMedium)),
                 GestureDetector(
                     onTap: () {
-                      onTapTxtContinuacomoinvitado(context);
+                      logInAnonymously();
+                      //onTapTxtContinuacomoinvitado(context);
                     },
                     child: Text("⠀⠀⠀Continua como invitado",
                         style: CustomTextStyles.titleMediumTeal100))

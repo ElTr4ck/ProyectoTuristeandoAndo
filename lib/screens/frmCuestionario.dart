@@ -1,17 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:font_awesome_flutter/font_awesome_flutter.dart';
+import 'package:get/get.dart';
+import 'package:turisteando_ando/repositories/auth/controlers/signout_controller.dart';
+import 'package:turisteando_ando/screens/pantallas/loginSystem/frmwelcome_screen/frmwelcome_screen.dart';
+import 'package:turisteando_ando/core/app_export.dart';
 
 class FrmCuestionario extends StatelessWidget {
   const FrmCuestionario({super.key});
 
   @override
   Widget build(BuildContext context) {
-    return Scaffold(
-      body: ElementList()
-    );
+    return Scaffold(body: ElementList());
   }
-} 
+}
 
 class ElementList extends StatefulWidget {
   @override
@@ -20,13 +21,20 @@ class ElementList extends StatefulWidget {
 
 class _ElementListState extends State<ElementList> {
   List<ElementItem> elements = [
-    ElementItem("Museos", "Obras contemporáneas y nacionales.", Icons.account_balance),
-    ElementItem("Cines", "El séptimo arte, más explicación no hay.", Icons.local_movies),
-    ElementItem("Parques", "Una caminata tranquila, ¿por qué no?.", Icons.park_rounded),
-    ElementItem("Exposiciones", "Siempre se puede descubrir algo nuevo.", FontAwesomeIcons.palette),
-    ElementItem("Conciertos", "Artistas, bandas y las mejores experiencias.", Icons.my_library_music),
-    ElementItem("Hoteles", "Los mejores hospedajes y buffetes.", FontAwesomeIcons.hotel),
-    ElementItem("Alimentos", "Recuerda que panza llena, corazón contento.", Icons.fastfood),
+    ElementItem(
+        "Museos", "Obras contemporáneas y nacionales.", Icons.account_balance),
+    ElementItem("Cines", "El séptimo arte, más explicación no hay.",
+        Icons.local_movies),
+    ElementItem(
+        "Parques", "Una caminata tranquila, ¿por qué no?.", Icons.park_rounded),
+    ElementItem("Exposiciones", "Siempre se puede descubrir algo nuevo.",
+        FontAwesomeIcons.palette),
+    ElementItem("Conciertos", "Artistas, bandas y las mejores experiencias.",
+        Icons.my_library_music),
+    ElementItem("Hoteles", "Los mejores hospedajes y buffetes.",
+        FontAwesomeIcons.hotel),
+    ElementItem("Alimentos", "Recuerda que panza llena, corazón contento.",
+        Icons.fastfood),
   ];
 
   @override
@@ -49,7 +57,8 @@ class _ElementListState extends State<ElementList> {
                 textAlign: TextAlign.center,
               ),
               Container(
-                margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: const Text(
                   'Elige tus tipos de lugares favoritos y disfruta de recomendaciones personalizadas',
                   style: TextStyle(
@@ -71,16 +80,20 @@ class _ElementListState extends State<ElementList> {
                 style: ElevatedButton.styleFrom(
                   backgroundColor: const Color(0xFF114C5F),
                   foregroundColor: Colors.white,
-                  minimumSize: Size(400, 60), // Ajusta el ancho (200) y el alto (50) del botón
+                  minimumSize: Size(400,
+                      60), // Ajusta el ancho (200) y el alto (50) del botón
                   padding: const EdgeInsets.all(16.0), // Relleno
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0), // Borde redondeado
+                    borderRadius:
+                        BorderRadius.circular(10.0), // Borde redondeado
                   ),
                 ), //Style
                 onPressed: () {
-                  // Lógica para el botón "Recordármelo más tarde"
+                  Navigator.pushReplacementNamed(
+                      context, AppRoutes.frminicioContainerScreen);
                 },
-                child: const Text('Continuar',
+                child: const Text(
+                  'Continuar',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
@@ -93,16 +106,19 @@ class _ElementListState extends State<ElementList> {
                 style: ElevatedButton.styleFrom(
                   primary: const Color(0xFF9CD2D3),
                   onPrimary: Colors.white,
-                  minimumSize: Size(400, 60), // Ajusta el ancho (200) y el alto (50) del botón
+                  minimumSize: Size(400,
+                      60), // Ajusta el ancho (200) y el alto (50) del botón
                   padding: const EdgeInsets.all(16.0), // Relleno
                   shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(10.0), // Borde redondeado
+                    borderRadius:
+                        BorderRadius.circular(10.0), // Borde redondeado
                   ),
                 ), //Style
                 onPressed: () {
                   // Lógica para el botón "Finalizar"
                 },
-                child: const Text('Recordarmelo más tarde',
+                child: const Text(
+                  'Recordarmelo más tarde',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
