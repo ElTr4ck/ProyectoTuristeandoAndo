@@ -1,6 +1,6 @@
-# ahora_si_maps
+# turisteando_ando
 
-A new Flutter MAPS.
+Proyecto de la materia ADS ESCOM
 
 ## Getting Started
 
@@ -14,8 +14,3 @@ A few resources to get you started if this is your first Flutter project:
 For help getting started with Flutter development, view the
 [online documentation](https://docs.flutter.dev/), which offers tutorials,
 samples, guidance on mobile development, and a full API reference.
-=======
-# ProyectoTuristeandoAndo
-Proyecto de la materia de Analisis y Diseño de Sistemas, donde se desarrolla una app nativa en flutter enfocada a fomentar el turismo a nivel nacional
-
-### Hola soy pepito

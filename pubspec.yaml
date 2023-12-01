@@ -1,5 +1,5 @@
-name: ahora_si_maps
-description: A new Flutter MAPS.
+name: turisteando_ando
+description: Proyecto de la materia ADS ESCOM
 # The following line prevents the package from being accidentally published to
 # pub.dev using `flutter pub publish`. This is preferred for private packages.
 publish_to: 'none' # Remove this line if you wish to publish to pub.dev
@@ -30,22 +30,47 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  
+  google_maps_flutter: ^2.5.0
+  geolocator: ^9.0.2
+  geocoding: ^2.1.0
+  flutter_google_places: ^0.3.0
+  awesome_snackbar_content: ^0.0.8
+  google_places_flutter: ^2.0.6
+  google_maps_routes: ^1.1.2
+  flutter_google_maps_webservices: ^1.1.1
+  carousel_slider: ^4.2.1
+  flogger: ^0.0.8
 
 
   # The following adds the Cupertino Icons font to your application.
   # Use with the CupertinoIcons class for iOS style icons.
   cupertino_icons: ^1.0.2
-
-  google_maps_flutter: ^2.5.0
-  geolocator: ^8.0.1
-  awesome_snackbar_content: ^0.0.8
-  http: ^1.1.0
-  google_places_flutter: ^2.0.6
-  google_maps_routes: ^1.1.2
-  flutter_google_maps_webservices: ^1.1.1
+  #flutter_google_maps_webservices: ^1.1.1
+  http: ^0.13.1
+  uuid: ^3.0.7
+  json_serializable: ^6.7.1
   google_maps_widget: ^1.0.5+1
-  carousel_slider: ^4.2.1
-  flogger: ^0.0.8
+  
+
+  font_awesome_flutter: ^10.6.0  # Verifica la última versión en pub.dev
+  flutter_scrollbar: ^1.0.0
+  flutter_rating_bar: ^4.0.1
+  google_api_headers: ^1.6.0
+  flutter_bloc: ^7.3.3
+  equatable: ^2.0.5
+  bloc: ^7.0.2
+  intl: ^0.18.1
+  cached_network_image: ^3.3.0
+  flutter_svg: ^1.1.6
+  permission_handler: ^11.0.1
+  flutter_lints: ^2.0.0
+  firebase_storage: ^11.5.0
+  firebase_auth: ^4.13.0
+  cloud_firestore: ^4.13.0
+  firebase_core: ^2.22.0
+  image_picker: ^1.0.4
+  get: ^4.6.5
 
 dependency_overrides:
   http: ^1.1.0
@@ -60,7 +85,7 @@ dev_dependencies:
   # activated in the `analysis_options.yaml` file located at the root of your
   # package. See that file for information about deactivating specific lint
   # rules and activating additional ones.
-  flutter_lints: ^2.0.0
+  
 
 # For information on the generic Dart part of this file, see the
 # following page: https://dart.dev/tools/pub/pubspec
@@ -68,20 +93,25 @@ dev_dependencies:
 # The following section is specific to Flutter packages.
 flutter:
 
+  assets: 
+    - lib/assets/
+    - lib/assets/images/
+
   # The following line ensures that the Material Icons font is
   # included with your application, so that you can use the icons in
   # the material Icons class.
   uses-material-design: true
+
   fonts:
     - family: Nunito
       fonts:
-        - asset: lib/fonts/Nunito-Black.ttf
-        - asset: lib/fonts/Nunito-BlackItalic.ttf
-        - asset: lib/fonts/Nunito-Bold.ttf
-        - asset: lib/fonts/Nunito-BoldItalic.ttf
-        - asset: lib/fonts/Nunito-ExtraBold.ttf
-        - asset: lib/fonts/Nunito-Medium.ttf
-        - asset: lib/fonts/Nunito-Light.ttf
+        - asset: lib/assets/fonts/Nunito-Black.ttf
+        - asset: lib/assets/fonts/Nunito-BlackItalic.ttf
+        - asset: lib/assets/fonts/Nunito-Bold.ttf
+        - asset: lib/assets/fonts/Nunito-BoldItalic.ttf
+        - asset: lib/assets/fonts/Nunito-ExtraBold.ttf
+        - asset: lib/assets/fonts/Nunito-Medium.ttf
+        - asset: lib/assets/fonts/Nunito-Light.ttf
 
   # To add assets to your application, add an assets section, like this:
   # assets:
