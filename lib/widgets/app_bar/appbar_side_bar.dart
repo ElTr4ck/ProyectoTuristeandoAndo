@@ -14,7 +14,7 @@ class SideBar extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  'Henrry la Bomba Martin',
+                  'Ramses Federico',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -45,7 +45,9 @@ class SideBar extends StatelessWidget {
                 fontFamily: 'Nunito',
               ),
             ),
-            onTap: () => null,
+            onTap: () {
+              Navigator.pushNamed(context, '/frmporvisitar_screen');
+            },
           ),
           ListTile(
             leading: Icon(

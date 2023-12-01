@@ -66,9 +66,11 @@ class FrminicioPage extends StatelessWidget {
                                   child: Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        Text("Bienvenido",
-                                            style: CustomTextStyles
-                                                .bodyMediumMontserrat),
+                                        Text(
+                                          "Bienvenido",
+                                          style: CustomTextStyles
+                                              .bodyMediumMontserrat,
+                                        ),
                                         Padding(
                                             padding:
                                                 EdgeInsets.only(left: 40.h),
