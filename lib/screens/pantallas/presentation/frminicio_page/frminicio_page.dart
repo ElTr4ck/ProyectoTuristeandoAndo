@@ -8,12 +8,13 @@ import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/widgets/custom_drop_down.dart';
 import 'package:turisteando_ando/widgets/custom_search_view.dart';
+import 'package:turisteando_ando/widgets/app_bar/appbar_side_bar.dart';
 
 // ignore_for_file: must_be_immutable
 class FrminicioPage extends StatelessWidget {
   FrminicioPage({Key? key}) : super(key: key);
 
-  List<String> dropdownItemList = ["Item One", "Item Two", "Item Three"];
+  // List<String> dropdownItemList = ["Item One", "Item Two", "Item Three"];
 
   TextEditingController searchController = TextEditingController();
 
@@ -29,6 +30,25 @@ class FrminicioPage extends StatelessWidget {
     mediaQueryData = MediaQuery.of(context);
     return SafeArea(
         child: Scaffold(
+            appBar: AppBar(title: null, actions: [
+              TextButton(
+                onPressed: () {
+                  signout();
+                },
+                style: TextButton.styleFrom(
+                  padding: const EdgeInsets.only(right: 15),
+                ),
+                child: const Text(
+                  'Cerrar sesión',
+                  style: TextStyle(
+                    color: Colors.red, // Color rojo
+                    fontSize: 14.0, // Tamaño de fuente
+                    fontWeight: FontWeight.bold, // Negrita
+                  ),
+                ),
+              ),
+            ]),
+            drawer: SideBar(),
             resizeToAvoidBottomInset: false,
             body: Container(
                 width: double.maxFinite,
@@ -40,48 +60,30 @@ class FrminicioPage extends StatelessWidget {
                         Column(children: [
                           SizedBox(height: 2.v),
                           Align(
-                              alignment: Alignment.centerRight,
+                              alignment: Alignment.center,
                               child: Padding(
                                   padding: EdgeInsets.only(right: 5.h),
-                                  child: Row(
+                                  child: Column(
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
-                                        TextButton(
-                                          onPressed: () {
-                                            signout();
-                                          },
-                                          style: TextButton.styleFrom(
-                                            padding: const EdgeInsets.only(right: 50),
-                                          ),
-                                          child: const Text(
-                                            'Cerrar sesión',
-                                            style: TextStyle(
-                                              color: Colors.red, // Color rojo
-                                              fontSize:
-                                                  14.0, // Tamaño de fuente
-                                              fontWeight:
-                                                  FontWeight.bold, // Negrita
-                                            ),
-                                          ),
-                                        ),
                                         Text("Bienvenido",
                                             style: CustomTextStyles
                                                 .bodyMediumMontserrat),
                                         Padding(
                                             padding:
-                                                EdgeInsets.only(left: 41.h),
+                                                EdgeInsets.only(left: 40.h),
                                             child: CustomDropDown(
                                                 width: 93.h,
-                                                icon: Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 6.h),
-                                                    child: CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .imgArrowdown,
-                                                        height: 16.adaptSize,
-                                                        width: 16.adaptSize)),
-                                                hintText: "UserNameXx",
-                                                items: dropdownItemList,
+                                                // icon: Container(
+                                                //     margin: EdgeInsets.only(
+                                                //         left: 6.h),
+                                                //     child: CustomImageView(
+                                                //         imagePath: ImageConstant
+                                                //             .imgArrowdown,
+                                                //         height: 16.adaptSize,
+                                                //         width: 16.adaptSize)),
+                                                // hintText: "UserNameXx",
+                                                // items: dropdownItemList,
                                                 onChanged: (value) {}))
                                       ]))),
                           SizedBox(height: 15.v),
