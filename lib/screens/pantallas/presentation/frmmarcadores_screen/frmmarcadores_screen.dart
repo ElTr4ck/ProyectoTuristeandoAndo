@@ -8,6 +8,7 @@ import 'package:turisteando_ando/widgets/app_bar/appbar_trailing_dropdown.dart';
 import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
 import 'package:turisteando_ando/widgets/custom_bottom_bar.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
+import 'package:turisteando_ando/widgets/app_bar/appbar_side_bar.dart';
 
 // ignore_for_file: must_be_immutable
 class FrmmarcadoresScreen extends StatelessWidget {
@@ -22,53 +23,55 @@ class FrmmarcadoresScreen extends StatelessWidget {
     mediaQueryData = MediaQuery.of(context);
     return SafeArea(
         child: Scaffold(
-            appBar: _buildAppBar(context),
-            body: SizedBox(
-                width: double.maxFinite,
-                child: ListView(
-                  children: [
-                    Column(
-                      children: [
-                      Container(
-                          decoration: AppDecoration.outlineBlack,
-                          child: Text("Estos son tus marcadores",
-                              style: theme.textTheme.headlineMedium)),
-                      SizedBox(height: 11.v),
-                      CustomElevatedButton(
-                          height: 24.v,
-                          width: 125.h,
-                          text: "Ver en mapa",
-                          buttonStyle: CustomButtonStyles.outlineBlack,
-                          buttonTextStyle:
-                              CustomTextStyles.labelLargeMontserratTeal400,
-                          onPressed: () {
-                            onTapVerEnMapa(context);
-                          }),
-                      SizedBox(height: 5.v),
-                      _buildComponentNuevDest(context),
-                      SizedBox(height: 15.v),
-                      _buildComponentNuevDest1(context),
-                      SizedBox(height: 5.v)
-                    ]),
-                  ],
-                )),
-            //bottomNavigationBar: _buildBottomBar(context)
-            ));
+      drawer: SideBar(),
+      appBar: AppBar(
+        title: null,
+      ),
+      body: SizedBox(
+          width: double.maxFinite,
+          child: ListView(
+            children: [
+              Column(children: [
+                Container(
+                    decoration: AppDecoration.outlineBlack,
+                    child: Text("Estos son tus marcadores",
+                        style: theme.textTheme.headlineMedium)),
+                SizedBox(height: 11.v),
+                CustomElevatedButton(
+                    height: 24.v,
+                    width: 125.h,
+                    text: "Ver en mapa",
+                    buttonStyle: CustomButtonStyles.outlineBlack,
+                    buttonTextStyle:
+                        CustomTextStyles.labelLargeMontserratTeal400,
+                    onPressed: () {
+                      onTapVerEnMapa(context);
+                    }),
+                SizedBox(height: 5.v),
+                _buildComponentNuevDest(context),
+                SizedBox(height: 15.v),
+                _buildComponentNuevDest1(context),
+                SizedBox(height: 5.v)
+              ]),
+            ],
+          )),
+      //bottomNavigationBar: _buildBottomBar(context)
+    ));
   }
 
   /// Section Widget
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
-    return CustomAppBar(
-        title: AppbarSubtitleThree(
-            text: "Favoritos", margin: EdgeInsets.only(left: 14.h)),
-        actions: [
-          AppbarTrailingDropdown(
-              margin: EdgeInsets.fromLTRB(8.h, 14.v, 8.h, 24.v),
-              hintText: "UserNameXx",
-              items: dropdownItemList,
-              onTap: (value) {})
-        ]);
-  }
+  // PreferredSizeWidget _buildAppBar(BuildContext context) {
+  //   return CustomAppBar(
+  //       title: AppbarSubtitleThree(
+  //           text: "Favoritos", margin: EdgeInsets.only(left: 14.h)),
+  //       actions: [
+  //         AppbarTrailingDropdown(
+  //             margin: EdgeInsets.fromLTRB(8.h, 14.v, 8.h, 24.v),
+  //             hintText: "UserNameXx",
+  //             items: dropdownItemList,
+  //             onTap: (value) {})
+  //       ]);
+  // }
 
   /// Section Widget
   Widget _buildComponentNuevDest(BuildContext context) {
@@ -113,8 +116,6 @@ class FrmmarcadoresScreen extends StatelessWidget {
                   }))
         ]));
   }
-
-
 
   /// Navigates to the frmmarcmapaScreen when the action is triggered.
   onTapVerEnMapa(BuildContext context) {

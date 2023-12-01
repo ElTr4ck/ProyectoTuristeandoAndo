@@ -17,17 +17,16 @@ import 'package:carousel_slider/carousel_slider.dart';
 class PolylineScreen extends StatefulWidget {
   const PolylineScreen({Key? key}) : super(key: key);
 
-
   @override
   State<PolylineScreen> createState() => _PolylineScreenState();
 }
+
 const kGoogleApiKey = 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
 final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
 class _PolylineScreenState extends State<PolylineScreen> {
   static const CameraPosition initialPosition = CameraPosition(
       target: LatLng(19.36965534943562, -98.96226746584259), zoom: 14);
-
 
   final Completer<GoogleMapController> _controller = Completer();
 
@@ -52,7 +51,6 @@ class _PolylineScreenState extends State<PolylineScreen> {
 
   late GoogleMapController googleMapController;
 
-
   List<LatLng> points = [
     LatLng(19.36663909454925, -98.96088344601702),
     LatLng(19.50481109220203, -99.14636592039268)
@@ -75,7 +73,6 @@ class _PolylineScreenState extends State<PolylineScreen> {
     }));*/
     //Color _iconColor = Colors.grey;
     return Scaffold(
-
       body: Stack(
         children: [
           GoogleMap(
@@ -98,35 +95,34 @@ class _PolylineScreenState extends State<PolylineScreen> {
                 BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.2))
               ], // Efecto de desenfoque
             ),
-
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
-                children: [
-                  SizedBox(height: 45), // Espacio interno
-                  Container(
-                    alignment: Alignment.center,
-                    // Centrar horizontal y verticalmente
-                    child: Text(
-                      "¿Qué deseas hacer el día de hoy?",
-                      style: TextStyle(
-                        fontSize: 24,
-                        fontWeight: FontWeight.bold,
-                        color: Colors.black,
-                        fontFamily: 'Nunito',
-                      ),
+              children: [
+                SizedBox(height: 45), // Espacio interno
+                Container(
+                  alignment: Alignment.center,
+                  // Centrar horizontal y verticalmente
+                  child: Text(
+                    "¿Qué deseas hacer el día de hoy?",
+                    style: TextStyle(
+                      fontSize: 24,
+                      fontWeight: FontWeight.bold,
+                      color: Colors.black,
+                      fontFamily: 'Nunito',
                     ),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                      border: Border.all(
-                        color: Colors.transparent,
-                      ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Colors.transparent,
                     ),
                   ),
-                  placesAutoCompleteTextField(),
-                  // La barra de búsqueda que diseñamos anteriormente
-                  /*Positioned(
+                ),
+                placesAutoCompleteTextField(),
+                // La barra de búsqueda que diseñamos anteriormente
+                /*Positioned(
                     top: 0,
                     left: 0,
                     right: 0,
@@ -165,28 +161,27 @@ class _PolylineScreenState extends State<PolylineScreen> {
                       ),
                     ),
                   ),*/
-
-                ],
+              ],
             ),
           ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              padding: EdgeInsets.all(10.0),
-              color: Colors.white, // Puedes ajustar el color según tus preferencias
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  buildButtonHome(Icons.home, Colors.grey),
-                  buildButtonMap(Icons.map, Color(0xFF114C5F)),
-                  buildButtonFav(Icons.monitor_heart, Colors.grey),
-                  buildButtonUsser(Icons.person, Colors.grey),
-                ],
-              ),
-            ),
-          ),
+          // Align(
+          //   alignment: Alignment.bottomCenter,
+          //   child: Container(
+          //     padding: EdgeInsets.all(10.0),
+          //     color: Colors.white, // Puedes ajustar el color según tus preferencias
+          //     child: Row(
+          //       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+          //       children: [
+          //         buildButtonHome(Icons.home, Colors.grey),
+          //         buildButtonMap(Icons.map, Color(0xFF114C5F)),
+          //         buildButtonFav(Icons.monitor_heart, Colors.grey),
+          //         buildButtonUsser(Icons.person, Colors.grey),
+          //       ],
+          //     ),
+          //   ),
+          // ),
           Positioned(
-            bottom: 68.1,
+            bottom: 0,
             left: 0,
             right: 0,
             child: Container(
@@ -194,11 +189,11 @@ class _PolylineScreenState extends State<PolylineScreen> {
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.8),
                 boxShadow: [
-                  BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.2)),
+                  BoxShadow(
+                      blurRadius: 10, color: Colors.black.withOpacity(0.2)),
                 ],
               ),
               child: Column(
-
                 children: [
                   Container(
                     alignment: Alignment.centerLeft,
@@ -245,7 +240,6 @@ class _PolylineScreenState extends State<PolylineScreen> {
             ),
           ),*/
         ],
-
       ),
 
       /*floatingActionButton: FloatingActionButton(
@@ -256,7 +250,6 @@ class _PolylineScreenState extends State<PolylineScreen> {
       ),*/
     );
   }
-
 
   void drawPolyline(double destinationlat, double destinationlon) async {
     Position position = await _determinePosition();
@@ -270,16 +263,14 @@ class _PolylineScreenState extends State<PolylineScreen> {
       //LatLng(45.851254420031296, 14.624331708344428),
       //LatLng(45.84794984187217, 14.605434384742317)
     ];
-    await route.drawRoute(points, 'Test routes',
-        Color.fromRGBO(130, 78, 210, 1.0), googleApiKey,
+    await route.drawRoute(
+        points, 'Test routes', Color.fromRGBO(130, 78, 210, 1.0), googleApiKey,
         travelMode: TravelModes.walking);
     setState(() {
       totalDistance =
           distanceCalculator.calculateRouteDistance(points, decimals: 1);
 
-
       //totalTime =
-
     });
     /*var response = await http.post(Uri.parse("https://maps.googleapis.com/maps/api/directions/json?key=" +
         apiKey +
@@ -310,6 +301,7 @@ class _PolylineScreenState extends State<PolylineScreen> {
 
     setState(() {});*/
   }
+
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -351,6 +343,7 @@ class _PolylineScreenState extends State<PolylineScreen> {
       },
     );
   }
+
   Widget buildButtonMap(IconData icon, Color color) {
     return IconButton(
       icon: Icon(
@@ -363,6 +356,7 @@ class _PolylineScreenState extends State<PolylineScreen> {
       },
     );
   }
+
   Widget buildButtonFav(IconData icon, Color color) {
     return IconButton(
       icon: Icon(
@@ -375,6 +369,7 @@ class _PolylineScreenState extends State<PolylineScreen> {
       },
     );
   }
+
   Widget buildButtonUsser(IconData icon, Color color) {
     return IconButton(
       icon: Icon(
@@ -387,6 +382,7 @@ class _PolylineScreenState extends State<PolylineScreen> {
       },
     );
   }
+
   placesAutoCompleteTextField() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 20),
@@ -411,7 +407,8 @@ class _PolylineScreenState extends State<PolylineScreen> {
             borderRadius: BorderRadius.circular(20),
             borderSide: BorderSide(color: Colors.transparent),
           ),
-          border: OutlineInputBorder( // Agrega este bloque para el border general
+          border: OutlineInputBorder(
+            // Agrega este bloque para el border general
             borderRadius: BorderRadius.circular(20),
             borderSide: BorderSide(color: Colors.transparent),
           ),
@@ -419,9 +416,7 @@ class _PolylineScreenState extends State<PolylineScreen> {
           fillColor: Colors.white,
           // Ajusta el color del fondo según tus necesidades
           filled: true,
-          contentPadding: EdgeInsets.symmetric(
-              vertical: 12, horizontal: 16),
-
+          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         ),
 
         debounceTime: 400,
@@ -435,12 +430,15 @@ class _PolylineScreenState extends State<PolylineScreen> {
           controller.text = prediction.description ?? "";
           controller.selection = TextSelection.fromPosition(
               TextPosition(offset: prediction.description?.length ?? 0));
-          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+          Navigator.of(context)
+              .push(MaterialPageRoute(builder: (BuildContext context) {
             //String aux = '${prediction.lat}, ${prediction.lng}';
             return MyApp(prediction.description as String);
           }));
         },
-        seperatedBuilder: Divider(color: Colors.transparent,),
+        seperatedBuilder: Divider(
+          color: Colors.transparent,
+        ),
         // OPTIONAL// If you want to customize list view item builder
         itemBuilder: (context, index, Prediction prediction) {
           return Container(
@@ -457,26 +455,20 @@ class _PolylineScreenState extends State<PolylineScreen> {
                     ),
                   ),
                 ),
-                Expanded(child: Text("${prediction.description??""}"))
-
+                Expanded(child: Text("${prediction.description ?? ""}"))
               ],
-
             ),
-
           );
-
         },
 
         isCrossBtnShown: true,
 
         // default 600 ms ,
       ),
-
     );
-
   }
-
 }
+
 class CarouselWithInfo extends StatefulWidget {
   @override
   _CarouselWithInfoState createState() => _CarouselWithInfoState();
@@ -517,8 +509,10 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
     // Las cabeceras de la solicitud
     Map<String, String> headers = {
       'Content-Type': 'application/json',
-      'X-Goog-Api-Key': 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM', // Reemplaza 'API_KEY' con tu clave real
-      'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.location,places.currentOpeningHours,places.photos,places.primaryTypeDisplayName,places.id',
+      'X-Goog-Api-Key':
+          'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM', // Reemplaza 'API_KEY' con tu clave real
+      'X-Goog-FieldMask':
+          'places.displayName,places.formattedAddress,places.location,places.currentOpeningHours,places.photos,places.primaryTypeDisplayName,places.id',
     };
 
     // Realiza la solicitud POST
@@ -566,12 +560,15 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
   void updateCarouselItems(List<dynamic> places) {
     List<Widget> items = [];
     for (var place in places) {
-      String title = place["displayName"]["text"] + '-' + place["primaryTypeDisplayName"]["text"];
+      String title = place["displayName"]["text"] +
+          '-' +
+          place["primaryTypeDisplayName"]["text"];
       print(title);
       String description = place["formattedAddress"];
       String photo = place["photos"][0]["name"];
       //print(photo);
-      String image = 'https://places.googleapis.com/v1/$photo/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
+      String image =
+          'https://places.googleapis.com/v1/$photo/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
       //print(image);
       //String image = 'imagen1.jpg';
       String id = place["id"];
@@ -597,66 +594,72 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
         viewportFraction: 0.8,
       ),
       items: carouselItems.isEmpty
-          ? [buildLoadingItem()] // Puedes mostrar un indicador de carga mientras se obtienen los datos
+          ? [
+              buildLoadingItem()
+            ] // Puedes mostrar un indicador de carga mientras se obtienen los datos
           : carouselItems,
     );
   }
 
-  Widget buildCarouselItem(String title, String description, String image, String id) {
+  Widget buildCarouselItem(
+      String title, String description, String image, String id) {
     return GestureDetector(
-        onTap: () {
-          // Acción a realizar cuando se toca el elemento del carrusel
-          print('Elemento del carrusel presionado: $id');
-          // Aquí puedes agregar la lógica adicional que desees
-        },
-    child: Container(
-      margin: EdgeInsets.symmetric(horizontal: 5.0),
-      decoration: BoxDecoration(
-        color: Colors.white,
-        borderRadius: BorderRadius.circular(24.0), // Borde ovalado
-        boxShadow: [
-          BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.2)),
-        ],
-      ),
-      child: Row(
-        children: [
-          Container(
-            width: 100.0, // Ajusta el ancho según tus necesidades
-            height: 200.0, // Ajusta la altura según tus necesidades
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(20.0),
-                bottomLeft: Radius.circular(20.0),
-              ),
-              image: DecorationImage(
-                image: NetworkImage(image),
-                fit: BoxFit.cover,
-              ),
-            ),
-          ),
-          Expanded(
-            child: Padding(
-              padding: const EdgeInsets.all(8.0),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    title,
-                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, fontFamily: 'Nunito'),
-                  ),
-                  SizedBox(height: 5.0),
-                  Text(
-                    description,
-                    style: TextStyle(fontSize: 14.0, fontFamily: 'Nunito'),
-                  ),
-                ],
+      onTap: () {
+        // Acción a realizar cuando se toca el elemento del carrusel
+        print('Elemento del carrusel presionado: $id');
+        // Aquí puedes agregar la lógica adicional que desees
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(horizontal: 5.0),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(24.0), // Borde ovalado
+          boxShadow: [
+            BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.2)),
+          ],
+        ),
+        child: Row(
+          children: [
+            Container(
+              width: 100.0, // Ajusta el ancho según tus necesidades
+              height: 200.0, // Ajusta la altura según tus necesidades
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(20.0),
+                  bottomLeft: Radius.circular(20.0),
+                ),
+                image: DecorationImage(
+                  image: NetworkImage(image),
+                  fit: BoxFit.cover,
+                ),
               ),
             ),
-          ),
-        ],
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyle(
+                          fontSize: 18.0,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Nunito'),
+                    ),
+                    SizedBox(height: 5.0),
+                    Text(
+                      description,
+                      style: TextStyle(fontSize: 14.0, fontFamily: 'Nunito'),
+                    ),
+                  ],
+                ),
+              ),
+            ),
+          ],
+        ),
       ),
-    ),
     );
   }
 
@@ -675,6 +678,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
       ),
     );
   }
+
   Future<Position> _determinePosition2() async {
     bool serviceEnabled;
     LocationPermission permission;
