@@ -763,7 +763,7 @@ class _RutaUnoState extends State<RutaUno> {
 
           Container(
               //padding: const EdgeInsets.all(16.0),
-              height: 200,
+              height: 180,
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.8),
                 // Ajusta la opacidad y el color del fondo difuminado
@@ -778,7 +778,7 @@ class _RutaUnoState extends State<RutaUno> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    SizedBox(height: 45), // Espacio interno
+                    SizedBox(height: 20), // Espacio interno
                     Container(
                         width: MediaQuery.of(context).size.width,
                         child: Padding(
@@ -993,7 +993,7 @@ class _RutaUnoState extends State<RutaUno> {
                   ])),
 
           // Contenido en la parte inferior
-          Align(
+          /*Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               padding: EdgeInsets.all(10.0),
@@ -1008,7 +1008,7 @@ class _RutaUnoState extends State<RutaUno> {
                 ],
               ),
             ),
-          ),
+          ),*/
           /*Column(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
             Container(
               color: Colors.white,
