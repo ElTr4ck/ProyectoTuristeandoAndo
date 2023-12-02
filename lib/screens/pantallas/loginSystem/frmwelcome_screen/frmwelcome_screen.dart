@@ -1,12 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
+import 'package:turisteando_ando/repositories/auth/wrapper.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 
 class FrmwelcomeScreen extends StatelessWidget {
   const FrmwelcomeScreen({Key? key}) : super(key: key);
-  void logInAnonymously() async {
-    await AuthMethods().logInAnonymously();
+  Future<bool> logInAnonymously() async {
+    bool res = await AuthMethods().logInAnonymously();
+    return res;
   }
 
   @override
@@ -80,9 +82,14 @@ class FrmwelcomeScreen extends StatelessWidget {
                     child: Text("⠀⠀⠀Registrate",
                         style: theme.textTheme.titleMedium)),
                 GestureDetector(
-                    onTap: () {
-                      logInAnonymously();
-                      //onTapTxtContinuacomoinvitado(context);
+                    onTap: () async {
+                      bool res = await logInAnonymously();
+                      if (res) {
+                        // ignore: use_build_context_synchronously
+                        Navigator.of(context, rootNavigator: true)
+                            .pushReplacement(MaterialPageRoute(
+                                builder: (context) => new Wrapper()));
+                      }
                     },
                     child: Text("⠀⠀⠀Continua como invitado",
                         style: CustomTextStyles.titleMediumTeal100))

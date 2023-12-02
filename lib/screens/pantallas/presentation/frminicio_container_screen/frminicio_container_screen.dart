@@ -14,11 +14,6 @@ import '../../loginSystem/frmwelcome_screen/frmwelcome_screen.dart';
 // ignore_for_file: must_be_immutable
 class FrminicioContainerScreen extends StatelessWidget {
   FrminicioContainerScreen({Key? key}) : super(key: key);
-  final controller = Get.put(SignoutController());
-  void signout() async {
-    await controller.signout();
-    Get.to(FrmwelcomeScreen());
-  }
 
   GlobalKey<NavigatorState> navigatorKey = GlobalKey();
 

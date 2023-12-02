@@ -15,21 +15,8 @@ import 'package:turisteando_ando/screens/pantallas/loginSystem/frmwelcome_screen
 
 class AuthMethods extends GetxController {
   static AuthMethods get instance => Get.find();
-  //Variables
-  late final Rx<User?> _firebaseUser;
   final _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
-
-  User? get firebaseUser => _firebaseUser.value;
-  String get getUserID => firebaseUser?.uid ?? "";
-  String get getUserEmail => firebaseUser?.email ?? "";
-  @override
-  void onReady() {
-    _firebaseUser = Rx<User?>(_auth.currentUser);
-    _firebaseUser.bindStream(_auth.userChanges());
-    setInitialScreen(_firebaseUser.value);
-    //ever(_firebaseUser, _setInitialScreen);
-  }
 
   Future<model.User> getUserDetails() async {
     User currenUser = _auth.currentUser!;
@@ -38,22 +25,16 @@ class AuthMethods extends GetxController {
     return model.User.formSnap(snap);
   }
 
-  setInitialScreen(User? user) async {
-    user == null
-        ? Get.offAll(() => const FrmwelcomeScreen())
-        : user.isAnonymous
-            ? Get.offAll(() => const FrminvitadoScreen())
-            : user.emailVerified
-                ? Get.offAll(() => const FrmSetLocation())
-                : Get.offAll(() => const FrmcorreoScreen());
-  }
-
   Future<void> sendVerificationEmail() async {
     try {
       await _auth.currentUser?.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
+      String res = e.code;
+      if (e.code == "too-many-requests") {
+        res = "Revisa tu correo electrónico";
+      }
       Get.showSnackbar(GetSnackBar(
-        message: e.code,
+        message: res,
         duration: const Duration(seconds: 5),
       ));
     }
@@ -76,7 +57,6 @@ class AuthMethods extends GetxController {
         String photoUrl =
             await StorageMethods().uploadImageToStorage('profilePics', file);
         */
-
       model.User user = model.User(
         name: name,
         lastName: lastName,
@@ -85,16 +65,11 @@ class AuthMethods extends GetxController {
         photo:
             'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
       );
+
       await _firestore
           .collection('usuarios')
           .doc(cred.user!.uid)
           .set(user.toJson());
-
-      /*_firebaseUser.value != null
-          ? Get.offAll(() => const LoginScreen())
-          : Get.to(const LoginScreen());*/
-
-      //setInitialScreen(firebaseUser);
     } on FirebaseAuthException catch (e) {
       final exp = SignupEmailFailure.code(e.code);
       print('FIREBASE AUTH EXCEPTION-${exp.message}');
@@ -106,16 +81,24 @@ class AuthMethods extends GetxController {
     }
   }
 
-  Future<void> logInAnonymously() async {
+  Future<bool> logInAnonymously() async {
     try {
       final userCredential = await _auth.signInAnonymously();
       print(userCredential);
-      setInitialScreen(userCredential.user);
+      //setInitialScreen(userCredential.user);
+      return true;
     } on FirebaseAuthException catch (e) {
+      String res;
+      if (e.code == "network-request-failed") {
+        res = "Verifica tu conexión a internet";
+      } else {
+        res = e.code;
+      }
       Get.showSnackbar(GetSnackBar(
-        message: e.code,
+        message: res,
         duration: const Duration(seconds: 5),
       ));
+      return false;
     }
   }
 
@@ -164,9 +147,6 @@ class AuthMethods extends GetxController {
       {required String email, required String password}) async {
     try {
       await _auth.signInWithEmailAndPassword(email: email, password: password);
-      _firebaseUser.value != null
-          ? Get.offAll(() => const FrmSetLocation())
-          : Get.to(const FrmwelcomeScreen());
     } on FirebaseAuthException catch (e) {
       final exp = SignupEmailFailure.code(e.code);
       print('FIREBASE AUTH EXCEPTION-${exp.message}');
@@ -266,5 +246,23 @@ class AuthMethods extends GetxController {
         duration: const Duration(seconds: 5),
       ));
     }
+  }
+
+  bool checkEmail() {
+    bool res = false;
+    try {
+      User? user = _auth.currentUser;
+      res = user!.emailVerified;
+    } on FirebaseAuthException catch (e) {
+      Get.showSnackbar(GetSnackBar(
+        message: e.code,
+        duration: const Duration(seconds: 5),
+      ));
+    }
+    return res;
+  }
+
+  Future<void> reload() async {
+    await _auth.currentUser!.reload();
   }
 }

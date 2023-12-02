@@ -16,11 +16,10 @@ class FrminvitadoScreen extends StatefulWidget {
 }
 
 class _FrminvitadoScreenState extends State<FrminvitadoScreen> {
-  final controller = Get.put(SignoutController());
+  final controller = SignoutController();
 
-  void signOut() async {
+  Future<void> signOut() async {
     await controller.signout();
-    Get.to(FrmwelcomeScreen());
   }
 
   @override
@@ -83,7 +82,10 @@ class _FrminvitadoScreenState extends State<FrminvitadoScreen> {
   Widget _buildContinueButton(BuildContext context) {
     return CustomElevatedButton(
       onPressed: () {
-        signOut();
+        /*await signOut();
+        Navigator.pushNamedAndRemoveUntil(
+            context, AppRoutes.frmwelcomeScreen, (route) => false);*/
+        Navigator.pushNamed(context, AppRoutes.frmSetLocation);
       },
       height: 40.v,
       text: "Continuar",

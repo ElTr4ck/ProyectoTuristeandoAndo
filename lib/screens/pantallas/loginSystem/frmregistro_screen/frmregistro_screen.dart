@@ -3,6 +3,7 @@ import 'package:get/get.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
 import 'package:turisteando_ando/repositories/auth/controlers/signup_controller.dart';
+import 'package:turisteando_ando/repositories/auth/wrapper.dart';
 import 'package:turisteando_ando/widgets/app_bar/appbar_leading_image.dart';
 import 'package:turisteando_ando/widgets/app_bar/appbar_title.dart';
 import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
@@ -17,18 +18,20 @@ class FrmregistroScreen extends StatelessWidget {
   TextEditingController textFieldOutlineApellido = TextEditingController();
   TextEditingController textFieldOutlineCorreo = TextEditingController();
   TextEditingController textFieldOutlineContrasena = TextEditingController();
-  final controller = Get.put(SignupController());
+  final controller = SignupController();
   final formkey = GlobalKey<FormState>();
-  void signup() {
-    controller.signUp(
+  Future<bool> signup() async {
+    bool res = await controller.signUp(
         email: textFieldOutlineCorreo.text,
         password: textFieldOutlineContrasena.text,
         name: textFieldOutlineNombre.text,
         lastName: textFieldOutlineApellido.text);
+    return res;
   }
 
-  void logInAnonymously() async {
-    await AuthMethods().logInAnonymously();
+  Future<bool> logInAnonymously() async {
+    bool res = await AuthMethods().logInAnonymously();
+    return res;
   }
 
   @override
@@ -192,9 +195,10 @@ class FrmregistroScreen extends StatelessWidget {
       height: 45.v,
       text: "Registrarme",
       buttonStyle: CustomButtonStyles.fillPrimaryTL22,
-      onPressed: () {
+      onPressed: () async {
         if (formkey.currentState!.validate()) {
-          signup();
+          bool res = await signup();
+          if (res) Navigator.pop(context);
         }
       },
     );
@@ -206,8 +210,15 @@ class FrmregistroScreen extends StatelessWidget {
         height: 46.v,
         text: "Quiero seguir como invitado",
         buttonStyle: CustomButtonStyles.radiusTL23,
-        onPressed: () {
-          logInAnonymously();
+        onPressed: () async {
+          bool res = await logInAnonymously();
+          // ignore: use_build_context_synchronously
+          if (res) {
+            Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => new Wrapper()),
+                (route) => false);
+          }
+
           //onTapCancelarQuieroSeguirComo(context);
         });
   }

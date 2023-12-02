@@ -71,6 +71,7 @@ dependencies:
   firebase_core: ^2.22.0
   image_picker: ^1.0.4
   get: ^4.6.5
+  rxdart: ^0.27.7
 
 dependency_overrides:
   http: ^1.1.0
