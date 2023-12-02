@@ -4,6 +4,8 @@ import 'package:get/get.dart';
 import 'package:turisteando_ando/repositories/auth/controlers/signout_controller.dart';
 import 'package:turisteando_ando/screens/pantallas/loginSystem/frmwelcome_screen/frmwelcome_screen.dart';
 import 'package:turisteando_ando/core/app_export.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 class FrmCuestionario extends StatelessWidget {
   const FrmCuestionario({super.key});
@@ -27,14 +29,17 @@ class _ElementListState extends State<ElementList> {
         Icons.local_movies),
     ElementItem(
         "Parques", "Una caminata tranquila, ¿por qué no?.", Icons.park_rounded),
-    ElementItem("Exposiciones", "Siempre se puede descubrir algo nuevo.",
+    ElementItem("Galerías de arte", "Siempre se puede descubrir algo nuevo.",
         FontAwesomeIcons.palette),
-    ElementItem("Conciertos", "Artistas, bandas y las mejores experiencias.",
-        Icons.my_library_music),
+    ElementItem("Acuarios", "Bellos animales acuáticos, no te lo puedes perder!",
+        Icons.set_meal),
+    ElementItem("Zoológicos", "Disfruta de la naturaleza como nunca antes!",
+        Icons.cruelty_free),
     ElementItem("Hoteles", "Los mejores hospedajes y buffetes.",
         FontAwesomeIcons.hotel),
     ElementItem("Alimentos", "Recuerda que panza llena, corazón contento.",
         Icons.fastfood),
+
   ];
 
   @override
@@ -149,6 +154,9 @@ class ElementItem extends StatefulWidget {
 class _ElementItemState extends State<ElementItem> {
   @override
   Widget build(BuildContext context) {
+    final _auth = FirebaseAuth.instance;
+    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
       decoration: BoxDecoration(
@@ -182,7 +190,41 @@ class _ElementItemState extends State<ElementItem> {
                 Icons.favorite,
                 color: widget.isLiked ? Colors.red : Colors.grey,
               ),
-              onTap: () {
+              onTap: () async {
+                var nombre;
+                if (widget.name == "Museos") {
+                  nombre = "museum";
+                } else if (widget.name == "Cines") {
+                  nombre = "movie_theater";
+                } else if (widget.name == "Parques") {
+                  nombre = "park";
+                } else if (widget.name == "Galerías de arte") {
+                  nombre = "art_gallery";
+                } else if (widget.name == "Acuarios") {
+                  nombre = "aquarium";
+                } else if (widget.name == "Zoológicos") {
+                  nombre = "zoo";
+                } else if (widget.name == "Hoteles") {
+                  nombre = "hotel";
+                } else if (widget.name == "Alimentos") {
+                  nombre = "restaurant";
+                }
+
+                DocumentReference docRef = _firestore
+                    .collection('usuarios')
+                    .doc(_auth.currentUser!.uid)
+                    .collection('preferencias')
+                    .doc(nombre);
+
+                var docSnapshot = await docRef.get();
+
+                if (docSnapshot.exists) {
+                  // El documento ya existe, así que lo eliminamos
+                  await docRef.delete();
+                } else {
+                  // El documento no existe, así que lo creamos
+                  await docRef.set({'nombre': nombre});
+                }
                 setState(() {
                   widget.isLiked = !widget.isLiked;
                 });
