@@ -14,6 +14,7 @@ import 'package:http/http.dart' as http;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frminfolugar_screen/frminfolugar_screen.dart';
 
 // ignore_for_file: must_be_immutable
 class FrminicioPage extends StatelessWidget {
@@ -93,11 +94,32 @@ class FrminicioPage extends StatelessWidget {
                           _buildEightyThree(context),
                           SizedBox(height: 18.v),
                           Padding(
-                              padding: EdgeInsets.only(left: 18.h, right: 16.h),
-                              child: CustomSearchView(
-                                  controller: searchController,
-                                  hintText:
-                                      "¿Buscas hacer algo en particular en ... ")),
+                            padding: EdgeInsets.only(left: 10.0, right: 16.0),
+                            child: Container(
+                              decoration: BoxDecoration(
+                                color: Color(0xFF9CD2D3), // Puedes cambiar este color según tus preferencias
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),
+                              child: Row(
+                                children: [
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(horizontal: 8.0), // Ajusta este valor según tus preferencias
+                                    child: Icon(Icons.search_sharp, color: Colors.white, size: 24.0), // Icono de lupa
+                                  ),
+                                  Expanded(
+                                    child: TextField(
+                                      controller: searchController,
+                                      decoration: InputDecoration(
+                                        hintText: "¿Buscas hacer algo en particular en ... ",
+                                        border: InputBorder.none,
+                                        contentPadding: EdgeInsets.all(16.0),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ),
                           SizedBox(height: 31.v),
                           _buildComponentNuevDest(context),
                           SizedBox(height: 40.v),
@@ -424,6 +446,10 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
       onTap: () {
         // Acción a realizar cuando se toca el elemento del carrusel
         print('Elemento del carrusel presionado: $id');
+        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+          //String aux = '${prediction.lat}, ${prediction.lng}';
+          return FrminfolugarScreen(id: id);
+        }));
         // Aquí puedes agregar la lógica adicional que desees
       },
       child: Container(
