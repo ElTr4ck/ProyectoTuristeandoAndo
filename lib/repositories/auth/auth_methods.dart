@@ -1,20 +1,13 @@
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:turisteando_ando/repositories/auth/firestore_methods.dart';
+import 'package:turisteando_ando/repositories/auth/utils.dart';
 import 'package:turisteando_ando/repositories/exeptions/signup_email_failure.dart';
 import 'dart:typed_data';
 import 'package:turisteando_ando/repositories/auth/storage_methods.dart';
-import 'package:get/get.dart';
 import 'package:turisteando_ando/models/users/user.dart' as model;
-import 'package:turisteando_ando/models/users/marcadores.dart';
-import 'package:turisteando_ando/screens/frmSetLocation.dart';
-import 'package:turisteando_ando/screens/pantallas/loginSystem/frmcorreo_screen/frmcorreo_screen.dart';
-import 'package:turisteando_ando/screens/pantallas/loginSystem/frminvitado_screen/frminvitado_screen.dart';
-import 'package:turisteando_ando/screens/pantallas/loginSystem/frmwelcome_screen/frmwelcome_screen.dart';
 
-class AuthMethods extends GetxController {
-  static AuthMethods get instance => Get.find();
+class AuthMethods {
   final _auth = FirebaseAuth.instance;
   final FirebaseFirestore _firestore = FirebaseFirestore.instance;
 
@@ -25,7 +18,7 @@ class AuthMethods extends GetxController {
     return model.User.formSnap(snap);
   }
 
-  Future<void> sendVerificationEmail() async {
+  Future<void> sendVerificationEmail(BuildContext context) async {
     try {
       await _auth.currentUser?.sendEmailVerification();
     } on FirebaseAuthException catch (e) {
@@ -33,10 +26,9 @@ class AuthMethods extends GetxController {
       if (e.code == "too-many-requests") {
         res = "Revisa tu correo electrónico";
       }
-      Get.showSnackbar(GetSnackBar(
-        message: res,
-        duration: const Duration(seconds: 5),
-      ));
+      // ignore: use_build_context_synchronously
+      showSnackBar(res, context);
+      rethrow;
     }
   }
 
@@ -81,23 +73,18 @@ class AuthMethods extends GetxController {
     }
   }
 
-  Future<bool> logInAnonymously() async {
+  Future<bool> logInAnonymously(BuildContext context) async {
     try {
       final userCredential = await _auth.signInAnonymously();
       print(userCredential);
-      //setInitialScreen(userCredential.user);
       return true;
     } on FirebaseAuthException catch (e) {
-      String res;
+      String res = e.code;
       if (e.code == "network-request-failed") {
         res = "Verifica tu conexión a internet";
-      } else {
-        res = e.code;
       }
-      Get.showSnackbar(GetSnackBar(
-        message: res,
-        duration: const Duration(seconds: 5),
-      ));
+      // ignore: use_build_context_synchronously
+      showSnackBar(res, context);
       return false;
     }
   }
@@ -219,15 +206,14 @@ class AuthMethods extends GetxController {
   Future<void> resetPassword(String emailReset) async {
     try {
       await _auth.sendPasswordResetEmail(email: emailReset);
-      /*Get.showSnackbar(const GetSnackBar(
-        message: "Te hemos enviado un correo para cambiar la contraseña",
-        duration: Duration(seconds: 5),
-      ));*/
     } on FirebaseAuthException catch (e) {
-      Get.showSnackbar(GetSnackBar(
-        message: e.code,
-        duration: const Duration(seconds: 3),
-      ));
+      final exp = SignupEmailFailure.code(e.code);
+      print('FIREBASE AUTH EXCEPTION-${exp.message}');
+      throw exp;
+    } catch (_) {
+      const exp = SignupEmailFailure();
+      print('EXCEPTION-${exp.message}');
+      throw exp;
     }
   }
 
@@ -241,25 +227,8 @@ class AuthMethods extends GetxController {
     try {
       await _auth.signOut();
     } on FirebaseAuthException catch (e) {
-      Get.showSnackbar(GetSnackBar(
-        message: e.code,
-        duration: const Duration(seconds: 5),
-      ));
+      rethrow;
     }
-  }
-
-  bool checkEmail() {
-    bool res = false;
-    try {
-      User? user = _auth.currentUser;
-      res = user!.emailVerified;
-    } on FirebaseAuthException catch (e) {
-      Get.showSnackbar(GetSnackBar(
-        message: e.code,
-        duration: const Duration(seconds: 5),
-      ));
-    }
-    return res;
   }
 
   Future<void> reload() async {

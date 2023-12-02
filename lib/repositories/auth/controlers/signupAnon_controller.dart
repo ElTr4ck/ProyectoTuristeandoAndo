@@ -1,7 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
+import 'package:turisteando_ando/repositories/auth/utils.dart';
 import 'package:turisteando_ando/repositories/exeptions/signup_email_failure.dart';
 
 class SignupAnonController {
@@ -9,7 +8,8 @@ class SignupAnonController {
   final password = TextEditingController();
   final name = TextEditingController();
   final lastName = TextEditingController();
-
+  final BuildContext context;
+  SignupAnonController({required this.context});
   void signUpAnonymously(
       {required String email,
       required String password,
@@ -19,14 +19,11 @@ class SignupAnonController {
       final auth = AuthMethods();
       await auth.signUpAnonymously(
           email: email, password: password, name: name, lastName: lastName);
-
-      //auth.setInitialScreen(auth.firebaseUser);
-      auth.sendVerificationEmail();
+      // ignore: use_build_context_synchronously
+      auth.sendVerificationEmail(context);
     } on SignupEmailFailure catch (e) {
-      Get.showSnackbar(GetSnackBar(
-        message: e.message,
-        duration: const Duration(seconds: 3),
-      ));
+      // ignore: use_build_context_synchronously
+      showSnackBar(e.message, context);
     }
   }
 }

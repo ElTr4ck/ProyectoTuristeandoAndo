@@ -1,11 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:get/get.dart';
 import 'package:turisteando_ando/blocs/autocomplete/auto_complete_bloc.dart';
 import 'package:turisteando_ando/blocs/geolocation/geolocation_bloc.dart';
 import 'package:turisteando_ando/blocs/place/place_bloc.dart';
 import 'package:turisteando_ando/core/app_export.dart';
-import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
 import 'package:turisteando_ando/repositories/auth/wrapper.dart';
 import 'package:turisteando_ando/repositories/geolocation/geolocation_repository.dart';
 import 'package:turisteando_ando/repositories/places/PlacesRepository.dart';
@@ -18,7 +16,7 @@ void main() async {
 
   await Firebase.initializeApp(
     options: DefaultFirebaseOptions.currentPlatform,
-  ).then((FirebaseApp value) => Get.put(AuthMethods()));
+  );
   ThemeHelper().changeTheme('primary');
   runApp(const MyApp());
 }
@@ -63,7 +61,6 @@ class MyApp extends StatelessWidget {
           ),*/
           //home: const MyHomePage(title: 'Flutter Demo Home Page'),
           //initialRoute: AppRoutes.frmwelcomeScreen,
-          navigatorKey: Get.key,
           home: Wrapper(),
           routes: AppRoutes.routes,
         ),

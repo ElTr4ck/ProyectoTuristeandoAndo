@@ -1,5 +1,4 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/repositories/auth/controlers/login_controller.dart';
 import 'package:turisteando_ando/repositories/auth/wrapper.dart';
@@ -15,20 +14,22 @@ class FrmloginScreen extends StatelessWidget {
   TextEditingController contrasenaController = TextEditingController();
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final controller = LoginController();
-  Future<bool> logIn() async {
-    print('LogIn');
-    bool res = false;
-    res = await controller.loginUser(
-      email: emailController.text,
-      password: contrasenaController.text,
-    );
-    print(res);
-    return res;
-  }
 
   @override
   Widget build(BuildContext context) {
+    final controller = LoginController(context: context);
+
+    Future<bool> logIn() async {
+      print('LogIn');
+      bool res = false;
+      res = await controller.loginUser(
+        email: emailController.text,
+        password: contrasenaController.text,
+      );
+      print(res);
+      return res;
+    }
+
     mediaQueryData = MediaQuery.of(context);
     return SafeArea(
         child: Scaffold(

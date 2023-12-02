@@ -1,7 +1,6 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
+import 'package:turisteando_ando/repositories/auth/utils.dart';
 import 'package:turisteando_ando/repositories/exeptions/signup_email_failure.dart';
 
 class SignupController {
@@ -9,6 +8,8 @@ class SignupController {
   final password = TextEditingController();
   final name = TextEditingController();
   final lastName = TextEditingController();
+  final BuildContext context;
+  SignupController({required this.context});
 
   Future<bool> signUp(
       {required String email,
@@ -21,10 +22,8 @@ class SignupController {
           email: email, password: password, name: name, lastName: lastName);
       return true;
     } on SignupEmailFailure catch (e) {
-      Get.showSnackbar(GetSnackBar(
-        message: e.message,
-        duration: const Duration(seconds: 3),
-      ));
+      // ignore: use_build_context_synchronously
+      showSnackBar(e.message, context);
       return false;
     }
   }

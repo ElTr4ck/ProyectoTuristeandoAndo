@@ -1,15 +1,12 @@
 import 'dart:async';
 
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
 import 'package:turisteando_ando/repositories/auth/controlers/signout_controller.dart';
 import 'package:turisteando_ando/screens/frmSetLocation.dart';
 import 'package:turisteando_ando/screens/pantallas/loginSystem/frminvitado_screen/frminvitado_screen.dart';
-import 'package:turisteando_ando/screens/pantallas/loginSystem/frmwelcome_screen/frmwelcome_screen.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 
 class FrmcorreoScreen extends StatefulWidget {
@@ -20,12 +17,6 @@ class FrmcorreoScreen extends StatefulWidget {
 }
 
 class _FrmcorreoScreenState extends State<FrmcorreoScreen> {
-  final controllerSignOut = SignoutController();
-
-  void signOut() async {
-    await controllerSignOut.signout();
-  }
-
   bool isEmailVerified = false;
   bool isAnonymous = false;
   Timer? timer;
@@ -35,7 +26,7 @@ class _FrmcorreoScreenState extends State<FrmcorreoScreen> {
     isEmailVerified = FirebaseAuth.instance.currentUser!.emailVerified;
     isAnonymous = FirebaseAuth.instance.currentUser!.isAnonymous;
     if (!isEmailVerified && !isAnonymous) {
-      AuthMethods().sendVerificationEmail();
+      AuthMethods().sendVerificationEmail(context);
       timer = Timer.periodic(Duration(seconds: 3), (_) => checkEmail());
     }
   }
@@ -105,6 +96,12 @@ class _FrmcorreoScreenState extends State<FrmcorreoScreen> {
 
   /// Section Widget
   Widget _buildRegresarAInicio(BuildContext context) {
+    final controllerSignOut = SignoutController(context: context);
+
+    void signOut() async {
+      await controllerSignOut.signout();
+    }
+
     return CustomElevatedButton(
         height: 40.v,
         text: "Sign out",

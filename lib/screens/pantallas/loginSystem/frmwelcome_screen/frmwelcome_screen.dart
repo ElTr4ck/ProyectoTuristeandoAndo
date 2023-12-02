@@ -6,10 +6,6 @@ import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 
 class FrmwelcomeScreen extends StatelessWidget {
   const FrmwelcomeScreen({Key? key}) : super(key: key);
-  Future<bool> logInAnonymously() async {
-    bool res = await AuthMethods().logInAnonymously();
-    return res;
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -46,6 +42,11 @@ class FrmwelcomeScreen extends StatelessWidget {
 
   /// Section Widget
   Widget _buildWelcomeScreen(BuildContext context) {
+    Future<bool> logInAnonymously() async {
+      bool res = await AuthMethods().logInAnonymously(context);
+      return res;
+    }
+
     return Container(
         width: 352.h,
         margin: EdgeInsets.only(right: 8.h),
