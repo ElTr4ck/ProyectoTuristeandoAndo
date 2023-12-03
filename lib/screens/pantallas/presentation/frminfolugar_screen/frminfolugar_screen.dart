@@ -60,7 +60,7 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
 
   Future<void> fetchData() async {
     // Tu lógica para obtener datos desde la API
-    String url = 'https://places.googleapis.com/v1/places/${widget.id}?fields=websiteUri,regularOpeningHours,displayName,formattedAddress,nationalPhoneNumber,editorialSummary,photos,id&languageCode=es&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
+    String url = 'https://places.googleapis.com/v1/places/${widget.id}?fields=rating,websiteUri,regularOpeningHours,displayName,formattedAddress,nationalPhoneNumber,editorialSummary,photos,id&languageCode=es&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
     // Los datos que enviarás en el cuerpo de la solicitud POST
 
     print("Hola");
@@ -264,16 +264,33 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 26.h),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Container(
-              padding: EdgeInsets.symmetric(horizontal: 9.h, vertical: 5.v),
-              decoration: AppDecoration.fillErrorContainer1
-                  .copyWith(borderRadius: BorderRadiusStyle.circleBorder12),
-              child:
-                  CustomRatingBar(initialRating: 5, color: appTheme.yellow700)),
+        Container(
+        padding: EdgeInsets.symmetric(horizontal: 9.h, vertical: 5.v),
+      decoration: AppDecoration.fillErrorContainer1
+          .copyWith(borderRadius: BorderRadiusStyle.circleBorder12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.star,
+            color: appTheme.yellow700,
+          ),
+          SizedBox(width: 5), // Ajusta el espacio entre la estrella y el número
+          Text(
+            '${jsonData?["rating"]}', // Puedes cambiar esto al número que desees
+            style: TextStyle(
+              fontSize: 16.0, // Ajusta el tamaño del número
+              fontWeight: FontWeight.bold,
+              color: Colors.black, // Puedes cambiar el color del número
+            ),
+          ),
+        ],
+      ),
+    ),
           CustomElevatedButton(
               height: 17.v,
               width: 88.h,
-              text: "Indicaciones",
+              text: "Ruta",
               margin: EdgeInsets.only(left: 23.h),
               leftIcon: Container(
                   margin: EdgeInsets.only(right: 6.h),
@@ -420,10 +437,10 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                                   decoration: TextDecoration.underline, // Subrayado del enlace
                                 ),
                                 recognizer: TapGestureRecognizer()
-                                  ..onTap = () {
-                                    if (jsonData?["websiteUri"] != null) {
-                                      // Acción cuando se toca el enlace (abrir la página web)
-                                      _launchUrl;
+                                  ..onTap = () async {
+                                    final Uri _url = Uri.parse(jsonData?["websiteUri"]);
+                                    if (!await launchUrl(_url)) {
+                                      throw Exception('Could not launch $_url');
                                     }
                                   },
                               ),
@@ -446,11 +463,6 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
   onTapReseas(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.frmnewreseAScreen);
   }
-  Future<void> _launchUrl(url) async {
-    final Uri _url = Uri.parse('https://flutter.dev');
-    if (!await launchUrl(_url)) {
-      throw Exception('Could not launch $_url');
-    }
-  }
+
 
 }

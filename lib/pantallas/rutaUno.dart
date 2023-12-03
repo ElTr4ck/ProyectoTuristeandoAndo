@@ -792,7 +792,7 @@ class _RutaUnoState extends State<RutaUno> {
                           child: TextButton(
                             onPressed: _selectLocation,
                             child: Text(
-                              buttonText,
+                              'Origen: $buttonText',
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
@@ -820,7 +820,7 @@ class _RutaUnoState extends State<RutaUno> {
                           child: TextButton(
                             onPressed: _searchAndSelectSecondLocation,
                             child: Text(
-                              secondLocationName,
+                              'Destino: $secondLocationName',
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
