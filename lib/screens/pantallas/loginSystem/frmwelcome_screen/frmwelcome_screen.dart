@@ -33,7 +33,9 @@ class FrmwelcomeScreen extends StatelessWidget {
                           height: 51.v,
                           text: "Iniciar sesión",
                           margin: EdgeInsets.only(left: 30.h, right: 20.h),
-                          buttonTextStyle: theme.textTheme.titleLarge!,
+                          buttonStyle: CustomButtonStyles.fillPrimaryTL22,
+                          buttonTextStyle:
+                              CustomTextStyles.titleMediumOnPrimary17,
                           onPressed: () {
                             onTapIniciarSesin(context);
                           }),
@@ -45,49 +47,67 @@ class FrmwelcomeScreen extends StatelessWidget {
   /// Section Widget
   Widget _buildWelcomeScreen(BuildContext context) {
     return Container(
-        width: 352.h,
-        margin: EdgeInsets.only(right: 8.h),
-        padding: EdgeInsets.symmetric(horizontal: 5.h, vertical: 8.v),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadiusStyle.circleBorder29,
-          image: DecorationImage(
-            image: AssetImage(ImageConstant.imgGroup8),
-            fit: BoxFit.cover,
-            colorFilter: ColorFilter.mode(
-              Colors.white.withOpacity(0.35),
-              BlendMode.dstATop,
-            ),
+      width: 352.h,
+      margin: EdgeInsets.only(right: 8.h),
+      padding: EdgeInsets.symmetric(horizontal: 5.h, vertical: 8.v),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadiusStyle.circleBorder29,
+        image: DecorationImage(
+          image: AssetImage(ImageConstant.imgGroup8),
+          fit: BoxFit.cover,
+          colorFilter: ColorFilter.mode(
+            Colors.white.withOpacity(0.35),
+            BlendMode.dstATop,
           ),
         ),
-        child: Row(mainAxisSize: MainAxisSize.max, children: [
-          Container(
-              width: 117.h,
-              margin: EdgeInsets.only(bottom: 1.v),
-              decoration: AppDecoration.outlineBlack,
-              child: Center(
-                child: Text("¿No tienes \n cuenta?",
-                    maxLines: null,
-                    overflow: TextOverflow.ellipsis,
-                    style: CustomTextStyles.titleMediumOnPrimary17),
-              )),
-          Padding(
-              padding: EdgeInsets.only(left: 11.h),
-              child: Column(children: [
-                GestureDetector(
-                    onTap: () {
-                      onTapTxtRegistrate(context);
-                    },
-                    child: Text("⠀⠀⠀Registrate",
-                        style: theme.textTheme.titleMedium)),
-                GestureDetector(
-                    onTap: () {
-                      logInAnonymously();
-                      //onTapTxtContinuacomoinvitado(context);
-                    },
-                    child: Text("⠀⠀⠀Continua como invitado",
-                        style: CustomTextStyles.titleMediumTeal100))
-              ]))
-        ]));
+      ),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "¿No tienes una cuenta?",
+                maxLines: null,
+                overflow: TextOverflow.ellipsis,
+                style: CustomTextStyles.titleMediumOnPrimary17,
+              ),
+              SizedBox(width: 10),
+              GestureDetector(
+                onTap: () {
+                  onTapTxtRegistrate(context);
+                },
+                child: Text("Registrate",
+                    style: CustomTextStyles.titleMediumTeal100),
+              ),
+              SizedBox(width: 10),
+              Text(
+                "ó",
+                maxLines: null,
+                overflow: TextOverflow.ellipsis,
+                style: CustomTextStyles.titleMediumOnPrimary17,
+              ),
+              SizedBox(width: 10),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  logInAnonymously();
+                  //onTapTxtContinuacomoinvitado(context);
+                },
+                child: Text("Continua como invitado",
+                    style: CustomTextStyles.titleMediumTeal100,
+                    textAlign: TextAlign.center),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
   }
 
   /// Navigates to the frmloginScreen when the action is triggered.
