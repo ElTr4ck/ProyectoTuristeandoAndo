@@ -1,22 +1,19 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
 
 class Marcador {
-  final String x;
-  final String y;
-  const Marcador({
-    required this.x,
-    required this.y,
-  });
+  final GeoPoint point;
+  final String nombre;
+
+  const Marcador({this.point = const GeoPoint(0, 0), this.nombre = ""});
   //json to object
   Map<String, dynamic> toJson() => {
-        "x": x,
-        "y": y,
+        "point": point,
+        "nombre": nombre,
       };
   static Marcador formSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
     return Marcador(
-      x: snapshot['x'],
-      y: snapshot['y'],
+      point: snapshot['point'],
     );
   }
 }

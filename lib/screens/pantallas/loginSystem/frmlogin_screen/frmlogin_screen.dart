@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/repositories/auth/controlers/login_controller.dart';
+import 'package:turisteando_ando/repositories/auth/wrapper.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 import 'package:turisteando_ando/widgets/custom_text_form_field.dart';
 
@@ -14,17 +14,22 @@ class FrmloginScreen extends StatelessWidget {
   TextEditingController contrasenaController = TextEditingController();
 
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
-  final controller = Get.put(LoginController());
-  void logIn() {
-    print('LogIn');
-    controller.loginUser(
-      email: emailController.text,
-      password: contrasenaController.text,
-    );
-  }
 
   @override
   Widget build(BuildContext context) {
+    final controller = LoginController(context: context);
+
+    Future<bool> logIn() async {
+      print('LogIn');
+      bool res = false;
+      res = await controller.loginUser(
+        email: emailController.text,
+        password: contrasenaController.text,
+      );
+      print(res);
+      return res;
+    }
+
     mediaQueryData = MediaQuery.of(context);
     return SafeArea(
         child: Scaffold(
@@ -132,11 +137,22 @@ class FrmloginScreen extends StatelessWidget {
                                           text: "Iniciar sesión",
                                           buttonTextStyle:
                                               theme.textTheme.titleLarge!,
-                                          onPressed: () {
+                                          onPressed: () async {
                                             if (_formKey.currentState!
                                                 .validate()) {
                                               //onTapSetLocation(context);
-                                              logIn();
+                                              bool res = await logIn();
+                                              print(res);
+                                              if (res) {
+                                                // ignore: use_build_context_synchronously
+                                                Navigator.of(context,
+                                                        rootNavigator: true)
+                                                    .pushAndRemoveUntil(
+                                                        MaterialPageRoute(
+                                                            builder: (context) =>
+                                                                new Wrapper()),
+                                                        (route) => false);
+                                              }
                                             }
                                           },
                                         ),
