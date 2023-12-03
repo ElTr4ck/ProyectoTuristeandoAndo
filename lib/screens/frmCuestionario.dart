@@ -26,7 +26,7 @@ class _ElementListState extends State<ElementList> {
     ElementItem("Cines", "El séptimo arte, más explicación no hay.",
         Icons.local_movies),
     ElementItem(
-        "Parques", "Una caminata tranquila, ¿por qué no?.", Icons.park_rounded),
+        "Parques", "Una caminata tranquila, ¿por qué no?", Icons.park_rounded),
     ElementItem("Exposiciones", "Siempre se puede descubrir algo nuevo.",
         FontAwesomeIcons.palette),
     ElementItem("Conciertos", "Artistas, bandas y las mejores experiencias.",
@@ -60,7 +60,7 @@ class _ElementListState extends State<ElementList> {
                 margin:
                     const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: const Text(
-                  'Elige tus tipos de lugares favoritos y disfruta de recomendaciones personalizadas',
+                  'Selecciona tus lugares preferidos y experimenta recomendaciones personalizadas según tus gustos.',
                   style: TextStyle(
                     fontFamily: 'Nunito',
                     fontSize: 16,
@@ -118,7 +118,7 @@ class _ElementListState extends State<ElementList> {
                   // Lógica para el botón "Finalizar"
                 },
                 child: const Text(
-                  'Recordarmelo más tarde',
+                  'Recordar más tarde',
                   style: TextStyle(
                     fontSize: 18,
                     fontWeight: FontWeight.bold,
