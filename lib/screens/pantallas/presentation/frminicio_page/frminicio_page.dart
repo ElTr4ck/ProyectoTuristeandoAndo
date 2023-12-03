@@ -820,6 +820,10 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
       onTap: () {
         // Acción a realizar cuando se toca el elemento del carrusel
         print('Elemento del carrusel presionado: $id');
+        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+          //String aux = '${prediction.lat}, ${prediction.lng}';
+          return FrminfolugarScreen(id: id);
+        }));
         // Aquí puedes agregar la lógica adicional que desees
       },
       child: Container(

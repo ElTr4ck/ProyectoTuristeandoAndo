@@ -15,6 +15,7 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:turisteando_ando/pantallas/rutaUno.dart';
 
+
 // ignore_for_file: must_be_immutable
 class FrminfolugarScreen extends StatefulWidget {
   final String id;
@@ -124,7 +125,7 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
               children: [
                 Column(
                   children: [
-                    _buildComponentLugares(context),
+                    //_buildComponentLugares(context),
                     SizedBox(height: 21.v),
                     _buildFortyTwo(context),
                     SizedBox(height: 7.v),
