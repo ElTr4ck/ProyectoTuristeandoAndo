@@ -30,40 +30,42 @@ class _FrmcorreoScreenState extends State<FrmcorreoScreen> {
             body: Container(
                 width: double.maxFinite,
                 padding: EdgeInsets.symmetric(vertical: 17.v),
-                child: Column(children: [
-                  Container(
-                      width: double.maxFinite,
-                      decoration: AppDecoration.outlineBlack,
-                      child: Text("¡Revisa tu correo electrónico!\n",
-                          maxLines: null,
-                          textAlign: TextAlign.center,
-                          overflow: TextOverflow.ellipsis,
-                          style: CustomTextStyles.titleLargeBlack900
-                              .copyWith(height: 1.41))),
-                  SizedBox(height: 5.v),
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: 42.h),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 15.h, vertical: 9.v),
-                      decoration: AppDecoration.fillGray.copyWith(
-                          borderRadius: BorderRadiusStyle.roundedBorder12),
-                      child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(height: 2.v),
-                            SizedBox(
-                                width: 244.h,
-                                child: Text(
-                                    "Hemos enviado un enlace para restablecer tu contraseña. \n Ingresa y sigue las instrucciones para completar el proceso.",
-                                    maxLines: 6,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                    style: CustomTextStyles
-                                        .titleSmallMontserratGray600
-                                        .copyWith(height: 1.41)))
-                          ]))
-                ])),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                          width: double.maxFinite,
+                          decoration: AppDecoration.outlineBlack,
+                          child: Text("¡Revisa tu correo electrónico!\n",
+                              maxLines: null,
+                              textAlign: TextAlign.center,
+                              overflow: TextOverflow.ellipsis,
+                              style: CustomTextStyles.titleLargeBlack900
+                                  .copyWith(height: 1.41))),
+                      SizedBox(height: 5.v),
+                      Container(
+                          margin: EdgeInsets.symmetric(horizontal: 42.h),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 15.h, vertical: 9.v),
+                          decoration: AppDecoration.fillGray.copyWith(
+                              borderRadius: BorderRadiusStyle.roundedBorder12),
+                          child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                SizedBox(height: 2.v),
+                                SizedBox(
+                                    width: 244.h,
+                                    child: Text(
+                                        "Hemos enviado un enlace para restablecer tu contraseña. \n Ingresa y sigue las instrucciones para completar el proceso.",
+                                        maxLines: 6,
+                                        overflow: TextOverflow.ellipsis,
+                                        textAlign: TextAlign.center,
+                                        style: CustomTextStyles
+                                            .titleSmallMontserratGray600
+                                            .copyWith(height: 1.41)))
+                              ]))
+                    ])),
             bottomNavigationBar: _buildRegresarAInicio(context)));
   }
 
