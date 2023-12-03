@@ -99,7 +99,7 @@ class FrmloginScreen extends StatelessWidget {
                                                 left: 19.h, right: 20.h),
                                             child: CustomTextFormField(
                                                 controller: emailController,
-                                                hintText: "E-mail",
+                                                hintText: "Correo elctrónico",
                                                 validator: (value) {
                                                   if (value!.isEmpty) {
                                                     return "Campo obligatorio";
@@ -135,8 +135,10 @@ class FrmloginScreen extends StatelessWidget {
                                         CustomElevatedButton(
                                           height: 57.v,
                                           text: "Iniciar sesión",
-                                          buttonTextStyle:
-                                              theme.textTheme.titleLarge!,
+                                          buttonStyle: CustomButtonStyles
+                                              .fillPrimaryTL22,
+                                          buttonTextStyle: CustomTextStyles
+                                              .titleMediumOnPrimary17,
                                           onPressed: () async {
                                             if (_formKey.currentState!
                                                 .validate()) {

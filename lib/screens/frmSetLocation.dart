@@ -20,14 +20,15 @@ class _FrmSetLocationState extends State<FrmSetLocation> {
     return SafeArea(
       child: Scaffold(
         appBar: AppBar(
-          title: const Text('Selecciona tu ubicación'),
+          title: const Text('Seleccionar ubicación'),
+          titleTextStyle: CustomTextStyles.titleMediumOnPrimary17,
           leading: IconButton(
             onPressed: () {
               Navigator.pop(context);
             },
             icon: const Icon(Icons.arrow_back),
           ),
-          backgroundColor: const Color.fromARGB(255, 17, 76, 95),
+          backgroundColor: const Color.fromARGB(255, 20, 76, 95),
         ),
         body: BlocBuilder<PlaceBloc, PlaceState>(
           builder: (context, state) {
@@ -83,10 +84,12 @@ class _FrmSetLocationState extends State<FrmSetLocation> {
                           ),
                           CustomElevatedButton(
                               height: 41.v,
-                              text: "Continuar",
+                              text: "Aceptar",
                               margin: EdgeInsets.only(
                                   left: 30.h, right: 20.h, bottom: 10.h),
-                              buttonTextStyle: theme.textTheme.titleLarge!,
+                              buttonStyle: CustomButtonStyles.fillPrimary,
+                              buttonTextStyle:
+                                  CustomTextStyles.titleMediumOnPrimary17,
                               onPressed: () {
                                 Navigator.pushNamed(
                                     context, AppRoutes.frmCuestionario);
@@ -99,8 +102,11 @@ class _FrmSetLocationState extends State<FrmSetLocation> {
                           CustomElevatedButton(
                               height: 41.v,
                               text: "Usar mi ubicación actual",
-                              margin: EdgeInsets.only(left: 30.h, right: 20.h),
+                              margin: EdgeInsets.only(
+                                  left: 30.h, right: 20.h, bottom: 10.h),
                               buttonStyle: CustomButtonStyles.fillTeal,
+                              buttonTextStyle:
+                                  CustomTextStyles.titleMediumOnPrimary17,
                               onPressed: () {})
                         ],
                       ),
@@ -152,10 +158,12 @@ class _FrmSetLocationState extends State<FrmSetLocation> {
                           ),
                           CustomElevatedButton(
                               height: 41.v,
-                              text: "Continuar",
+                              text: "Aceptar",
                               margin: EdgeInsets.only(
                                   left: 30.h, right: 20.h, bottom: 10.h),
-                              buttonTextStyle: theme.textTheme.titleLarge!,
+                              buttonStyle: CustomButtonStyles.fillPrimary,
+                              buttonTextStyle:
+                                  CustomTextStyles.titleMediumOnPrimary17,
                               onPressed: () {
                                 Navigator.pushNamed(
                                     context, AppRoutes.frmCuestionario);
@@ -163,8 +171,11 @@ class _FrmSetLocationState extends State<FrmSetLocation> {
                           CustomElevatedButton(
                               height: 41.v,
                               text: "Usar mi ubicación actual",
-                              margin: EdgeInsets.only(left: 30.h, right: 20.h),
+                              margin: EdgeInsets.only(
+                                  left: 30.h, right: 20.h, bottom: 10.h),
                               buttonStyle: CustomButtonStyles.fillTeal,
+                              buttonTextStyle:
+                                  CustomTextStyles.titleMediumOnPrimary17,
                               onPressed: () {})
                         ],
                       ),

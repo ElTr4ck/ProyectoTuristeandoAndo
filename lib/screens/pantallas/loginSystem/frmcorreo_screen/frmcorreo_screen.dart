@@ -104,9 +104,10 @@ class _FrmcorreoScreenState extends State<FrmcorreoScreen> {
 
     return CustomElevatedButton(
         height: 40.v,
-        text: "Sign out",
+        text: "Regresar a Inicio",
         margin: EdgeInsets.only(left: 30.h, right: 30.h, bottom: 41.v),
-        buttonTextStyle: CustomTextStyles.titleMediumNunitoOnPrimary18,
+        buttonStyle: CustomButtonStyles.fillPrimaryTL22,
+        buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
         onPressed: () {
           signOut();
           //onTapRegresarAInicio(context);

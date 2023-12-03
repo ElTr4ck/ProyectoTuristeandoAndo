@@ -45,6 +45,8 @@ class FrmcontraseAScreen extends StatelessWidget {
                               text: "Enviar",
                               margin: EdgeInsets.only(left: 46.h, right: 47.h),
                               buttonStyle: CustomButtonStyles.fillPrimaryTL16,
+                              buttonTextStyle:
+                                  CustomTextStyles.titleMediumOnPrimary17,
                               onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   bool res = await sendResetEmail();
@@ -55,7 +57,9 @@ class FrmcontraseAScreen extends StatelessWidget {
                           CustomElevatedButton(
                               text: "Cancelar",
                               margin: EdgeInsets.only(left: 46.h, right: 47.h),
-                              buttonStyle: CustomButtonStyles.fillTeal,
+                              buttonStyle: CustomButtonStyles.radiusTL23,
+                              buttonTextStyle:
+                                  CustomTextStyles.titleMediumOnPrimary17,
                               onPressed: () {
                                 onTapCancelar(context);
                               })
@@ -77,7 +81,7 @@ class FrmcontraseAScreen extends StatelessWidget {
                       textAlign: TextAlign.center,
                       maxLines: null,
                       overflow: TextOverflow.ellipsis,
-                      style: theme.textTheme.headlineSmall!
+                      style: CustomTextStyles.titleLargeBlack900
                           .copyWith(height: 1.41)))),
           Align(
               alignment: Alignment.bottomCenter,

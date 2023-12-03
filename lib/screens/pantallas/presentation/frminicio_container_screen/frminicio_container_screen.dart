@@ -60,7 +60,7 @@ class FrminicioContainerScreen extends StatelessWidget {
       case AppRoutes.frmmarcadoresScreen:
         return FrmmarcadoresScreen();
       case AppRoutes.frminfolugarScreen:
-        return FrminfolugarScreen();
+        return FrminfolugarScreen(id: '',);
       case AppRoutes.frmnewreseAScreen:
         return FrmnewreseAScreen();
       case AppRoutes.rutas:
