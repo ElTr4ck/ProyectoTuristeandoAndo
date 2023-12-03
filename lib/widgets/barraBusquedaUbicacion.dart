@@ -25,9 +25,10 @@ class _BarraBusquedaUbicacionState extends State<BarraBusquedaUbicacion> {
               child: Column(
                 children: [
                   TextField(
-                    style: const TextStyle(color: Colors.black),                    controller: _textController,
+                    style: const TextStyle(color: Colors.black),
+                    controller: _textController,
                     decoration: InputDecoration(
-                      hintText: 'Ingresa tu ubicación',
+                      hintText: 'Buscar ubicación',
                       prefixIcon:
                           const Icon(Icons.search, color: Color(0xFF114C5F)),
                       suffixIcon: IconButton(
@@ -38,7 +39,7 @@ class _BarraBusquedaUbicacionState extends State<BarraBusquedaUbicacion> {
                           });
                         },
                       ),
-                      labelText: 'Ingresa tu ubicación',
+                      labelText: 'Buscar ubicación',
                       border: const OutlineInputBorder(),
                       filled: true,
                       fillColor: Colors.white,
@@ -71,30 +72,32 @@ class _BarraBusquedaUbicacionState extends State<BarraBusquedaUbicacion> {
                                   ),
                                 ),
                                 onTap: () {
-                                  context.read<PlaceBloc>().add(
-                                    LoadPlace(
-                                      placeId: state.autocomplete[index].placeId,
-                                    )
-                                    );
-                                  context.read<AutoCompleteBloc>().add(AutoCompleteSelected(selectedText: state.autocomplete[index].descripcion));
+                                  context.read<PlaceBloc>().add(LoadPlace(
+                                        placeId:
+                                            state.autocomplete[index].placeId,
+                                      ));
+                                  context.read<AutoCompleteBloc>().add(
+                                      AutoCompleteSelected(
+                                          selectedText: state
+                                              .autocomplete[index]
+                                              .descripcion));
                                 },
                               );
                             }),
                       ))
                 ],
               ));
-        }
-        else if(state is AutoCompleteSelectedState){
+        } else if (state is AutoCompleteSelectedState) {
           _textController.text = state.selectedText;
           return Padding(
               padding: const EdgeInsets.fromLTRB(16, 16, 16, 0),
               child: Column(
                 children: [
                   TextField(
-                    style: const TextStyle(color: Colors.black),                    
+                    style: const TextStyle(color: Colors.black),
                     controller: _textController,
                     decoration: InputDecoration(
-                      hintText: 'Ingresa tu ubicación',
+                      hintText: 'Buscar ubicación',
                       prefixIcon:
                           const Icon(Icons.search, color: Color(0xFF114C5F)),
                       suffixIcon: IconButton(
@@ -105,7 +108,7 @@ class _BarraBusquedaUbicacionState extends State<BarraBusquedaUbicacion> {
                           });
                         },
                       ),
-                      labelText: 'Ingresa tu ubicación',
+                      labelText: 'Buscar ubicación',
                       border: const OutlineInputBorder(),
                       filled: true,
                       fillColor: Colors.white,
@@ -118,8 +121,7 @@ class _BarraBusquedaUbicacionState extends State<BarraBusquedaUbicacion> {
                   ),
                 ],
               ));
-        }
-        else {
+        } else {
           return const Text('Algo salio mal...');
         }
       },
