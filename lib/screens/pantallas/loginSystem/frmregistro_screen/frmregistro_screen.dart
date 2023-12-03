@@ -89,6 +89,7 @@ class FrmregistroScreen extends StatelessWidget {
         },
         controller: textFieldOutlineNombre,
         hintText: "Nombre",
+        textStyle: CustomTextStyles.titleMediumOnPrimary17,
         prefix: Container(
             margin: EdgeInsets.symmetric(horizontal: 13.h, vertical: 16.v),
 
@@ -116,6 +117,7 @@ class FrmregistroScreen extends StatelessWidget {
         },
         controller: textFieldOutlineApellido,
         hintText: "Apellidos",
+        textStyle: CustomTextStyles.titleMediumOnPrimary17,
         prefix: Container(
             margin: EdgeInsets.symmetric(horizontal: 13.h, vertical: 16.v),
 
@@ -144,6 +146,7 @@ class FrmregistroScreen extends StatelessWidget {
       },
       controller: textFieldOutlineCorreo,
       hintText: "Correo electronico",
+      textStyle: CustomTextStyles.titleMediumOnPrimary17,
       textInputAction: TextInputAction.done,
       prefix: Container(
           margin: EdgeInsets.symmetric(horizontal: 13.h, vertical: 16.v),
@@ -175,6 +178,7 @@ class FrmregistroScreen extends StatelessWidget {
         obscureText: true,
         controller: textFieldOutlineContrasena,
         hintText: "Contraseña",
+        textStyle: CustomTextStyles.titleMediumOnPrimary17,
         textInputAction: TextInputAction.done,
         prefix: Container(
             margin: EdgeInsets.symmetric(horizontal: 15.h, vertical: 16.v),
@@ -192,6 +196,7 @@ class FrmregistroScreen extends StatelessWidget {
       height: 45.v,
       text: "Registrarme",
       buttonStyle: CustomButtonStyles.fillPrimaryTL22,
+      buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
       onPressed: () {
         if (formkey.currentState!.validate()) {
           signup();
@@ -206,6 +211,7 @@ class FrmregistroScreen extends StatelessWidget {
         height: 46.v,
         text: "Quiero seguir como invitado",
         buttonStyle: CustomButtonStyles.radiusTL23,
+        buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
         onPressed: () {
           logInAnonymously();
           //onTapCancelarQuieroSeguirComo(context);

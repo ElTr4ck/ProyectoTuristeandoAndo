@@ -38,7 +38,7 @@ class _FrmcorreoScreenState extends State<FrmcorreoScreen> {
                           maxLines: null,
                           textAlign: TextAlign.center,
                           overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.headlineSmall!
+                          style: CustomTextStyles.titleLargeBlack900
                               .copyWith(height: 1.41))),
                   SizedBox(height: 5.v),
                   Container(
@@ -60,7 +60,7 @@ class _FrmcorreoScreenState extends State<FrmcorreoScreen> {
                                     overflow: TextOverflow.ellipsis,
                                     textAlign: TextAlign.center,
                                     style: CustomTextStyles
-                                        .titleLargeOnPrimaryContainer
+                                        .titleSmallMontserratGray600
                                         .copyWith(height: 1.41)))
                           ]))
                 ])),
@@ -71,9 +71,10 @@ class _FrmcorreoScreenState extends State<FrmcorreoScreen> {
   Widget _buildRegresarAInicio(BuildContext context) {
     return CustomElevatedButton(
         height: 40.v,
-        text: "Sign out",
+        text: "Regresar a Inicio",
         margin: EdgeInsets.only(left: 30.h, right: 30.h, bottom: 41.v),
-        buttonTextStyle: CustomTextStyles.titleMediumNunitoOnPrimary18,
+        buttonStyle: CustomButtonStyles.fillPrimaryTL22,
+        buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
         onPressed: () {
           signOut();
           //onTapRegresarAInicio(context);

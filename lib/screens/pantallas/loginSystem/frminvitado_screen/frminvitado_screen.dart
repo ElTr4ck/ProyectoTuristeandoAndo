@@ -87,6 +87,7 @@ class _FrminvitadoScreenState extends State<FrminvitadoScreen> {
       },
       height: 40.v,
       text: "Continuar",
+      buttonStyle: CustomButtonStyles.fillPrimaryTL22,
       margin: EdgeInsets.only(
         left: 30.h,
         right: 30.h,
