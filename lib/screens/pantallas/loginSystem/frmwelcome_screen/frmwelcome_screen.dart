@@ -96,8 +96,9 @@ class FrmwelcomeScreen extends StatelessWidget {
                     },
                     child: Text("⠀⠀⠀Continua como invitado",
                         style: CustomTextStyles.titleMediumTeal100))
-              ]))
-        ]));
+              ])
+        ])))
+        ;
   }
 
   /// Navigates to the frmloginScreen when the action is triggered.

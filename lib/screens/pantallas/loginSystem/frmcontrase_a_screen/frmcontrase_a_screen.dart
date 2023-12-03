@@ -47,7 +47,7 @@ class FrmcontraseAScreen extends StatelessWidget {
                               buttonStyle: CustomButtonStyles.fillPrimaryTL16,
                               buttonTextStyle:
                                   CustomTextStyles.titleMediumOnPrimary17,
-                              onPressed: () {
+                              onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
                                   bool res = await sendResetEmail();
                                   if (res) onTapEnviar(context);
