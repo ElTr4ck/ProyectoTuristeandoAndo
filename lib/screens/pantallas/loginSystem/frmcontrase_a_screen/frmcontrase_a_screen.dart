@@ -1,6 +1,9 @@
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
+import 'package:turisteando_ando/repositories/auth/utils.dart';
+import 'package:turisteando_ando/repositories/exeptions/signup_email_failure.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 import 'package:turisteando_ando/widgets/custom_text_form_field.dart';
 
@@ -8,12 +11,20 @@ class FrmcontraseAScreen extends StatelessWidget {
   FrmcontraseAScreen({Key? key}) : super(key: key);
   GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   TextEditingController textFieldOutlineCorreo = TextEditingController();
-  void sendResetEmail() async {
-    await AuthMethods().resetPassword(textFieldOutlineCorreo.text);
-  }
 
   @override
   Widget build(BuildContext context) {
+    Future<bool> sendResetEmail() async {
+      try {
+        await AuthMethods().resetPassword(textFieldOutlineCorreo.text);
+        return true;
+      } on SignupEmailFailure catch (e) {
+        // ignore: use_build_context_synchronously
+        showSnackBar(e.message, context);
+        return false;
+      }
+    }
+
     mediaQueryData = MediaQuery.of(context);
     return SafeArea(
         child: Scaffold(
@@ -34,10 +45,10 @@ class FrmcontraseAScreen extends StatelessWidget {
                               text: "Enviar",
                               margin: EdgeInsets.only(left: 46.h, right: 47.h),
                               buttonStyle: CustomButtonStyles.fillPrimaryTL16,
-                              onPressed: () {
+                              onPressed: () async {
                                 if (_formKey.currentState!.validate()) {
-                                  sendResetEmail();
-                                  onTapEnviar(context);
+                                  bool res = await sendResetEmail();
+                                  if (res) onTapEnviar(context);
                                 }
                               }),
                           SizedBox(height: 14.v),
@@ -125,7 +136,7 @@ class FrmcontraseAScreen extends StatelessWidget {
   /// Navigates to the frmcorreoScreen when the action is triggered.
   onTapEnviar(BuildContext context) {
     Navigator.pop(context);
-    Navigator.pushNamed(context, AppRoutes.frmcorreoScreen);
+    Navigator.pushNamed(context, AppRoutes.frmcambiocontScreen);
   }
 
   /// Navigates to the frmloginScreen when the action is triggered.

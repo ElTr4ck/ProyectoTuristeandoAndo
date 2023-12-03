@@ -1,13 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
+import 'package:turisteando_ando/repositories/auth/wrapper.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 
 class FrmwelcomeScreen extends StatelessWidget {
   const FrmwelcomeScreen({Key? key}) : super(key: key);
-  void logInAnonymously() async {
-    await AuthMethods().logInAnonymously();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +42,11 @@ class FrmwelcomeScreen extends StatelessWidget {
 
   /// Section Widget
   Widget _buildWelcomeScreen(BuildContext context) {
+    Future<bool> logInAnonymously() async {
+      bool res = await AuthMethods().logInAnonymously(context);
+      return res;
+    }
+
     return Container(
         width: 352.h,
         margin: EdgeInsets.only(right: 8.h),
@@ -80,9 +83,14 @@ class FrmwelcomeScreen extends StatelessWidget {
                     child: Text("⠀⠀⠀Registrate",
                         style: theme.textTheme.titleMedium)),
                 GestureDetector(
-                    onTap: () {
-                      logInAnonymously();
-                      //onTapTxtContinuacomoinvitado(context);
+                    onTap: () async {
+                      bool res = await logInAnonymously();
+                      if (res) {
+                        // ignore: use_build_context_synchronously
+                        Navigator.of(context, rootNavigator: true)
+                            .pushReplacement(MaterialPageRoute(
+                                builder: (context) => new Wrapper()));
+                      }
                     },
                     child: Text("⠀⠀⠀Continua como invitado",
                         style: CustomTextStyles.titleMediumTeal100))

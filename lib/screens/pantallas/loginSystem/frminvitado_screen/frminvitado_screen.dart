@@ -1,8 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:turisteando_ando/core/app_export.dart';
-import 'package:turisteando_ando/repositories/auth/controlers/signout_controller.dart';
-import 'package:turisteando_ando/screens/pantallas/loginSystem/frmwelcome_screen/frmwelcome_screen.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 
 class FrminvitadoScreen extends StatefulWidget {
@@ -16,17 +13,9 @@ class FrminvitadoScreen extends StatefulWidget {
 }
 
 class _FrminvitadoScreenState extends State<FrminvitadoScreen> {
-  final controller = Get.put(SignoutController());
-
-  void signOut() async {
-    await controller.signout();
-    Get.to(FrmwelcomeScreen());
-  }
-
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
-
     return SafeArea(
       child: Scaffold(
         body: Container(
@@ -83,7 +72,10 @@ class _FrminvitadoScreenState extends State<FrminvitadoScreen> {
   Widget _buildContinueButton(BuildContext context) {
     return CustomElevatedButton(
       onPressed: () {
-        signOut();
+        /*await signOut();
+        Navigator.pushNamedAndRemoveUntil(
+            context, AppRoutes.frmwelcomeScreen, (route) => false);*/
+        Navigator.pushNamed(context, AppRoutes.frmSetLocation);
       },
       height: 40.v,
       text: "Continuar",

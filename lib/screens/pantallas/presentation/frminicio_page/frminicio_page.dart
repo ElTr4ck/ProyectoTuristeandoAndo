@@ -1,7 +1,5 @@
-import 'package:get/get.dart';
 import 'package:turisteando_ando/repositories/auth/controlers/signout_controller.dart';
-import 'package:turisteando_ando/screens/pantallas/loginSystem/frmwelcome_screen/frmwelcome_screen.dart';
-
+import 'package:turisteando_ando/repositories/auth/wrapper.dart';
 import '../frminicio_page/widgets/ninety_item_widget.dart';
 import '../frminicio_page/widgets/recommended_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -17,15 +15,14 @@ class FrminicioPage extends StatelessWidget {
 
   TextEditingController searchController = TextEditingController();
 
-  final controller = Get.put(SignoutController());
-
-  void signout() async {
-    await controller.signout();
-    Get.to(FrmwelcomeScreen());
-  }
-
   @override
   Widget build(BuildContext context) {
+    final controllerSignOut = SignoutController(context: context);
+
+    Future<void> signOut() async {
+      await controllerSignOut.signout();
+    }
+
     mediaQueryData = MediaQuery.of(context);
     return SafeArea(
         child: Scaffold(
@@ -47,11 +44,20 @@ class FrminicioPage extends StatelessWidget {
                                       mainAxisAlignment: MainAxisAlignment.end,
                                       children: [
                                         TextButton(
-                                          onPressed: () {
-                                            signout();
+                                          onPressed: () async {
+                                            await signOut();
+                                            // ignore: use_build_context_synchronously
+                                            Navigator.of(context,
+                                                    rootNavigator: true)
+                                                .pushAndRemoveUntil(
+                                                    MaterialPageRoute(
+                                                        builder: (context) =>
+                                                            new Wrapper()),
+                                                    (route) => false);
                                           },
                                           style: TextButton.styleFrom(
-                                            padding: const EdgeInsets.only(right: 50),
+                                            padding: const EdgeInsets.only(
+                                                right: 50),
                                           ),
                                           child: const Text(
                                             'Cerrar sesión',

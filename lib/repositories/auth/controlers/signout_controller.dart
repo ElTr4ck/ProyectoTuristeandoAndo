@@ -1,21 +1,19 @@
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:get/get.dart';
 import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
+import 'package:turisteando_ando/repositories/auth/utils.dart';
 
-class SignoutController extends GetxController {
-  static SignoutController get instance => Get.find();
+class SignoutController {
   final email = TextEditingController();
   final password = TextEditingController();
-
+  final BuildContext context;
+  SignoutController({required this.context});
   Future<void> signout() async {
     try {
-      final auth = AuthMethods.instance;
+      final auth = AuthMethods();
       await auth.signOut();
-
-      await auth.setInitialScreen(auth.firebaseUser);
     } catch (e) {
-      print(e);
+      // ignore: use_build_context_synchronously
+      showSnackBar(e.toString(), context);
     }
   }
 }
