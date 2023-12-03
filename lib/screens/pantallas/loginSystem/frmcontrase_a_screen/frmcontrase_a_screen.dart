@@ -115,7 +115,6 @@ class FrmcontraseAScreen extends StatelessWidget {
         controller: textFieldOutlineCorreo,
         hintText: "Correo electronico",
         textInputAction: TextInputAction.done,
-        textStyle: CustomTextStyles.titleMediumOnPrimary17,
         prefix: Container(
             margin: EdgeInsets.symmetric(horizontal: 13.h, vertical: 16.v),
             child: CustomImageView(
