@@ -31,7 +31,7 @@ class FrmregistroScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 15.h, vertical: 38.v),
                 child: Form(
                     key: formkey,
-                    child: Column(children: [
+                    child: Column(mainAxisSize: MainAxisSize.min, children: [
                       SizedBox(height: 32.v),
                       _buildTextFieldOutline(context),
                       SizedBox(height: 15.v),
@@ -131,7 +131,7 @@ class FrmregistroScreen extends StatelessWidget {
         return null;
       },
       controller: textFieldOutlineCorreo,
-      hintText: "Correo electronico",
+      hintText: "Correo electrónico",
       textInputAction: TextInputAction.done,
       prefix: Container(
           margin: EdgeInsets.symmetric(horizontal: 13.h, vertical: 16.v),
@@ -190,6 +190,7 @@ class FrmregistroScreen extends StatelessWidget {
       height: 45.v,
       text: "Registrarme",
       buttonStyle: CustomButtonStyles.fillPrimaryTL22,
+      buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
       onPressed: () async {
         if (formkey.currentState!.validate()) {
           bool res = await signup();
@@ -208,7 +209,7 @@ class FrmregistroScreen extends StatelessWidget {
 
     return CustomElevatedButton(
         height: 46.v,
-        text: "Quiero seguir como invitado",
+        text: "Continuar como invitado",
         buttonStyle: CustomButtonStyles.radiusTL23,
         onPressed: () async {
           bool res = await logInAnonymously();
