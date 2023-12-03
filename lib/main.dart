@@ -62,9 +62,9 @@ class MyApp extends StatelessWidget {
             useMaterial3: true,
           ),*/
           //home: const MyHomePage(title: 'Flutter Demo Home Page'),
-          //initialRoute: AppRoutes.frmwelcomeScreen,
-          navigatorKey: Get.key,
-          home: const ProgressIndicator(),
+          initialRoute: AppRoutes.frmRutaDestacada,
+          //navigatorKey: Get.key,
+          //home: const ProgressIndicator(),
           routes: AppRoutes.routes,
         ),
       ),
