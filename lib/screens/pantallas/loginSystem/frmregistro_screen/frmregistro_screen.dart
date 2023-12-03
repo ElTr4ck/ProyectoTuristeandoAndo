@@ -43,7 +43,7 @@ class FrmregistroScreen extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: 15.h, vertical: 38.v),
                 child: Form(
                     key: formkey,
-                    child: Column(children: [
+                    child: Column(mainAxisSize: MainAxisSize.min, children: [
                       SizedBox(height: 32.v),
                       _buildTextFieldOutline(context),
                       SizedBox(height: 15.v),
@@ -89,7 +89,6 @@ class FrmregistroScreen extends StatelessWidget {
         },
         controller: textFieldOutlineNombre,
         hintText: "Nombre",
-        textStyle: CustomTextStyles.titleMediumOnPrimary17,
         prefix: Container(
             margin: EdgeInsets.symmetric(horizontal: 13.h, vertical: 16.v),
 
@@ -117,7 +116,6 @@ class FrmregistroScreen extends StatelessWidget {
         },
         controller: textFieldOutlineApellido,
         hintText: "Apellidos",
-        textStyle: CustomTextStyles.titleMediumOnPrimary17,
         prefix: Container(
             margin: EdgeInsets.symmetric(horizontal: 13.h, vertical: 16.v),
 
@@ -145,8 +143,7 @@ class FrmregistroScreen extends StatelessWidget {
         return null;
       },
       controller: textFieldOutlineCorreo,
-      hintText: "Correo electronico",
-      textStyle: CustomTextStyles.titleMediumOnPrimary17,
+      hintText: "Correo electrónico",
       textInputAction: TextInputAction.done,
       prefix: Container(
           margin: EdgeInsets.symmetric(horizontal: 13.h, vertical: 16.v),
@@ -178,7 +175,6 @@ class FrmregistroScreen extends StatelessWidget {
         obscureText: true,
         controller: textFieldOutlineContrasena,
         hintText: "Contraseña",
-        textStyle: CustomTextStyles.titleMediumOnPrimary17,
         textInputAction: TextInputAction.done,
         prefix: Container(
             margin: EdgeInsets.symmetric(horizontal: 15.h, vertical: 16.v),
@@ -209,7 +205,7 @@ class FrmregistroScreen extends StatelessWidget {
   Widget _buildCancelarQuieroSeguirComo(BuildContext context) {
     return CustomElevatedButton(
         height: 46.v,
-        text: "Quiero seguir como invitado",
+        text: "Continuar como invitado",
         buttonStyle: CustomButtonStyles.radiusTL23,
         buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
         onPressed: () {

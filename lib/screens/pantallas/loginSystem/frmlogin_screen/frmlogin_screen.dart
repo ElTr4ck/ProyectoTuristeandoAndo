@@ -94,7 +94,7 @@ class FrmloginScreen extends StatelessWidget {
                                                 left: 19.h, right: 20.h),
                                             child: CustomTextFormField(
                                                 controller: emailController,
-                                                hintText: "E-mail",
+                                                hintText: "Correo elctrónico",
                                                 validator: (value) {
                                                   if (value!.isEmpty) {
                                                     return "Campo obligatorio";
