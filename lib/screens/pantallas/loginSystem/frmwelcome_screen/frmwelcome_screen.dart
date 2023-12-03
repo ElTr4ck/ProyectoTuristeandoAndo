@@ -46,66 +46,72 @@ class FrmwelcomeScreen extends StatelessWidget {
 
   /// Section Widget
   Widget _buildWelcomeScreen(BuildContext context) {
-    return Container(
-      width: 352.h,
-      margin: EdgeInsets.only(right: 8.h),
-      padding: EdgeInsets.symmetric(horizontal: 5.h, vertical: 8.v),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadiusStyle.circleBorder29,
-        image: DecorationImage(
-          image: AssetImage(ImageConstant.imgGroup8),
-          fit: BoxFit.cover,
-          colorFilter: ColorFilter.mode(
-            Colors.white.withOpacity(0.35),
-            BlendMode.dstATop,
+    return Center(
+      child: Container(
+        width: 352.h,
+        margin: EdgeInsets.only(right: 8.h, left: 9.h),
+        padding: EdgeInsets.symmetric(horizontal: 5.h, vertical: 8.v),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadiusStyle.circleBorder29,
+          image: DecorationImage(
+            image: AssetImage(ImageConstant.imgGroup8),
+            fit: BoxFit.cover,
+            colorFilter: ColorFilter.mode(
+              Colors.white.withOpacity(0.35),
+              BlendMode.dstATop,
+            ),
           ),
         ),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "¿No tienes una cuenta?",
-                maxLines: null,
-                overflow: TextOverflow.ellipsis,
-                style: CustomTextStyles.titleMediumOnPrimary17,
-              ),
-              SizedBox(width: 10),
-              GestureDetector(
-                onTap: () {
-                  onTapTxtRegistrate(context);
-                },
-                child: Text("Registrate",
-                    style: CustomTextStyles.titleMediumTeal100),
-              ),
-              SizedBox(width: 10),
-              Text(
-                "ó",
-                maxLines: null,
-                overflow: TextOverflow.ellipsis,
-                style: CustomTextStyles.titleMediumOnPrimary17,
-              ),
-              SizedBox(width: 10),
-            ],
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              GestureDetector(
-                onTap: () {
-                  logInAnonymously();
-                  //onTapTxtContinuacomoinvitado(context);
-                },
-                child: Text("Continua como invitado",
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "¿No tienes una cuenta?",
+                  maxLines: null,
+                  overflow: TextOverflow.ellipsis,
+                  style: CustomTextStyles.titleMediumOnPrimary17,
+                ),
+                SizedBox(width: 10),
+                GestureDetector(
+                  onTap: () {
+                    onTapTxtRegistrate(context);
+                  },
+                  child: Text(
+                    "Regístrate",
                     style: CustomTextStyles.titleMediumTeal100,
-                    textAlign: TextAlign.center),
-              ),
-            ],
-          ),
-        ],
+                  ),
+                ),
+                SizedBox(width: 10),
+                Text(
+                  "ó",
+                  maxLines: null,
+                  overflow: TextOverflow.ellipsis,
+                  style: CustomTextStyles.titleMediumOnPrimary17,
+                ),
+                SizedBox(width: 10),
+              ],
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                GestureDetector(
+                  onTap: () {
+                    logInAnonymously();
+                    //onTapTxtContinuacomoinvitado(context);
+                  },
+                  child: Text(
+                    "Continúa como invitado",
+                    style: CustomTextStyles.titleMediumTeal100,
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
