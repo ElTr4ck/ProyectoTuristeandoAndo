@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:turisteando_ando/repositories/auth/controlers/signout_controller.dart';
 import 'package:turisteando_ando/repositories/auth/wrapper.dart';
 import '../frminicio_page/widgets/ninety_item_widget.dart';
@@ -157,7 +159,7 @@ class FrminicioPage extends StatelessWidget {
     return Padding(
         padding: EdgeInsets.only(left: 10.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("De acuerdo con tus preferencias te recomendamos...",
+          Text("Te recomendamos...",
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, fontFamily: 'Nunito',)),
           SizedBox(height: 20.v),
           /*SizedBox(
