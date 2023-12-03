@@ -36,6 +36,7 @@ class _FrminvitadoScreenState extends State<FrminvitadoScreen> {
             vertical: 25.v,
           ),
           child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Container(
                 decoration: AppDecoration.outlineBlack,
