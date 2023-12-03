@@ -159,7 +159,7 @@ class FrminicioPage extends StatelessWidget {
     return Padding(
         padding: EdgeInsets.only(left: 10.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-          Text("De acuerdo con tus preferencias te recomendamos...",
+          Text("Te recomendamos...",
               style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, fontFamily: 'Nunito',)),
           SizedBox(height: 20.v),
           /*SizedBox(
