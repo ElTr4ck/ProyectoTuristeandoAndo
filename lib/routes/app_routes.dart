@@ -74,7 +74,7 @@ class AppRoutes {
     frmporvisitarScreen: (context) => FrmporvisitarScreen(),
     frmmarcadoresScreen: (context) => FrmmarcadoresScreen(),
     frmmarcmapaScreen: (context) => FrmmarcmapaScreen(),
-    frminfolugarScreen: (context) => FrminfolugarScreen(),
+    frminfolugarScreen: (context) => FrminfolugarScreen(id: '',),
     frmreseATabContainerScreen: (context) => FrmreseATabContainerScreen(),
     frmnewreseAScreen: (context) => FrmnewreseAScreen(),
     frmreportarreseAScreen: (context) => FrmreportarreseAScreen(),

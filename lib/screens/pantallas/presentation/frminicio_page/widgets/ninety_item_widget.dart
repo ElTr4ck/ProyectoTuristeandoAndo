@@ -4,10 +4,9 @@ import 'package:turisteando_ando/widgets/custom_icon_button.dart';
 
 // ignore: must_be_immutable
 class NinetyItemWidget extends StatelessWidget {
-  const NinetyItemWidget({Key? key})
-      : super(
-          key: key,
-        );
+  final String itemText;
+
+  NinetyItemWidget({required this.itemText});
 
   @override
   Widget build(BuildContext context) {
@@ -48,7 +47,7 @@ class NinetyItemWidget extends StatelessWidget {
                       borderRadius: BorderRadiusStyle.circleBorder12,
                     ),
                     child: Text(
-                      "Museo Soumaya",
+                      itemText,
                       style: theme.textTheme.bodySmall,
                     ),
                   ),

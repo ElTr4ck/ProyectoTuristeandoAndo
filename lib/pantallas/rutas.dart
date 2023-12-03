@@ -90,7 +90,7 @@ class _PolylineScreenState extends State<PolylineScreen> {
           ),
 
           Container(
-            height: 150,
+            height: 125,
             decoration: BoxDecoration(
               color: Colors.white.withOpacity(0.8),
               // Ajusta la opacidad y el color del fondo difuminado
@@ -103,7 +103,7 @@ class _PolylineScreenState extends State<PolylineScreen> {
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
                 children: [
-                  SizedBox(height: 45), // Espacio interno
+                  SizedBox(height: 20), // Espacio interno
                   Container(
                     alignment: Alignment.center,
                     // Centrar horizontal y verticalmente
@@ -169,7 +169,7 @@ class _PolylineScreenState extends State<PolylineScreen> {
                 ],
             ),
           ),
-          Align(
+          /*Align(
             alignment: Alignment.bottomCenter,
             child: Container(
               padding: EdgeInsets.all(10.0),
@@ -184,13 +184,13 @@ class _PolylineScreenState extends State<PolylineScreen> {
                 ],
               ),
             ),
-          ),
+          ),*/
           Positioned(
-            bottom: 68.1,
+            bottom: 0,
             left: 0,
             right: 0,
             child: Container(
-              height: 170,
+              height: 220,
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.8),
                 boxShadow: [
@@ -587,7 +587,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
   Widget build(BuildContext context) {
     return CarouselSlider(
       options: CarouselOptions(
-        height: 140.0,
+        height: 190.0,
         enlargeCenterPage: true,
         autoPlay: true,
         aspectRatio: 16 / 9,
