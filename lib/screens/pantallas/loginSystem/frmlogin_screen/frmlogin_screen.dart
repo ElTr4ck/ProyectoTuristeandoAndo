@@ -130,8 +130,10 @@ class FrmloginScreen extends StatelessWidget {
                                         CustomElevatedButton(
                                           height: 57.v,
                                           text: "Iniciar sesión",
-                                          buttonTextStyle:
-                                              theme.textTheme.titleLarge!,
+                                          buttonStyle: CustomButtonStyles
+                                              .fillPrimaryTL22,
+                                          buttonTextStyle: CustomTextStyles
+                                              .titleMediumOnPrimary17,
                                           onPressed: () {
                                             if (_formKey.currentState!
                                                 .validate()) {
