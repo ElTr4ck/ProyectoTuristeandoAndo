@@ -12,6 +12,7 @@ class CustomBottomBar extends StatefulWidget {
 
 class CustomBottomBarState extends State<CustomBottomBar> {
   int selectedIndex = 0;
+  List<bool> selectedStates = [true, false, false, false];
 
   List<BottomMenuModel> bottomMenuList = [
     BottomMenuModel(
@@ -67,19 +68,25 @@ class CustomBottomBarState extends State<CustomBottomBar> {
               imagePath: bottomMenuList[index].icon,
               height: 24.adaptSize,
               width: 24.adaptSize,
-              color: appTheme.gray400,
+              color: selectedStates[index]
+                  ? const Color.fromARGB(255, 20, 76, 95)
+                  : appTheme.gray400,
             ),
             activeIcon: CustomImageView(
               imagePath: bottomMenuList[index].activeIcon,
               height: 20.adaptSize,
               width: 20.adaptSize,
-              color: theme.colorScheme.onPrimary.withOpacity(1),
+              color: selectedStates[index]
+                  ? const Color.fromARGB(255, 20, 76, 95)
+                  : theme.colorScheme.onPrimary.withOpacity(1),
             ),
             label: '',
           );
         }),
         onTap: (index) {
-          selectedIndex = index;
+          for (int i = 0; i < selectedStates.length; i++) {
+            selectedStates[i] = (i == index);
+          }
           widget.onChanged?.call(bottomMenuList[index].type);
           setState(() {});
         },
