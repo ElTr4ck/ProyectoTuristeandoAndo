@@ -5,6 +5,7 @@ import 'package:turisteando_ando/screens/pantallas/presentation/frminfolugar_scr
 import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmmarcadores_screen/frmmarcadores_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmnewrese_a_screen/frmnewrese_a_screen.dart';
+import 'package:turisteando_ando/screens/rutaDestacada/frmRutaDestacada.dart';
 import 'package:turisteando_ando/widgets/custom_bottom_bar.dart';
 
 // ignore_for_file: must_be_immutable
@@ -65,6 +66,8 @@ class FrminicioContainerScreen extends StatelessWidget {
         return FrmnewreseAScreen();
       case AppRoutes.rutas:
         return PolylineScreen();
+      case AppRoutes.frmRutaDestacada:
+        return FrmRutaDestacada();
       default:
         return DefaultWidget();
     }

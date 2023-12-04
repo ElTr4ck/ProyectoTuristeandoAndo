@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:turisteando_ando/repositories/auth/controlers/signout_controller.dart';
 import 'package:turisteando_ando/repositories/auth/wrapper.dart';
+import 'package:turisteando_ando/widgets/app_bar/appbar_side_bar.dart';
 import '../frminicio_page/widgets/ninety_item_widget.dart';
 import '../frminicio_page/widgets/recommended_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -19,7 +20,7 @@ import 'package:turisteando_ando/screens/pantallas/presentation/frminfolugar_scr
 class FrminicioPage extends StatelessWidget {
   FrminicioPage({Key? key}) : super(key: key);
 
-  List<String> dropdownItemList = ["Item One", "Item Two", "Item Three"];
+  //List<String> dropdownItemList = ["Item One", "Item Two", "Item Three"];
 
   TextEditingController searchController = TextEditingController();
 
@@ -34,70 +35,31 @@ class FrminicioPage extends StatelessWidget {
     mediaQueryData = MediaQuery.of(context);
     return SafeArea(
         child: Scaffold(
+          appBar: AppBar(title: null, 
+          backgroundColor: Colors.white,
+          elevation: 0,
+          leading: Builder(
+            builder: (BuildContext context){
+              return IconButton(
+                onPressed: (){
+                  Scaffold.of(context).openDrawer();
+                }, 
+                icon: const Icon(Icons.menu, color: Color.fromARGB(255,17,76,95))
+              );
+            }
+          ),
+          ),
+            drawer: SideBar(),
             resizeToAvoidBottomInset: false,
             body: Container(
                 width: double.maxFinite,
                 decoration: AppDecoration.fillOnPrimary,
                 child: Container(
-                    padding: EdgeInsets.symmetric(vertical: 30.v),
+                    padding: EdgeInsets.symmetric(vertical: 2.v),
                     child: ListView(
                       children: [
                         Column(children: [
                           SizedBox(height: 2.v),
-                          Align(
-                              alignment: Alignment.centerRight,
-                              child: Padding(
-                                  padding: EdgeInsets.only(right: 5.h),
-                                  child: Row(
-                                      mainAxisAlignment: MainAxisAlignment.end,
-                                      children: [
-                                        TextButton(
-                                          onPressed: () async {
-                                            await signOut();
-                                            // ignore: use_build_context_synchronously
-                                            Navigator.of(context,
-                                                    rootNavigator: true)
-                                                .pushAndRemoveUntil(
-                                                    MaterialPageRoute(
-                                                        builder: (context) =>
-                                                            new Wrapper()),
-                                                    (route) => false);
-                                          },
-                                          style: TextButton.styleFrom(
-                                            padding: const EdgeInsets.only(
-                                                right: 50),
-                                          ),
-                                          child: const Text(
-                                            'Cerrar sesión',
-                                            style: TextStyle(
-                                              color: Colors.red, // Color rojo
-                                              fontSize:
-                                                  14.0, // Tamaño de fuente
-                                              fontWeight:
-                                                  FontWeight.bold, // Negrita
-                                            ),
-                                          ),
-                                        ),
-                                        Text("Bienvenido",
-                                            style: TextStyle(fontWeight: FontWeight.bold, fontFamily: 'Nunito',)),
-                                        Padding(
-                                            padding:
-                                                EdgeInsets.only(left: 41.h),
-                                            child: CustomDropDown(
-                                                width: 93.h,
-                                                icon: Container(
-                                                    margin: EdgeInsets.only(
-                                                        left: 6.h),
-                                                    child: CustomImageView(
-                                                        imagePath: ImageConstant
-                                                            .imgArrowdown,
-                                                        height: 16.adaptSize,
-                                                        width: 16.adaptSize)),
-                                                hintText: "UserNameXx",
-                                                items: dropdownItemList,
-                                                onChanged: (value) {}))
-                                      ]))),
-                          SizedBox(height: 15.v),
                           _buildEightyThree(context),
                           SizedBox(height: 18.v),
                           Padding(
@@ -141,13 +103,13 @@ class FrminicioPage extends StatelessWidget {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 23.h),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          CustomImageView(
+          /*CustomImageView(
               imagePath: ImageConstant.imgArrowDown2,
               height: 10.v,
               width: 5.h,
-              margin: EdgeInsets.symmetric(vertical: 14.v)),
+              margin: EdgeInsets.symmetric(vertical: 14.v)),*/
           Container(
-              margin: EdgeInsets.only(left: 17.h),
+              margin: EdgeInsets.symmetric(horizontal: 5.h),
               decoration: AppDecoration.outlineBlack,
               child:
                   Text("¿A dónde vamos?", style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold, fontFamily: 'Nunito',)))
