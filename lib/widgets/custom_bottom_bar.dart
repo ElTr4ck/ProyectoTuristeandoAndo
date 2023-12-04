@@ -70,7 +70,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
               width: 24.adaptSize,
               color: selectedStates[index]
                   ? const Color.fromARGB(255, 20, 76, 95)
-                  : appTheme.gray400,
+                  : Colors.grey,
             ),
             activeIcon: CustomImageView(
               imagePath: bottomMenuList[index].activeIcon,
@@ -78,7 +78,7 @@ class CustomBottomBarState extends State<CustomBottomBar> {
               width: 20.adaptSize,
               color: selectedStates[index]
                   ? const Color.fromARGB(255, 20, 76, 95)
-                  : theme.colorScheme.onPrimary.withOpacity(1),
+                  : Colors.grey,
             ),
             label: '',
           );
