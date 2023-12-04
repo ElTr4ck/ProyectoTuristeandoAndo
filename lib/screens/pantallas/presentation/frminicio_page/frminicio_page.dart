@@ -311,7 +311,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
               "latitude": latitude,
               "longitude": longitude,
             },
-            "radius": 1000.0
+            "radius": 2000.0
           }
         },
       };
@@ -328,7 +328,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
               "latitude": latitude,
               "longitude": longitude,
             },
-            "radius": 1000.0
+            "radius": 2000.0
           }
         },
       };
@@ -345,7 +345,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
               "latitude": latitude,
               "longitude": longitude,
             },
-            "radius": 1000.0
+            "radius": 2000.0
           }
         },
       };
@@ -362,7 +362,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
               "latitude": latitude,
               "longitude": longitude,
             },
-            "radius": 1000.0
+            "radius": 2000.0
           }
         },
       };
@@ -685,7 +685,7 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
               "latitude": latitude,
               "longitude": longitude,
             },
-            "radius": 1000.0
+            "radius": 2000.0
           }
         },
       };
@@ -702,7 +702,7 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
               "latitude": latitude,
               "longitude": longitude,
             },
-            "radius": 1000.0
+            "radius": 2000.0
           }
         },
       };
@@ -719,7 +719,7 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
               "latitude": latitude,
               "longitude": longitude,
             },
-            "radius": 1000.0
+            "radius": 2000.0
           }
         },
       };

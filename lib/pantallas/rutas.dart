@@ -558,7 +558,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
             "latitude": latitude,
             "longitude": longitude,
           },
-          "radius": 500.0
+          "radius": 2000.0
         }
       },
     };
