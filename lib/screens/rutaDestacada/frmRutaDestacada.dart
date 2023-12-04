@@ -1,6 +1,5 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
-import 'package:turisteando_ando/theme/custom_text_style.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 
 class FrmRutaDestacada extends StatelessWidget {
@@ -83,26 +82,28 @@ class FrmRutaDestacada extends StatelessWidget {
             ),
 
             //TARJETAS DE LUGAR
-            SizedBox(
-              height: 400,
-              child: ListView(
-                scrollDirection: Axis.vertical,
-                children: List.generate( //Codigo piloto, esto se debe de llenar desde la BD
-                  5, 
-                  (index) => PlaceCardDestacada())
-              ),
+            Expanded(
+              child: ListView(scrollDirection: Axis.vertical, children: [
+                PlaceCardDestacada(),
+                PlaceCardDestacada(),
+                PlaceCardDestacada(),
+                PlaceCardDestacada(),
+                PlaceCardDestacada(),
+              ]),
             ),
             CustomElevatedButton(
               text: 'Agendar ruta completa',
-              buttonTextStyle: theme.textTheme.titleLarge!,
-              margin:  EdgeInsets.only(top: 20, left: 25.h, right: 25.h),
+              buttonStyle: CustomButtonStyles.fillPrimaryTL22,
+              buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
+              margin: EdgeInsets.only(top: 20, left: 25.h, right: 25.h),
               height: 40.v,
             ),
             CustomElevatedButton(
               text: 'Canjear recompensa',
+              buttonStyle: CustomButtonStyles.fillPrimaryTL22,
               isDisabled: true,
-              buttonTextStyle: theme.textTheme.titleLarge!,
-              margin:  EdgeInsets.only(top: 5, left: 25.h, right: 25.h),
+              buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
+              margin: EdgeInsets.only(top: 5, left: 25.h, right: 25.h),
               height: 40.v,
             )
           ],
@@ -112,6 +113,7 @@ class FrmRutaDestacada extends StatelessWidget {
   }
 }
 
+//TARJETAS DE LA RUTA ESTACADA
 class PlaceCardDestacada extends StatelessWidget {
   const PlaceCardDestacada({
     super.key,
@@ -120,7 +122,7 @@ class PlaceCardDestacada extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: const EdgeInsets.fromLTRB(20,0,20,10),
+      margin: const EdgeInsets.fromLTRB(20, 0, 20, 10),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: const Color.fromARGB(255, 247, 249, 248),
@@ -176,13 +178,12 @@ class PlaceCardDestacada extends StatelessWidget {
                         //Logica para el boton de visitado (sonsultar caso de uso)
                       },
                       icon: const Icon(Icons.check_box_outlined),
-                    ),// Ajusta el espacio horizontal aquí
+                    ), // Ajusta el espacio horizontal aquí
                     IconButton(
                       onPressed: () {
                         //logica para el boton de añadir a marcadores
                       },
-                      icon: const Icon(
-                          Icons.favorite_border_outlined),
+                      icon: const Icon(Icons.favorite_border_outlined),
                     ),
                   ],
                 ),

@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:turisteando_ando/routes/app_routes.dart';
 
 class SideBar extends StatelessWidget {
   @override
@@ -14,7 +15,7 @@ class SideBar extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  'Ramses Federico',
+                  'Ramses Federico', //Modificar el nombre de acuerdo a la BD
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -102,6 +103,21 @@ class SideBar extends StatelessWidget {
             onTap: () => null,
           ),
           ListTile(
+            leading: const Icon(
+              Icons.star,
+              color: Color.fromARGB(255, 128, 128, 128),
+            ),
+            title: const Text(
+              'Ruta destacada',
+              style: TextStyle(
+                fontFamily: 'Nunito',
+              ),
+            ),
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.frmRutaDestacada);
+            },
+          ),
+          ListTile(
             leading: Icon(
               Icons.question_answer_rounded,
               color: const Color.fromARGB(255, 128, 128, 128),
@@ -134,6 +150,19 @@ class SideBar extends StatelessWidget {
             ),
             title: Text(
               'Obtener ayuda',
+              style: TextStyle(
+                fontFamily: 'Nunito',
+              ),
+            ),
+            onTap: () => null,
+          ),
+          ListTile(
+            leading: Icon(
+              Icons.exit_to_app ,
+              color: const Color.fromARGB(255, 128, 128, 128),
+            ),
+            title: Text(
+              'Cerrar sesión',
               style: TextStyle(
                 fontFamily: 'Nunito',
               ),
