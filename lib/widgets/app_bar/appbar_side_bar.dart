@@ -1,9 +1,42 @@
 import 'package:flutter/material.dart';
+import 'package:turisteando_ando/models/users/user.dart' as model;
+import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
+import 'package:turisteando_ando/repositories/auth/controlers/signout_controller.dart';
+import 'package:turisteando_ando/repositories/auth/wrapper.dart';
 import 'package:turisteando_ando/routes/app_routes.dart';
 
-class SideBar extends StatelessWidget {
+class SideBar extends StatefulWidget {
+  @override
+  State<SideBar> createState() => _SideBarState();
+}
+
+class _SideBarState extends State<SideBar> {
+  String name = "";
+
+  String lastname = "";
+
+  @override
+  void initState() {
+    super.initState();
+    getUser();
+  }
+
+  Future<void> getUser() async {
+    model.User data = await AuthMethods().getUserDetails();
+    setState(() {
+      name = data.name;
+      lastname = data.lastName;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
+    final controllerSignOut = SignoutController(context: context);
+
+    Future<void> signOut() async {
+      await controllerSignOut.signout();
+    }
+
     return Drawer(
       child: ListView(
         children: [
@@ -15,7 +48,7 @@ class SideBar extends StatelessWidget {
             child: Column(
               children: [
                 Text(
-                  'Ramses Federico', //Modificar el nombre de acuerdo a la BD
+                  name + lastname, //Modificar el nombre de acuerdo a la BD
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
@@ -158,7 +191,7 @@ class SideBar extends StatelessWidget {
           ),
           ListTile(
             leading: Icon(
-              Icons.exit_to_app ,
+              Icons.exit_to_app,
               color: const Color.fromARGB(255, 128, 128, 128),
             ),
             title: Text(
@@ -167,7 +200,13 @@ class SideBar extends StatelessWidget {
                 fontFamily: 'Nunito',
               ),
             ),
-            onTap: () => null,
+            onTap: () async {
+              await signOut();
+              // ignore: use_build_context_synchronously
+              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => new Wrapper()),
+                  (route) => false);
+            },
           ),
         ],
       ),
