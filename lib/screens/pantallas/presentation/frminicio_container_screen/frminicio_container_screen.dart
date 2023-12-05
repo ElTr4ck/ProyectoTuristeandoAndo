@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/pantallas/rutas.dart';
+import 'package:turisteando_ando/screens/perfilUsuario/frmeditaperfil_screen/frmeditaperfil_screen.dart';
+import 'package:turisteando_ando/screens/perfilUsuario/frmperfil_screen/frmperfil_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminfolugar_screen/frminfolugar_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmmarcadores_screen/frmmarcadores_screen.dart';
@@ -47,7 +49,7 @@ class FrminicioContainerScreen extends StatelessWidget {
       case BottomBarEnum.Iconlylightoutlineheart:
         return AppRoutes.frmmarcadoresScreen;
       case BottomBarEnum.Iconlylightprofile:
-        return "/";
+        return AppRoutes.frmperfilScreen;
       default:
         return "/";
     }
@@ -68,6 +70,10 @@ class FrminicioContainerScreen extends StatelessWidget {
         return PolylineScreen();
       case AppRoutes.frmRutaDestacada:
         return FrmRutaDestacada();
+      case AppRoutes.frmperfilScreen:
+        return FrmperfilScreen();
+      case AppRoutes.frmEditaPerfil:
+        return FrmeditaperfilScreen();
       default:
         return DefaultWidget();
     }

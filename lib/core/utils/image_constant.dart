@@ -201,4 +201,32 @@ class ImageConstant {
   static String imgAvatar = '$imagePath/img_avatar.png';
 
   static String imageNotFound = 'assets/images/image_not_found.png';
+
+  static String imgFondo191x360 = '$imagePath/img_fondo_191x360.png';
+
+  static String imgRegresar = '$imagePath/img_regresar.svg';
+
+  static String imgImgprofile105x105 = '$imagePath/img_imgprofile_105x105.png';
+
+  static String imgMostrar = '$imagePath/img_mostrar.svg';
+
+  static String imgImgprofile = '$imagePath/img_imgprofile.png';
+
+  static String imgHeart = '$imagePath/img_heart.svg';
+
+  static String imgArrowRightBlack90010x6 = '$imagePath/img_arrow_right_black_900_10x6.svg';
+
+  static String imgClock = '$imagePath/img_clock.svg';
+
+  static String imgArrowRight10x6 = '$imagePath/img_arrow_right_10x6.svg';
+
+  static String imgStar = '$imagePath/img_star.svg';
+
+  static String imgTranslate = '$imagePath/img_translate.svg';
+
+  static String imgMoon = '$imagePath/img_moon.svg';
+  
+  static String imgClosesession = '$imagePath/img_closesession.svg';
+
+  static String imgArrowRightBlack900 = '$imagePath/img_arrow_right_black_900.svg';
 }
