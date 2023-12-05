@@ -1,5 +1,6 @@
 import 'dart:convert';
 
+import 'package:flutter_google_maps_webservices/places.dart';
 import 'package:turisteando_ando/repositories/auth/controlers/signout_controller.dart';
 import 'package:turisteando_ando/repositories/auth/wrapper.dart';
 import 'package:turisteando_ando/widgets/app_bar/appbar_side_bar.dart';
@@ -16,11 +17,27 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminfolugar_screen/frminfolugar_screen.dart';
 
+final GoogleMapsPlaces places = GoogleMapsPlaces(apiKey: "AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM");
+
 // ignore_for_file: must_be_immutable
 class FrminicioPage extends StatelessWidget {
   FrminicioPage({Key? key}) : super(key: key);
 
   //List<String> dropdownItemList = ["Item One", "Item Two", "Item Three"];
+  //AUTOCOMPLETAR
+  Future<List<String>> fetchSuggestions(String query) async {
+    const String apiKey = 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
+    final String url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$query&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
+
+    final response = await http.get(Uri.parse(url));
+
+    if (response.statusCode == 200) {
+      final predictions = json.decode(response.body)['predictions'];
+      return predictions.map<String>((prediction) => prediction['description']).toList();
+    } else {
+      throw Exception('Failed to load suggestions');
+    }
+  }
 
   TextEditingController searchController = TextEditingController();
 
@@ -64,29 +81,44 @@ class FrminicioPage extends StatelessWidget {
                           SizedBox(height: 18.v),
                           Padding(
                             padding: EdgeInsets.only(left: 10.0, right: 16.0),
-                            child: Container(
-                              decoration: BoxDecoration(
-                                color: Color(0xFF9CD2D3), // Puedes cambiar este color según tus preferencias
-                                borderRadius: BorderRadius.circular(12.0),
-                              ),
-                              child: Row(
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(horizontal: 8.0), // Ajusta este valor según tus preferencias
-                                    child: Icon(Icons.search_sharp, color: Colors.white, size: 24.0), // Icono de lupa
+                            //AUTOCOMPLETAR
+                            child: Autocomplete<String>(
+                              optionsBuilder: (TextEditingValue textEditingValue) async {
+                                if (textEditingValue.text == '') {
+                                  return const Iterable<String>.empty();
+                                }
+                                return await fetchSuggestions(textEditingValue.text);
+                              },
+                              onSelected: (String selection) {
+                                print('Has seleccionado: $selection');
+                              },
+                              fieldViewBuilder: (BuildContext context, TextEditingController textEditingController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
+                                return Container(
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF9CD2D3), // Puedes cambiar este color según tus preferencias
+                                    borderRadius: BorderRadius.circular(12.0),
                                   ),
-                                  Expanded(
-                                    child: TextField(
-                                      controller: searchController,
-                                      decoration: InputDecoration(
-                                        hintText: "¿Buscas hacer algo en particular en ... ",
-                                        border: InputBorder.none,
-                                        contentPadding: EdgeInsets.all(16.0),
+                                  child: Row(
+                                    children: [
+                                      const Padding(
+                                        padding: EdgeInsets.symmetric(horizontal: 8.0), // Ajusta este valor según tus preferencias
+                                        child: Icon(Icons.search_sharp, color: Colors.white, size: 24.0), // Icono de lupa
                                       ),
-                                    ),
+                                      Expanded(
+                                        child: TextField(
+                                          controller: textEditingController,
+                                          focusNode: focusNode,
+                                          decoration: const InputDecoration(
+                                            hintText: "¿Buscas hacer algo en particular en ...",
+                                            border: InputBorder.none,
+                                            contentPadding: EdgeInsets.all(16.0),
+                                          ),
+                                        ),
+                                      ),
+                                    ],
                                   ),
-                                ],
-                              ),
+                                );
+                              },
                             ),
                           ),
                           SizedBox(height: 31.v),
