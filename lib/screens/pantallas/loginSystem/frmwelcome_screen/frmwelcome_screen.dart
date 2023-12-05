@@ -49,43 +49,64 @@ class FrmwelcomeScreen extends StatelessWidget {
       return res;
     }
 
-    return Center(
-      child: Container(
-          width: 352.h,
-          margin: EdgeInsets.only(right: 8.h, left: 9.h),
-          padding: EdgeInsets.symmetric(horizontal: 5.h, vertical: 8.v),
-          decoration: BoxDecoration(
-            borderRadius: BorderRadiusStyle.circleBorder29,
-            image: DecorationImage(
-              image: AssetImage(ImageConstant.imgGroup8),
-              fit: BoxFit.cover,
-              colorFilter: ColorFilter.mode(
-                Colors.white.withOpacity(0.35),
-                BlendMode.dstATop,
-              ),
-            ),
-          ),
-          child: Column(
+    return Container(
+      width: 352.h,
+      margin: EdgeInsets.only(right: 8.h),
+      padding: EdgeInsets.symmetric(horizontal: 5.h, vertical: 8.v),
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "¿No tienes una cuenta?",
-                    maxLines: null,
-                    overflow: TextOverflow.ellipsis,
-                    style: CustomTextStyles.titleMediumOnPrimary17,
-                  ),
-                  SizedBox(width: 10),
-                  GestureDetector(
-                    onTap: () {
-                      onTapTxtRegistrate(context);
-                    },
-                    child: Text("⠀⠀⠀Registrate",
-                        style: theme.textTheme.titleMedium)),
-                GestureDetector(
-                    onTap: () async {
+              Text(
+                "¿No tienes una cuenta?",
+                maxLines: null,
+                overflow: TextOverflow.ellipsis,
+                style: CustomTextStyles.titleMediumOnPrimary17,
+              ),
+              SizedBox(width: 10),
+              GestureDetector(
+                onTap: () {
+                  onTapTxtRegistrate(context);
+                },
+                child: Text("Registrate", style: theme.textTheme.titleMedium),
+              ),
+              SizedBox(width: 10),
+              Text(
+                "ó",
+                maxLines: null,
+                overflow: TextOverflow.ellipsis,
+                style: CustomTextStyles.titleMediumOnPrimary17,
+              ),
+              SizedBox(width: 10),
+            ],
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              GestureDetector(
+                onTap: () async {
+                  bool res = await logInAnonymously();
+                  if (res) {
+                    // ignore: use_build_context_synchronously
+                    Navigator.of(context, rootNavigator: true).pushReplacement(
+                        MaterialPageRoute(builder: (context) => new Wrapper()));
+                  }
+                },
+                child: Text("Continua como invitado",
+                    style: theme.textTheme.titleMedium,
+                    textAlign: TextAlign.center),
+              ),
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
+  /*
+  onTap: () async {
                       bool res = await logInAnonymously();
                       if (res) {
                         // ignore: use_build_context_synchronously
@@ -93,13 +114,7 @@ class FrmwelcomeScreen extends StatelessWidget {
                             .pushReplacement(MaterialPageRoute(
                                 builder: (context) => new Wrapper()));
                       }
-                    },
-                    child: Text("⠀⠀⠀Continua como invitado",
-                        style: CustomTextStyles.titleMediumTeal100))
-              ])
-        ])))
-        ;
-  }
+  */
 
   /// Navigates to the frmloginScreen when the action is triggered.
   onTapIniciarSesin(BuildContext context) {
