@@ -80,13 +80,13 @@ class _FrminvitadoScreenState extends State<FrminvitadoScreen> {
       },
       height: 40.v,
       text: "Continuar",
-      buttonStyle: CustomButtonStyles.fillPrimaryTL22,
+      buttonStyle: CustomButtonStyles.fillPrimary,
+      buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
       margin: EdgeInsets.only(
         left: 30.h,
         right: 30.h,
         bottom: 32.v,
       ),
-      buttonTextStyle: CustomTextStyles.titleMediumNunitoOnPrimary18,
     );
   }
 }
