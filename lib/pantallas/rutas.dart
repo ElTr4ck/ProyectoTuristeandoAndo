@@ -13,6 +13,8 @@ import 'package:http/http.dart' as http;
 //import 'package:flutter_google_places/flutter_google_places.dart';
 import 'package:google_maps_routes/google_maps_routes.dart';
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frminfolugar_screen/frminfolugar_screen.dart';
+
 
 class PolylineScreen extends StatefulWidget {
   const PolylineScreen({Key? key}) : super(key: key);
@@ -432,9 +434,11 @@ class _PolylineScreenState extends State<PolylineScreen> {
               TextPosition(offset: prediction.description?.length ?? 0));
           Navigator.of(context)
               .push(MaterialPageRoute(builder: (BuildContext context) {
+          fetchData(prediction.description as String);
+          /*Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
             //String aux = '${prediction.lat}, ${prediction.lng}';
             return MyApp(prediction.description as String);
-          }));
+          }));*/
         },
         seperatedBuilder: Divider(
           color: Colors.transparent,
@@ -467,6 +471,53 @@ class _PolylineScreenState extends State<PolylineScreen> {
       ),
     );
   }
+
+  Future<void> fetchData(data) async {
+    // Tu lógica para obtener datos desde la API
+    String dataloc = data;
+    String url = 'https://places.googleapis.com/v1/places:searchText';
+    // Los datos que enviarás en el cuerpo de la solicitud POST
+
+    print(dataloc);
+    // Las cabeceras de la solicitud
+    Map<String, dynamic> requestData = {
+      "textQuery" : "$data"
+    };
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'X-Goog-Api-Key': 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM',
+      // Reemplaza 'API_KEY' con tu clave real
+      'X-Goog-FieldMask': 'places.id',
+    };
+
+    // Realiza la solicitud POST
+    try {
+      var response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(requestData),
+        headers: headers,
+      );
+      // Verifica el código de estado de la respuesta
+      if (response.statusCode == 200) {
+        // La solicitud fue exitosa, puedes manejar la respuesta aquí
+        print('Respuesta exitosa: ${response.body}');
+        Map<String, dynamic> jsonData = json.decode(response.body);
+        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+          //String aux = '${prediction.lat}, ${prediction.lng}';
+          return FrminfolugarScreen(id : jsonData["places"][0]["id"]);
+        }));
+        //print('${jsonData["places"][0]["displayName"]["text"]}');
+        //print('${jsonData["places"][0]["formattedAddress"]}');
+      } else {
+        // Hubo un error en la solicitud, puedes manejarlo aquí
+        print('Error en la solicitud: ${response.statusCode}');
+      }
+    } catch (e) {
+      // Maneja las excepciones que puedan ocurrir durante la solicitud
+      print('Error: $e');
+    }
+  }
+
 }
 
 class CarouselWithInfo extends StatefulWidget {
@@ -501,7 +552,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
             "latitude": latitude,
             "longitude": longitude,
           },
-          "radius": 500.0
+          "radius": 2000.0
         }
       },
     };
@@ -604,62 +655,63 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
   Widget buildCarouselItem(
       String title, String description, String image, String id) {
     return GestureDetector(
-      onTap: () {
-        // Acción a realizar cuando se toca el elemento del carrusel
-        print('Elemento del carrusel presionado: $id');
-        // Aquí puedes agregar la lógica adicional que desees
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(horizontal: 5.0),
-        decoration: BoxDecoration(
-          color: Colors.white,
-          borderRadius: BorderRadius.circular(24.0), // Borde ovalado
-          boxShadow: [
-            BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.2)),
-          ],
-        ),
-        child: Row(
-          children: [
-            Container(
-              width: 100.0, // Ajusta el ancho según tus necesidades
-              height: 200.0, // Ajusta la altura según tus necesidades
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(20.0),
-                  bottomLeft: Radius.circular(20.0),
-                ),
-                image: DecorationImage(
-                  image: NetworkImage(image),
-                  fit: BoxFit.cover,
-                ),
-              ),
-            ),
-            Expanded(
-              child: Padding(
-                padding: const EdgeInsets.all(8.0),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      title,
-                      style: TextStyle(
-                          fontSize: 18.0,
-                          fontWeight: FontWeight.bold,
-                          fontFamily: 'Nunito'),
-                    ),
-                    SizedBox(height: 5.0),
-                    Text(
-                      description,
-                      style: TextStyle(fontSize: 14.0, fontFamily: 'Nunito'),
-                    ),
-                  ],
-                ),
-              ),
-            ),
-          ],
-        ),
+        onTap: () {
+          // Acción a realizar cuando se toca el elemento del carrusel
+          print('Elemento del carrusel presionado: $id');
+          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+            //String aux = '${prediction.lat}, ${prediction.lng}';
+            return FrminfolugarScreen(id: id);
+          }));
+          // Aquí puedes agregar la lógica adicional que desees
+        },
+    child: Container(
+      margin: EdgeInsets.symmetric(horizontal: 5.0),
+      decoration: BoxDecoration(
+        color: Colors.white,
+        borderRadius: BorderRadius.circular(24.0), // Borde ovalado
+        boxShadow: [
+          BoxShadow(blurRadius: 5, color: Colors.black.withOpacity(0.2)),
+        ],
       ),
+      child: Row(
+        children: [
+          Container(
+            width: 100.0, // Ajusta el ancho según tus necesidades
+            height: 200.0, // Ajusta la altura según tus necesidades
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(20.0),
+                bottomLeft: Radius.circular(20.0),
+              ),
+              image: DecorationImage(
+                image: NetworkImage(image),
+                fit: BoxFit.cover,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.all(8.0),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    title,
+                    style: TextStyle(fontSize: 18.0, fontWeight: FontWeight.bold, fontFamily: 'Nunito'),
+                  ),
+                  SizedBox(height: 5.0),
+                  Text(
+                    description,
+                    style: TextStyle(fontSize: 14.0, fontFamily: 'Nunito'),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ],
+      ),
+    ),
     );
   }
 

@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:flutter/gestures.dart';
+
 import '../frminfolugar_screen/widgets/componentlugares_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
@@ -10,6 +12,9 @@ import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 import 'package:turisteando_ando/widgets/custom_rating_bar.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
+import 'package:turisteando_ando/pantallas/rutaUno.dart';
+
 
 // ignore_for_file: must_be_immutable
 class FrminfolugarScreen extends StatefulWidget {
@@ -56,7 +61,7 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
 
   Future<void> fetchData() async {
     // Tu lógica para obtener datos desde la API
-    String url = 'https://places.googleapis.com/v1/places/${widget.id}?fields=websiteUri,currentOpeningHours,displayName,formattedAddress,nationalPhoneNumber,editorialSummary,photos&languageCode=es&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
+    String url = 'https://places.googleapis.com/v1/places/${widget.id}?fields=rating,websiteUri,regularOpeningHours,displayName,formattedAddress,nationalPhoneNumber,editorialSummary,photos,id&languageCode=es&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
     // Los datos que enviarás en el cuerpo de la solicitud POST
 
     print("Hola");
@@ -77,7 +82,7 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
       // Verifica el código de estado de la respuesta
       if (response.statusCode == 200) {
         // La solicitud fue exitosa, puedes manejar la respuesta aquí
-        //print('Respuesta exitosa: ${response.body}');
+        print('Respuesta exitosa: ${response.body}');
         Map<String, dynamic> jsonData = json.decode(response.body);
         //print('${jsonData["places"][0]["displayName"]["text"]}');
         //print('${jsonData["places"][0]["formattedAddress"]}');
@@ -120,7 +125,7 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
               children: [
                 Column(
                   children: [
-                    _buildComponentLugares(context),
+                    //_buildComponentLugares(context),
                     SizedBox(height: 21.v),
                     _buildFortyTwo(context),
                     SizedBox(height: 7.v),
@@ -156,7 +161,7 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
               }));
             }),
         centerTitle: true,
-        title: AppbarTitle(text: "Información"));
+        title: AppbarTitle(text: "Información del lugar"));
   }
 
   /// Section Widget
@@ -183,23 +188,74 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
         padding: EdgeInsets.symmetric(horizontal: 8.h),
         child:
             Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-          CustomImageView(
-              imagePath: ImageConstant.imgRectangle994,
-              height: 231.v,
-              width: 188.h,
-              radius: BorderRadius.circular(24.h)),
+              ClipRRect(
+                borderRadius: BorderRadius.circular(24.0),
+                child: Image.network(
+                  'https://places.googleapis.com/v1/${jsonData?["photos"][0]["name"]}/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM',
+                  height: 231.v,
+                  width: 188.h,
+                  fit: BoxFit.cover, // Ajusta según tus necesidades
+                  loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                    if (loadingProgress == null) {
+                      return child; // La imagen se cargó con éxito
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(
+                          value: loadingProgress.expectedTotalBytes != null
+                              ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                              : null,
+                        ),
+                      );
+                    }
+                  },
+                ),
+              ),
           Column(children: [
-            CustomImageView(
-                imagePath: ImageConstant.imgRectangle992,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(24.0),
+              child: Image.network(
+                'https://places.googleapis.com/v1/${jsonData?["photos"][1]["name"]}/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM',
                 height: 109.v,
                 width: 142.h,
-                radius: BorderRadius.circular(24.h)),
+                fit: BoxFit.cover, // Ajusta según tus necesidades
+                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child; // La imagen se cargó con éxito
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                            : null,
+                      ),
+                    );
+                  }
+                },
+              ),
+            ),
             SizedBox(height: 7.v),
-            CustomImageView(
-                imagePath: ImageConstant.imgRectangle993,
+            ClipRRect(
+              borderRadius: BorderRadius.circular(24.0),
+              child: Image.network(
+                'https://places.googleapis.com/v1/${jsonData?["photos"][2]["name"]}/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM',
                 height: 115.v,
                 width: 142.h,
-                radius: BorderRadius.circular(24.h))
+                fit: BoxFit.cover, // Ajusta según tus necesidades
+                loadingBuilder: (BuildContext context, Widget child, ImageChunkEvent? loadingProgress) {
+                  if (loadingProgress == null) {
+                    return child; // La imagen se cargó con éxito
+                  } else {
+                    return Center(
+                      child: CircularProgressIndicator(
+                        value: loadingProgress.expectedTotalBytes != null
+                            ? loadingProgress.cumulativeBytesLoaded / (loadingProgress.expectedTotalBytes ?? 1)
+                            : null,
+                      ),
+                    );
+                  }
+                },
+              ),
+            )
           ])
         ]));
   }
@@ -209,16 +265,33 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 26.h),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-          Container(
-              padding: EdgeInsets.symmetric(horizontal: 9.h, vertical: 5.v),
-              decoration: AppDecoration.fillErrorContainer1
-                  .copyWith(borderRadius: BorderRadiusStyle.circleBorder12),
-              child:
-                  CustomRatingBar(initialRating: 5, color: appTheme.yellow700)),
+        Container(
+        padding: EdgeInsets.symmetric(horizontal: 9.h, vertical: 5.v),
+      decoration: AppDecoration.fillErrorContainer1
+          .copyWith(borderRadius: BorderRadiusStyle.circleBorder12),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Icon(
+            Icons.star,
+            color: appTheme.yellow700,
+          ),
+          SizedBox(width: 5), // Ajusta el espacio entre la estrella y el número
+          Text(
+            '${jsonData?["rating"]}', // Puedes cambiar esto al número que desees
+            style: TextStyle(
+              fontSize: 16.0, // Ajusta el tamaño del número
+              fontWeight: FontWeight.bold,
+              color: Colors.black, // Puedes cambiar el color del número
+            ),
+          ),
+        ],
+      ),
+    ),
           CustomElevatedButton(
               height: 17.v,
               width: 88.h,
-              text: "Indicaciones",
+              text: "Ruta",
               margin: EdgeInsets.only(left: 23.h),
               leftIcon: Container(
                   margin: EdgeInsets.only(right: 6.h),
@@ -227,32 +300,63 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                       height: 12.adaptSize,
                       width: 12.adaptSize)),
               buttonStyle: CustomButtonStyles.fillPrimary,
-              buttonTextStyle: CustomTextStyles.bodySmallRegular),
-          CustomImageView(
+              buttonTextStyle: CustomTextStyles.bodySmallRegular,
+              onPressed: () {
+                Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+                  //String aux = '${prediction.lat}, ${prediction.lng}';
+                  return MyApp(jsonData?["displayName"]["text"] as String);
+                }));
+    // Agrega la lógica que deseas ejecutar cuando se presiona el botón
+              },
+          ),
+          CustomElevatedButton(
+            height: 17.v,
+            width: 50.h,
+            text: "Itinerario",
+            margin: EdgeInsets.only(left: 23.h),
+            leftIcon: Container(
+                margin: EdgeInsets.only(right: 0.h),
+                child: CustomImageView(
+                    imagePath: ImageConstant.imgFrameAgregarruta,
+                    height: 12.adaptSize,
+                    width: 12.adaptSize)),
+            buttonStyle: CustomButtonStyles.fillPrimary,
+            buttonTextStyle: CustomTextStyles.bodySmallRegular,
+            onPressed: () {
+              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+                //String aux = '${prediction.lat}, ${prediction.lng}';
+                return MyApp(jsonData?["id"] as String); //A esta app NO LO MANDES, MANDA A LA TUYA
+                //Aqui mandamos al itinerario con el ID
+              }));
+              // Agrega la lógica que deseas ejecutar cuando se presiona el botón
+            },
+          ),
+
+          /*CustomImageView(
               imagePath: ImageConstant.imgFrameAgregarruta,
               height: 20.v,
               width: 19.h,
-              margin: EdgeInsets.only(left: 23.h)),
+              margin: EdgeInsets.only(left: 23.h)),*/
           CustomImageView(
               imagePath: ImageConstant.imgVectorvisitado,
               height: 16.v,
               width: 15.h,
-              margin: EdgeInsets.only(left: 23.h)),
+              margin: EdgeInsets.only(left: 10.h)),
           CustomImageView(
               imagePath: ImageConstant.imgVectorfavoritos,
               height: 16.v,
               width: 19.h,
-              margin: EdgeInsets.only(left: 23.h))
+              margin: EdgeInsets.only(left: 10.h))
         ]));
   }
 
   /// Section Widget
-  Widget _buildComponentInfo(BuildContext context) {
+  Widget _buildComponentInfo (BuildContext context) {
     return Container(
         margin: EdgeInsets.symmetric(horizontal: 8.h),
         padding: EdgeInsets.symmetric(horizontal: 12.h, vertical: 5.v),
         decoration:
-            BoxDecoration(borderRadius: BorderRadiusStyle.roundedBorder24),
+        BoxDecoration(borderRadius: BorderRadiusStyle.roundedBorder24),
         child: Column(mainAxisAlignment: MainAxisAlignment.center, children: [
           SizedBox(height: 3.v),
           Container(
@@ -275,7 +379,7 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                   width: 266.h,
                   margin: EdgeInsets.only(left: 14.h, right: 35.h),
                   child: Text(
-                      "Av. P.º de la Reforma 51, Polanco, Bosque de Chapultepec I Secc, Miguel Hidalgo, 11580 Ciudad de México, CDMX",
+                      jsonData?["formattedAddress"],
                       maxLines: 2,
                       overflow: TextOverflow.ellipsis,
                       style: CustomTextStyles.bodySmallDMSansOnError
@@ -317,17 +421,32 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                             text: TextSpan(children: [
                               TextSpan(
                                   text:
-                                      "Reconocido museo de arte contemporáneo que exhibe pinturas, escultura y fotografía.\nEs el primer museo en México construido con fondos privados, y ha sido administrado por el Instituto Nacional de Bellas Artes (INBA) desde 1986. Rufino Tamayo, nacido en Oaxaca en 1899, comenzó a coleccionar obras de arte en la década de 1960 con la intención declarada de brindar más arte del siglo XX a los mexicanos.\n",
+                                  "${jsonData?["editorialSummary"] != null ? '${jsonData?["editorialSummary"]["text"]}' : 'No hay una descripción disponible para este lugar.'}\n\n",
                                   style: theme.textTheme.bodyMedium),
                               TextSpan(
-                                  text: "Cerrado ",
-                                  style: CustomTextStyles.bodyMediumRed900),
+                                  text: '${jsonData?["regularOpeningHours"] != null ? '${jsonData?["regularOpeningHours"]["openNow"] == true ? 'Abierto: ' : 'Cerrado: '}' : 'No se conoce el estado actual del lugar (Abierto/Cerrado) '}',
+                                  style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, fontFamily: 'Nunito', color: jsonData?["regularOpeningHours"] != null  ? (jsonData?["regularOpeningHours"]["openNow"] == true ? Colors.green : Colors.red) : Colors.red,)),
                               TextSpan(
                                   text:
-                                      "Abre a las 10 a. m. del mié\n+52(55) 4122-8200\ninfo@museotamayo.org\n",
-                                  style: CustomTextStyles.bodyMediumCyan900)
+                                  "${jsonData?["regularOpeningHours"]!= null ? '${jsonData?["regularOpeningHours"]["weekdayDescriptions"][0]}, ${jsonData?["regularOpeningHours"]["weekdayDescriptions"][1]}, ${jsonData?["regularOpeningHours"]["weekdayDescriptions"][2]}, ${jsonData?["regularOpeningHours"]["weekdayDescriptions"][3]}, ${jsonData?["regularOpeningHours"]["weekdayDescriptions"][4]}, ${jsonData?["regularOpeningHours"]["weekdayDescriptions"][5]}, ${jsonData?["regularOpeningHours"]["weekdayDescriptions"][6]}.' : 'No hay una descripción de horarios disponibles para este lugar.'}\n\n${jsonData?["nationalPhoneNumber"]!= null ? '${jsonData?["nationalPhoneNumber"]}' : 'No hay un número de contacto disponible para este lugar.'}\n",
+                                  style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.normal, fontFamily: 'Nunito', color: Colors.black),
+                              ),
+                              TextSpan(
+                                text: "${jsonData?["websiteUri"] != null ? '${jsonData?["websiteUri"]}' : 'No se tiene una página de contacto'}",
+                                style: TextStyle(
+                                  fontSize: 15.0, fontWeight: FontWeight.bold, fontFamily: 'Nunito', color: Color(0xFF114C5F), // Color del enlace
+                                  decoration: TextDecoration.underline, // Subrayado del enlace
+                                ),
+                                recognizer: TapGestureRecognizer()
+                                  ..onTap = () async {
+                                    final Uri _url = Uri.parse(jsonData?["websiteUri"]);
+                                    if (!await launchUrl(_url)) {
+                                      throw Exception('Could not launch $_url');
+                                    }
+                                  },
+                              ),
                             ]),
-                            textAlign: TextAlign.left)))
+                          textAlign: TextAlign.justify)))
               ]))
         ]));
   }
@@ -345,5 +464,6 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
   onTapReseas(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.frmnewreseAScreen);
   }
-}
 
+
+}
