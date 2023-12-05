@@ -107,6 +107,10 @@ class BorderRadiusStyle {
   static BorderRadius get circleBorder12 => BorderRadius.circular(
         12.h,
       );
+  
+  static BorderRadius get circleBorder8 => BorderRadius.circular(
+    8.h
+  );
 
   // Custom borders
   static BorderRadius get customBorderTL20 => BorderRadius.vertical(
@@ -132,6 +136,10 @@ class BorderRadiusStyle {
   static BorderRadius get roundedBorder9 => BorderRadius.circular(
         9.h,
       );
+  static BorderRadius get roundedBorder57 => BorderRadius.circular(57.h);
+
+  static BorderRadius get roundedBorder52 => BorderRadius.circular(52.h);
+  
 }
 
 // Comment/Uncomment the below code based on your Flutter SDK version.

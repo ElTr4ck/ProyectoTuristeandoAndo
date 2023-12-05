@@ -271,7 +271,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
     if (preferencias.length == 1){
       requestData = {
         "includedTypes": preferencias,
-        "maxResultCount": 1,
+        "maxResultCount": 3,
         //"rankPreference": "DISTANCE",
         "languageCode": "es",
         "locationRestriction": {
@@ -280,15 +280,15 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
               "latitude": latitude,
               "longitude": longitude,
             },
-            "radius": 500.0
+            "radius": 2000.0
           }
         },
       };
     }
-    else if (preferencias.length >= 2){
+    else if (preferencias.length == 2){
       requestData = {
         "includedTypes": preferencias,
-        "maxResultCount": 9,
+        "maxResultCount": 5,
         //"rankPreference": "DISTANCE",
         "languageCode": "es",
         "locationRestriction": {
@@ -297,14 +297,14 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
               "latitude": latitude,
               "longitude": longitude,
             },
-            "radius": 500.0
+            "radius": 2000.0
           }
         },
       };
     }
-    else {
+    else if (preferencias.length >= 3){
       requestData = {
-        "includedTypes": ['restaurant', 'hotel'],
+        "includedTypes": preferencias,
         "maxResultCount": 10,
         //"rankPreference": "DISTANCE",
         "languageCode": "es",
@@ -314,7 +314,24 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
               "latitude": latitude,
               "longitude": longitude,
             },
-            "radius": 500.0
+            "radius": 2000.0
+          }
+        },
+      };
+    }
+    else {
+      requestData = {
+        "includedTypes": ['restaurant', 'hotel', 'museum'],
+        "maxResultCount": 10,
+        //"rankPreference": "DISTANCE",
+        "languageCode": "es",
+        "locationRestriction": {
+          "circle": {
+            "center": {
+              "latitude": latitude,
+              "longitude": longitude,
+            },
+            "radius": 2000.0
           }
         },
       };
@@ -628,7 +645,7 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
     if (preferencias.length == 1){
       requestData = {
         "excludedTypes": preferencias,
-        "maxResultCount": 4,
+        "maxResultCount": 5,
         //"rankPreference": "DISTANCE",
         "languageCode": "es",
         "locationRestriction": {
@@ -637,7 +654,7 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
               "latitude": latitude,
               "longitude": longitude,
             },
-            "radius": 500.0
+            "radius": 2000.0
           }
         },
       };
@@ -645,7 +662,7 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
     else if (preferencias.length >= 2){
       requestData = {
         "excludedTypes": preferencias,
-        "maxResultCount": 4,
+        "maxResultCount": 5,
         //"rankPreference": "DISTANCE",
         "languageCode": "es",
         "locationRestriction": {
@@ -654,7 +671,7 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
               "latitude": latitude,
               "longitude": longitude,
             },
-            "radius": 500.0
+            "radius": 2000.0
           }
         },
       };
@@ -662,7 +679,7 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
     else {
       requestData = {
         "includedTypes": ['park', 'movie_theater', 'aquarium', 'tourist_attraction', 'museum', 'market', 'night_club', 'historical_landmark', 'store'],
-        "maxResultCount": 3,
+        "maxResultCount": 5,
         //"rankPreference": "DISTANCE",
         "languageCode": "es",
         "locationRestriction": {
@@ -671,7 +688,7 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
               "latitude": latitude,
               "longitude": longitude,
             },
-            "radius": 500.0
+            "radius": 2000.0
           }
         },
       };
@@ -772,6 +789,10 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
       onTap: () {
         // Acción a realizar cuando se toca el elemento del carrusel
         print('Elemento del carrusel presionado: $id');
+        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+          //String aux = '${prediction.lat}, ${prediction.lng}';
+          return FrminfolugarScreen(id: id);
+        }));
         // Aquí puedes agregar la lógica adicional que desees
       },
       child: Container(

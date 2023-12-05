@@ -43,6 +43,7 @@ class MyHomePage extends StatefulWidget {
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
+
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -56,7 +57,9 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
+
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
@@ -80,7 +83,9 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
+
     );
+
   }
 }
 
@@ -787,7 +792,7 @@ class _RutaUnoState extends State<RutaUno> {
                           child: TextButton(
                             onPressed: _selectLocation,
                             child: Text(
-                              buttonText,
+                              'Origen: $buttonText',
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
@@ -815,7 +820,7 @@ class _RutaUnoState extends State<RutaUno> {
                           child: TextButton(
                             onPressed: _searchAndSelectSecondLocation,
                             child: Text(
-                              secondLocationName,
+                              'Destino: $secondLocationName',
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.bold,
