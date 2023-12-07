@@ -151,18 +151,27 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
     return CustomAppBar(
         height: 60.v,
         leadingWidth: 24.h,
-        leading: AppbarLeadingImage(
-            imagePath: ImageConstant.imgArrowDown2,
-            margin: EdgeInsets.only(left: 19.h, top: 12.v, bottom: 22.v),
-            onTap: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
-                //String aux = '${prediction.lat}, ${prediction.lng}';
-                return FrminicioPage();
-              }));
-            }),
+        leading: Padding(
+            padding: EdgeInsets.only(top: 7.v, bottom: 16.v),
+            child: GestureDetector(
+                onTap: () {
+                  Navigator.of(context)
+                      .push(MaterialPageRoute(builder: (BuildContext context) {
+                    //String aux = '${prediction.lat}, ${prediction.lng}';
+                    return FrminicioPage();
+                  }));
+                },
+                child: Icon(
+                  Icons.arrow_back_outlined,
+                  size: 30.h,
+                  color: Colors.grey,
+                ))),
         centerTitle: true,
-        title: AppbarTitle(text: "Información del lugar"));
+        title: Text(
+          "Información del lugar",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontFamily: 'Nunito'),
+        ));
   }
 
   /// Section Widget

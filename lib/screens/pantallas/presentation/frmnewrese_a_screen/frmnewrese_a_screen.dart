@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:get/get.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/widgets/app_bar/appbar_leading_image.dart';
 import 'package:turisteando_ando/widgets/app_bar/appbar_subtitle_two.dart';
@@ -26,7 +27,7 @@ class FrmnewreseAScreen extends StatelessWidget {
                           margin: EdgeInsets.only(left: 18.h, right: 19.h),
                           child: Text(
                               "¡Nos encantaría conocer tu opinión acerca de este lugar! Comparte tu experiencia y ayuda a otros a descubrir lo que hace especial a este destino.",
-                              maxLines: 3,
+                              maxLines: 4,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
                               style: theme.textTheme.bodyMedium)),
@@ -73,12 +74,16 @@ class FrmnewreseAScreen extends StatelessWidget {
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
         leadingWidth: 23.h,
-        leading: AppbarLeadingImage(
-            imagePath: ImageConstant.imgArrowDown2,
-            margin: EdgeInsets.only(left: 18.h, top: 5.v, bottom: 41.v),
+        leading: GestureDetector(
             onTap: () {
-              onTapRegresar(context);
-            }),
+              // Navigator.pushNamed(context,
+              //     '/frminfolugar_screen'); //se rompe no se
+            },
+            child: Icon(
+              Icons.arrow_back_outlined,
+              size: 30.h,
+              color: Colors.grey,
+            )),
         centerTitle: true,
         title: AppbarSubtitleTwo(text: "Museo Tamayo \n"));
   }
