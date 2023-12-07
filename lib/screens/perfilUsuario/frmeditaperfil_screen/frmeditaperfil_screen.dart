@@ -32,7 +32,8 @@ class FrmeditaperfilScreen extends StatelessWidget {
                 key: _formKey,
                 child: SizedBox(
                     width: double.maxFinite,
-                    child: Column(children: [
+                    child: SingleChildScrollView(
+                        child: Column(children: [
                       _buildMainContent(context),
                       Container(
                           padding: EdgeInsets.symmetric(vertical: 21.v),
@@ -44,43 +45,47 @@ class FrmeditaperfilScreen extends StatelessWidget {
                                 Padding(
                                     padding: EdgeInsets.only(left: 21.h),
                                     child: Text("Nombre",
-                                        style: CustomTextStyles.titleSmallSemiBold)),
+                                        style: CustomTextStyles
+                                            .titleSmallSemiBold)),
                                 SizedBox(height: 3.v),
                                 _buildFullName(context),
                                 SizedBox(height: 12.v),
                                 Padding(
                                     padding: EdgeInsets.only(left: 21.h),
                                     child: Text("Nombre de usuario",
-                                        style: CustomTextStyles.titleSmallSemiBold)),
+                                        style: CustomTextStyles
+                                            .titleSmallSemiBold)),
                                 SizedBox(height: 3.v),
                                 _buildUsername(context),
                                 SizedBox(height: 12.v),
                                 Padding(
                                     padding: EdgeInsets.only(left: 21.h),
                                     child: Text("E-mail",
-                                        style: CustomTextStyles.titleSmallSemiBold)),
+                                        style: CustomTextStyles
+                                            .titleSmallSemiBold)),
                                 SizedBox(height: 3.v),
                                 _buildEmail(context),
                                 SizedBox(height: 11.v),
                                 Padding(
                                     padding: EdgeInsets.only(left: 21.h),
                                     child: Text("Dirección",
-                                        style: CustomTextStyles.titleSmallSemiBold)),
+                                        style: CustomTextStyles
+                                            .titleSmallSemiBold)),
                                 SizedBox(height: 7.v),
                                 _buildAddress(context),
                                 SizedBox(height: 11.v),
                                 Padding(
                                     padding: EdgeInsets.only(left: 21.h),
                                     child: Text("Contraseña",
-                                        style: CustomTextStyles.titleSmallSemiBold)),
-                                SizedBox(height: 4.v),
+                                        style: CustomTextStyles
+                                            .titleSmallSemiBold)),
+                                SizedBox(height: 6.v),
                                 _buildPassword(context),
                                 SizedBox(height: 5.v)
                               ]))
-                    ]))),
+                    ])))),
             bottomNavigationBar: _buildUpdateInfoButton(context)));
   }
-
 
   Widget _buildMainContent(BuildContext context) {
     return SizedBox(
@@ -101,18 +106,23 @@ class FrmeditaperfilScreen extends StatelessWidget {
                             bottom: Radius.circular(33.h)),
                         alignment: Alignment.center),
                     CustomAppBar(
-                        height: 52.v,
-                        leadingWidth: 38.h,
-                        leading: AppbarLeadingImage(
-                            imagePath: ImageConstant.imgRegresar,
-                            margin: EdgeInsets.only(
-                                left: 33.h, top: 12.v, bottom: 12.v),
-                            onTap: () {
-                              onTapRegresar(context);
-                            }),
-                        title: AppbarTitle(
-                            text: "UserNameXx",
-                            margin: EdgeInsets.only(left: 86.h)))
+                      leadingWidth: 30.h,
+                      leading: Padding(
+                          padding: EdgeInsets.only(top: 7.v, bottom: 16.v),
+                          child: GestureDetector(
+                              onTap: () {
+                                Navigator.pushNamed(
+                                    context, '/frmperfil_screen.dart');
+                              },
+                              child: Icon(
+                                Icons.arrow_back_outlined,
+                                size: 30.h,
+                                color: Colors.grey,
+                              ))),
+                      centerTitle: true,
+                      title: Text("UserNameXx",
+                          style: TextStyle(color: Colors.black)),
+                    ),
                   ]))),
           Align(
               alignment: Alignment.bottomCenter,
@@ -139,16 +149,16 @@ class FrmeditaperfilScreen extends StatelessWidget {
                         decoration: AppDecoration.fillOnPrimary.copyWith(
                             borderRadius: BorderRadiusStyle.circleBorder8),
                         child: Text("Cambiar foto",
+                            textAlign: TextAlign.center,
                             style: theme.textTheme.labelMedium))
                   ])))
         ]));
   }
 
-
   Widget _buildPersonalDataButton(BuildContext context) {
-    return CustomElevatedButton(text: "Datos personales");
+    return CustomElevatedButton(
+        text: "Datos personales", buttonStyle: CustomButtonStyles.fillPrimary);
   }
-
 
   Widget _buildFullName(BuildContext context) {
     return Padding(
@@ -159,7 +169,6 @@ class FrmeditaperfilScreen extends StatelessWidget {
             alignment: Alignment.center));
   }
 
-
   Widget _buildUsername(BuildContext context) {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 21.h),
@@ -168,7 +177,6 @@ class FrmeditaperfilScreen extends StatelessWidget {
             hintText: "Nombre de usuario",
             alignment: Alignment.center));
   }
-
 
   Widget _buildEmail(BuildContext context) {
     return Padding(
@@ -180,7 +188,6 @@ class FrmeditaperfilScreen extends StatelessWidget {
             alignment: Alignment.center));
   }
 
-
   Widget _buildAddress(BuildContext context) {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 21.h),
@@ -189,7 +196,6 @@ class FrmeditaperfilScreen extends StatelessWidget {
             hintText: "Calle, número. Código postal, Localidad...",
             alignment: Alignment.center));
   }
-
 
   Widget _buildPassword(BuildContext context) {
     return Padding(
@@ -211,7 +217,6 @@ class FrmeditaperfilScreen extends StatelessWidget {
                 EdgeInsets.only(left: 12.h, top: 11.v, bottom: 11.v)));
   }
 
-
   Widget _buildUpdateInfoButton(BuildContext context) {
     return CustomElevatedButton(
         height: 33.v,
@@ -221,7 +226,6 @@ class FrmeditaperfilScreen extends StatelessWidget {
         buttonStyle: CustomButtonStyles.fillPrimary,
         buttonTextStyle: CustomTextStyles.titleSmallPoppinsGray5002);
   }
-
 
   onTapRegresar(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.frmperfilScreen);

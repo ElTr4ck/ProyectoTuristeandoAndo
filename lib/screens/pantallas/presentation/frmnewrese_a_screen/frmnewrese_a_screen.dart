@@ -31,19 +31,12 @@ class FrmnewreseAScreen extends StatelessWidget {
                               textAlign: TextAlign.center,
                               style: theme.textTheme.bodyMedium)),
                       SizedBox(height: 43.v),
-                      _buildReview(context),
-                      Spacer(),
-                      CustomElevatedButton(
-                          width: 104.h,
-                          text: "Agregar fotos",
-                          buttonStyle: CustomButtonStyles.fillTealTL12,
-                          buttonTextStyle: theme.textTheme.labelMedium!),
-                      SizedBox(height: 58.v),
                       Text("Califica este lugar",
                           style: theme.textTheme.titleLarge),
                       SizedBox(height: 23.v),
                       Container(
-                          margin: EdgeInsets.only(left: 61.h, right: 64.h),
+                          margin: EdgeInsets.only(
+                              left: 61.h, right: 64.h, bottom: 12.h),
                           padding: EdgeInsets.symmetric(
                               horizontal: 8.h, vertical: 10.v),
                           decoration: AppDecoration.fillErrorContainer1
@@ -54,6 +47,14 @@ class FrmnewreseAScreen extends StatelessWidget {
                               initialRating: 5,
                               itemSize: 34,
                               color: appTheme.yellow700)),
+                      _buildReview(context),
+                      Spacer(),
+                      CustomElevatedButton(
+                          width: 104.h,
+                          text: "Agregar fotos",
+                          buttonStyle: CustomButtonStyles.fillTealTL12,
+                          buttonTextStyle: theme.textTheme.labelMedium!),
+                      SizedBox(height: 58.v),
                       SizedBox(height: 30.v),
                       CustomElevatedButton(
                           text: "Aceptar",
