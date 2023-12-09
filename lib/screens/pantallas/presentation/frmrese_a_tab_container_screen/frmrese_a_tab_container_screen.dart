@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
-import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_a_page/frmrese_a_page.dart';
+//import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_a_page/frmrese_a_page.dart';
 import 'package:turisteando_ando/widgets/app_bar/appbar_leading_image.dart';
 import 'package:turisteando_ando/widgets/app_bar/appbar_title_searchview.dart';
 import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
@@ -9,10 +9,11 @@ import 'package:turisteando_ando/widgets/custom_bottom_bar.dart';
 import 'package:turisteando_ando/widgets/custom_rating_bar.dart';
 
 class FrmreseATabContainerScreen extends StatefulWidget {
-  const FrmreseATabContainerScreen({Key? key})
+  final Map<String, dynamic>? jsonData;
+  const FrmreseATabContainerScreen({required this.jsonData, Key? key})
       : super(
-          key: key,
-        );
+    key: key,
+  );
 
   @override
   FrmreseATabContainerScreenState createState() =>
@@ -118,7 +119,7 @@ class FrmreseATabContainerScreenState extends State<FrmreseATabContainerScreen>
             ],
           ),
         ),
-        bottomNavigationBar: _buildBottomBar(context),
+        //bottomNavigationBar: _buildBottomBar(context),
       ),
     );
   }
@@ -467,46 +468,10 @@ class FrmreseATabContainerScreenState extends State<FrmreseATabContainerScreen>
       child: TabBarView(
         controller: tabviewController,
         children: [
-          FrmreseAPage(),
-          FrmreseAPage(),
+          //FrmreseAPage(jsonData: widget.jsonData),
+          //FrmreseAPage(jsonData: widget.jsonData),
         ],
       ),
     );
-  }
-
-  /// Section Widget
-  Widget _buildBottomBar(BuildContext context) {
-    return CustomBottomBar(
-      onChanged: (BottomBarEnum type) {
-        Navigator.pushNamed(
-            navigatorKey.currentContext!, getCurrentRoute(type));
-      },
-    );
-  }
-
-  ///Handling route based on bottom click actions
-  String getCurrentRoute(BottomBarEnum type) {
-    switch (type) {
-      case BottomBarEnum.Iconlycurvedhome:
-        return "/";
-      case BottomBarEnum.Iconlylightticket:
-        return AppRoutes.frminicioPage;
-      case BottomBarEnum.Iconlylightoutlineheart:
-        return "/";
-      case BottomBarEnum.Iconlylightprofile:
-        return "/";
-      default:
-        return "/";
-    }
-  }
-
-  ///Handling page based on route
-  Widget getCurrentPage(String currentRoute) {
-    switch (currentRoute) {
-      case AppRoutes.frminicioPage:
-        return FrminicioPage();
-      default:
-        return DefaultWidget();
-    }
   }
 }

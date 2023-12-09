@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 
+
 class CustomRatingBar extends StatelessWidget {
   CustomRatingBar({
     Key? key,
@@ -13,57 +14,62 @@ class CustomRatingBar extends StatelessWidget {
     this.color,
     this.unselectedColor,
     this.onRatingUpdate,
-  }) : super(
-          key: key,
-        );
+  }) : super(key: key);
 
   final Alignment? alignment;
-
   final bool? ignoreGestures;
-
   final double? initialRating;
-
   final double? itemSize;
-
   final int? itemCount;
-
   final Color? color;
-
   final Color? unselectedColor;
-
   Function(double)? onRatingUpdate;
 
   @override
   Widget build(BuildContext context) {
+    int totalStars = itemCount ?? 5;
+
     return alignment != null
         ? Align(
-            alignment: alignment ?? Alignment.center,
-            child: ratingBarWidget,
-          )
-        : ratingBarWidget;
-  }
-
-  Widget get ratingBarWidget => RatingBar.builder(
+      alignment: alignment ?? Alignment.center,
+      child: RatingBar.builder(
         ignoreGestures: ignoreGestures ?? false,
         initialRating: initialRating ?? 0,
         minRating: 0,
         direction: Axis.horizontal,
-        allowHalfRating: false,
-        itemSize: itemSize ?? 10.v,
-        unratedColor: unselectedColor ?? appTheme.yellow700,
-        itemCount: itemCount ?? 5,
-        updateOnDrag: true,
-        itemBuilder: (
-          context,
-          _,
-        ) {
+        allowHalfRating: true,
+        itemSize: itemSize ?? 10.0,
+        itemCount: totalStars,
+        itemBuilder: (context, index) {
           return Icon(
             Icons.star,
-            color: color ?? theme.colorScheme.onPrimary.withOpacity(1),
+            color: index < initialRating! ? color : unselectedColor,
+            size: itemSize ?? 10.0,
           );
         },
         onRatingUpdate: (rating) {
-          onRatingUpdate!.call(rating);
+          onRatingUpdate?.call(rating);
         },
-      );
+      ),
+    )
+        : RatingBar.builder(
+      ignoreGestures: ignoreGestures ?? false,
+      initialRating: initialRating ?? 0,
+      minRating: 0,
+      direction: Axis.horizontal,
+      allowHalfRating: true,
+      itemSize: itemSize ?? 10.0,
+      itemCount: totalStars,
+      itemBuilder: (context, index) {
+        return Icon(
+          Icons.star,
+          color: index < initialRating! ? color : unselectedColor,
+          size: itemSize ?? 10.0,
+        );
+      },
+      onRatingUpdate: (rating) {
+        onRatingUpdate?.call(rating);
+      },
+    );
+  }
 }

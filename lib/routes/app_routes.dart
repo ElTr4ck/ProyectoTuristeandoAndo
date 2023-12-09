@@ -7,6 +7,7 @@ import 'package:turisteando_ando/screens/pantallas/presentation/frmmarcadores_sc
 import 'package:turisteando_ando/screens/pantallas/presentation/frmmarcmapa_screen/frmmarcmapa_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminfolugar_screen/frminfolugar_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_a_tab_container_screen/frmrese_a_tab_container_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmnewrese_a_screen/frmnewrese_a_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmreportarrese_a_screen/frmreportarrese_a_screen.dart';
 import 'package:turisteando_ando/screens/frmSetLocation.dart';
@@ -56,6 +57,9 @@ class AppRoutes {
 
   static const String frmreseAPage = '/frmrese_a_page';
 
+  static const String frmreseATabContainerScreen2 =
+      '/frmrese_a_tab_container_screen2';
+
   static const String frmreseATabContainerScreen =
       '/frmrese_a_tab_container_screen';
 
@@ -75,7 +79,8 @@ class AppRoutes {
     frmmarcadoresScreen: (context) => FrmmarcadoresScreen(),
     frmmarcmapaScreen: (context) => FrmmarcmapaScreen(),
     frminfolugarScreen: (context) => FrminfolugarScreen(id: '',),
-    frmreseATabContainerScreen: (context) => FrmreseATabContainerScreen(),
+    frmreseATabContainerScreen2: (context) => FrmreseATabContainerScreen2(id: '',),
+    frmreseATabContainerScreen: (context) => FrmreseATabContainerScreen(jsonData: null),
     frmnewreseAScreen: (context) => FrmnewreseAScreen(),
     frmreportarreseAScreen: (context) => FrmreportarreseAScreen(),
     appNavigationScreen: (context) => AppNavigationScreen(),
