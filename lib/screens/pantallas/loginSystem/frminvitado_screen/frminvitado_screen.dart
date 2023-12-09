@@ -20,21 +20,16 @@ class _FrminvitadoScreenState extends State<FrminvitadoScreen> {
       child: Scaffold(
         body: Container(
           width: double.maxFinite,
-          padding: EdgeInsets.symmetric(
-            horizontal: 42.h,
-            vertical: 25.v,
-          ),
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Container(
-                decoration: AppDecoration.outlineBlack,
-                child: Text(
-                  "TURISTEANDO ANDO \n",
-                  style: CustomTextStyles.titleLargeBlack900,
-                ),
+              CustomImageView(
+                imagePath: ImageConstant.imgLogo,
+                height: 150,
+                width: 150,
+                alignment: Alignment.topCenter,
               ),
-              SizedBox(height: 5.v),
+              SizedBox(height: 10.v),
               Container(
                 padding: EdgeInsets.symmetric(
                   horizontal: 1.h,
