@@ -90,8 +90,12 @@ class FrmloginScreen extends StatelessWidget {
                                                 maxLines: 2,
                                                 overflow: TextOverflow.ellipsis,
                                                 textAlign: TextAlign.center,
-                                                style: CustomTextStyles
-                                                    .titleLargeBlack90022)),
+                                                style: TextStyle(
+                                                  fontSize: 25.0,
+                                                  fontWeight: FontWeight.bold,
+                                                  color: Colors.white,
+                                                  fontFamily: 'Nunito',
+                                                ))),
                                         Divider(indent: 20.h, endIndent: 20.h),
                                         SizedBox(height: 51.v),
                                         Padding(
@@ -135,8 +139,8 @@ class FrmloginScreen extends StatelessWidget {
                                         CustomElevatedButton(
                                           height: 57.v,
                                           text: "Iniciar sesión",
-                                          buttonStyle: CustomButtonStyles
-                                              .fillPrimaryTL22,
+                                          buttonStyle:
+                                              CustomButtonStyles.fillPrimary,
                                           buttonTextStyle: CustomTextStyles
                                               .titleMediumOnPrimary17,
                                           onPressed: () async {
