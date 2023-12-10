@@ -25,11 +25,12 @@ class FrmnewreseAScreen extends StatelessWidget {
                           width: 286.h,
                           margin: EdgeInsets.only(left: 18.h, right: 19.h),
                           child: Text(
-                              "¡Nos encantaría conocer tu opinión acerca de este lugar! Comparte tu experiencia y ayuda a otros a descubrir lo que hace especial a este destino.",
-                              maxLines: 3,
-                              overflow: TextOverflow.ellipsis,
-                              textAlign: TextAlign.center,
-                              style: theme.textTheme.bodyMedium)),
+                            "¡Nos encantaría conocer tu opinión acerca de este lugar! Comparte tu experiencia y ayuda a otros a descubrir lo que hace especial a este destino.",
+                            maxLines: 5,
+                            overflow: TextOverflow.ellipsis,
+                            textAlign: TextAlign.center,
+                            style: CustomTextStyles.titleSmallMontserratGray600,
+                          )),
                       SizedBox(height: 43.v),
                       _buildReview(context),
                       Spacer(),
@@ -56,14 +57,20 @@ class FrmnewreseAScreen extends StatelessWidget {
                               color: appTheme.yellow700)),
                       SizedBox(height: 30.v),
                       CustomElevatedButton(
-                          text: "Aceptar",
-                          margin: EdgeInsets.only(left: 44.h, right: 45.h),
-                          buttonStyle: CustomButtonStyles.fillPrimaryTL16),
+                        text: "Aceptar",
+                        //margin: EdgeInsets.only(left: 44.h, right: 45.h),
+                        buttonStyle: CustomButtonStyles.fillPrimary,
+                        buttonTextStyle:
+                            CustomTextStyles.titleMediumOnPrimary17,
+                      ),
                       SizedBox(height: 14.v),
                       CustomElevatedButton(
-                          text: "Cancelar",
-                          margin: EdgeInsets.only(left: 44.h, right: 45.h),
-                          buttonStyle: CustomButtonStyles.fillTealTL16),
+                        text: "Cancelar",
+                        //margin: EdgeInsets.only(left: 44.h, right: 45.h),
+                        buttonStyle: CustomButtonStyles.fillTeal,
+                        buttonTextStyle:
+                            CustomTextStyles.titleMediumOnPrimary17,
+                      ),
                       SizedBox(height: 2.v)
                     ]))));
   }
