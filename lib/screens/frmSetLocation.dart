@@ -1,158 +1,194 @@
 import 'package:flutter/material.dart';
-import 'package:geolocator/geolocator.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-import 'package:turisteando_ando/screens/frmCuestionario.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:turisteando_ando/blocs/geolocation/geolocation_bloc.dart';
+import 'package:turisteando_ando/blocs/place/place_bloc.dart';
+import 'package:turisteando_ando/core/app_export.dart';
+import 'package:turisteando_ando/widgets/barraBusquedaUbicacion.dart';
+import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
+import 'package:turisteando_ando/widgets/gmap.dart';
 
-class frmSetLocation extends StatelessWidget {
+class FrmSetLocation extends StatefulWidget {
+  const FrmSetLocation({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      home: Scaffold(
-        body: Stack(
-          children: [
-            // MAPA DE GOOGLE MAPS
-            FutureBuilder<LatLng>(
-              future: Localizador().getCurrentLocation(), 
-              builder: (context, snapshot){
-                if(snapshot.connectionState == ConnectionState.waiting){
-                  //Mientras esperamos la resolucion del future
-                  return CircularProgressIndicator(); //TODO: Aqui hay que mejorarlo
-                }
-                else if(snapshot.hasError){
-                  // Si hay error en el future
-                  return Text('Error: ${snapshot.error}');
-                }
-                else{
-                  //Si el future se resuelve correctamente
-                  LatLng currentLocation = snapshot.data!;
-                  return GoogleMap(initialCameraPosition: CameraPosition(target: currentLocation, zoom: 16));
-                }
-              }
-            
-            ),
-            // Contenido en la parte inferior
-            Column(
-              mainAxisAlignment: MainAxisAlignment.end,
-              children: <Widget>[
-                Container(
-                  color: Colors.white,
-                  child: Column(
-                    children: <Widget>[
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.start, // Alinea los textos a la izquierda
-                        children: [
-                          Padding(
-                              padding: EdgeInsets.fromLTRB(16, 16, 0, 0),
-                              child: Text(
-                                  'Selecciona tu ubicación',
-                                  style: TextStyle(
-                                  fontSize: 24,
-                                  fontWeight: FontWeight.bold,
-                                  color: Colors.black,
-                                  fontFamily: 'Nunito',
-                                  ),
-                                ),
-                          ),
-                        ],
-                      ),
-                      const Row(
-                        mainAxisAlignment: MainAxisAlignment.start, // Alinea los textos a la izquierda
-                        children: [
-                          Flexible(child: Padding(
-                            padding: EdgeInsets.fromLTRB(16, 12, 5, 0),
-                            child: Text(
-                                'Esto nos ayudará a darte recomendaciones personalizadas.\nPuedes optar por ingresar una ubicación manualmente o dejarnos mostrarte sugerencias mediante tu ubicación actual.',
-                                style: TextStyle(
-                                fontSize: 13,
-                                color: Colors.black,
-                                  fontFamily: 'Nunito',
-                                  fontWeight: FontWeight.w100,
-                                ),
-                              ),
-                          ),)
-                          
-                        ],
-                      ),
-                      const Padding(
-                        padding: EdgeInsets.all(16.0),
-                        child: TextField(
-                          decoration: InputDecoration(
-                            hintText: 'Ingresa tu ubicación',
-                            prefixIcon: Icon(
-                                Icons.search,
-                                color: Color(0xFF114C5F)
-                            ),
-                            border: InputBorder.none,
-                            
-                          ),
-                        ),
-                      ),
-                      ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: const Color(0xFF114C5F),
-                          onPrimary: Colors.white,
-                          minimumSize: const Size(300, 50), // Ajusta el ancho (200) y el alto (50) del botón
-                          padding: const EdgeInsets.all(16.0), // Relleno
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(10.0), // Borde redondeado
-                          ),
-                        ), //Style
-                        onPressed: () {
-                          Navigator.push(context, MaterialPageRoute(builder: (context) => frmCuestionario()));
-                        },
-                        child: const Text('Continuar',
-                          style: TextStyle(
-                            fontSize: 18,
-                            fontWeight: FontWeight.bold,
-                            fontFamily: 'Nunito',
-                          ),
-                        ),
-
-                      ),
-                      TextButton(
-                        onPressed: () {
-                          // Lógica para usar la ubicación actual
-                        },
-                        child: const Text(
-                          'Quiero continuar con mi ubicación actual',
-                          style: TextStyle(
-                            decoration: TextDecoration.underline,
-                            color: Color(0xFF31B6D4),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            )
-          ],
-        )
-      ),
-    );
-  }
+  State<FrmSetLocation> createState() => _FrmSetLocationState();
 }
 
-//Esta clase nos sirve para los permisos de ubicacion
+class _FrmSetLocationState extends State<FrmSetLocation> {
+  @override
+  Widget build(BuildContext context) {
+    return SafeArea(
+      child: Scaffold(
+        appBar: AppBar(
+          title: const Text('Seleccionar ubicación'),
+          titleTextStyle: CustomTextStyles.titleMediumOnPrimary17,
+          leading: IconButton(
+            onPressed: () {
+              Navigator.pop(context);
+            },
+            icon: const Icon(Icons.arrow_back),
+          ),
+          backgroundColor: const Color.fromARGB(255, 20, 76, 95),
+        ),
+        body: BlocBuilder<PlaceBloc, PlaceState>(
+          builder: (context, state) {
+            if (state is PlaceLoading) {
+              return Stack(
+                children: [
+                  //Mapa de google con geolocalizacion
+                  BlocBuilder<GeolocationBloc, GeolocationState>(
+                    builder: (context, state) {
+                      if (state is GeolocationLoading) {
+                        return const Center(
+                          child: CircularProgressIndicator(),
+                        );
+                      } else if (state is GeolocationLoaded) {
+                        return Gmap(
+                          lat: state.position.latitude,
+                          lng: state.position.longitude,
+                        );
+                      } else {
+                        return const Text('Algo ha salido mal');
+                      }
+                    },
+                  ),
+                  //Barra de busqueda con autocompletado
+                  BarraBusquedaUbicacion(),
+                  //Botoneras
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 35),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              //Logica para la geolocalizacion
+                            },
+                            child: Container(
+                              margin:
+                                  EdgeInsets.only(right: 20.h, bottom: 20.h),
+                              padding: const EdgeInsets.all(11),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color.fromARGB(255, 255, 255, 255),
+                              ),
+                              child: const Icon(
+                                Icons.my_location,
+                                color: Colors.black,
+                                size: 25,
+                              ),
+                            ),
+                          ),
+                          CustomElevatedButton(
+                              height: 41.v,
+                              text: "Aceptar",
+                              margin: EdgeInsets.only(
+                                  left: 30.h, right: 20.h, bottom: 10.h),
+                              buttonStyle: CustomButtonStyles.fillPrimary,
+                              buttonTextStyle:
+                                  CustomTextStyles.titleMediumOnPrimary17,
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, AppRoutes.frmCuestionario);
+                                /*
+                                Navigator.pushReplacement(
+                                  context, 
+                                  MaterialPageRoute(builder: (context) => AppRoutes.routes[AppRoutes.frmCuestionario]!(context))
+                                );*/
+                              }),
+                          CustomElevatedButton(
+                              height: 41.v,
+                              text: "Usar mi ubicación actual",
+                              margin: EdgeInsets.only(
+                                  left: 30.h, right: 20.h, bottom: 10.h),
+                              buttonStyle: CustomButtonStyles.fillTeal,
+                              buttonTextStyle:
+                                  CustomTextStyles.titleMediumOnPrimary17,
+                              onPressed: () {})
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            } else if (state is PlaceLoaded) {
+              return Stack(
+                children: [
+                  //Mapa de google sin geolocalizacion, con el place cargado
+                  Gmap(
+                    lat: state.place.lat,
+                    lng: state.place.lon,
+                  ),
 
-class Localizador {
-  Future<LatLng> determinatePosition() async{
-    LocationPermission permission;
-    permission = await Geolocator.checkPermission(); // Se checa si el permiso ya esta habilitado
-    if(permission == LocationPermission.denied){
-      permission = await Geolocator.requestPermission(); // En caso de que no este habilitado, se solicita
-      if(permission == LocationPermission.denied){ // Esto es en caso de que se niegue el permiso de localizacion a la aplicacion
-        return const LatLng(19.4326, -99.1332); // Coordenadas del zocalo CDMX
-      }
-    }
-    Position posicion = await Geolocator.getCurrentPosition(); //TODO: Faltaria un try y catch de esto por si la app no puede obtener la ubicacion
-    LatLng latLng = LatLng(posicion.latitude, posicion.longitude);
-    return latLng;
-  }
-  // Este metodo retorna la ubicacion actual del ususario
-  Future<LatLng> getCurrentLocation() async {
-    LatLng position = await determinatePosition();
-    return position;
+                  //Barra de busqueda con autocompletado
+                  BarraBusquedaUbicacion(),
+                  //Botoneras
+                  Align(
+                    alignment: Alignment.bottomCenter,
+                    child: Container(
+                      margin: const EdgeInsets.only(bottom: 35),
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.end,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          GestureDetector(
+                            onTap: () {
+                              //Regresar al evento de placeLoading
+                              context
+                                  .read<PlaceBloc>()
+                                  .add(const LoadGeoPlace());
+                            },
+                            child: Container(
+                              margin:
+                                  EdgeInsets.only(right: 20.h, bottom: 20.h),
+                              padding: const EdgeInsets.all(11),
+                              decoration: const BoxDecoration(
+                                shape: BoxShape.circle,
+                                color: Color.fromARGB(255, 255, 255, 255),
+                              ),
+                              child: const Icon(
+                                Icons.my_location,
+                                color: Colors.black,
+                                size: 25,
+                              ),
+                            ),
+                          ),
+                          CustomElevatedButton(
+                              height: 41.v,
+                              text: "Aceptar",
+                              margin: EdgeInsets.only(
+                                  left: 30.h, right: 20.h, bottom: 10.h),
+                              buttonStyle: CustomButtonStyles.fillPrimary,
+                              buttonTextStyle:
+                                  CustomTextStyles.titleMediumOnPrimary17,
+                              onPressed: () {
+                                Navigator.pushNamed(
+                                    context, AppRoutes.frmCuestionario);
+                              }),
+                          CustomElevatedButton(
+                              height: 41.v,
+                              text: "Usar mi ubicación actual",
+                              margin: EdgeInsets.only(
+                                  left: 30.h, right: 20.h, bottom: 10.h),
+                              buttonStyle: CustomButtonStyles.fillTeal,
+                              buttonTextStyle:
+                                  CustomTextStyles.titleMediumOnPrimary17,
+                              onPressed: () {})
+                        ],
+                      ),
+                    ),
+                  ),
+                ],
+              );
+            } else {
+              return const Text('Algo ha salido mal :(');
+            }
+          },
+        ),
+      ),
+    );
   }
 }
