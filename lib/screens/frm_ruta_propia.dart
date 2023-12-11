@@ -4,7 +4,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
 
 class FrmRutaPropia extends StatefulWidget {
   @override
@@ -77,7 +76,6 @@ class _FrmRutaPropiaState extends State<FrmRutaPropia> {
         print('Error al obtener detalles del lugar: $e');
       }
     }
-
     setState(() {
       lugares = nuevosLugares;
       print('Lugares actualizados: $lugares');
@@ -93,25 +91,19 @@ class _FrmRutaPropiaState extends State<FrmRutaPropia> {
 
       // Obteniendo el nombre y la calificación del lugar
       String title = result['name']; // Nombre del lugar
-      double rating = result['rating'] ?? 0.0; // Calificación del lugar, 0.0 si no está disponible
-
       // Construyendo la descripción con la calificación
-      String description = '${rating.toStringAsFixed(1)}';
 
       // URL de la imagen del lugar
       String imageUrl = result['photos'] != null
           ? 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${result['photos'][0]['photo_reference']}&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM'
           : 'URL_imagen_por_defecto';
-
       return {
         'title': title,
-        'description': description,
         'image': imageUrl
       };
     } else {
       return {
         'title': 'Información no disponible',
-        'description': 'No se pudo obtener la descripción',
         'image': 'url_de_imagen_por_defecto'
       };
     }
@@ -150,6 +142,7 @@ class _FrmRutaPropiaState extends State<FrmRutaPropia> {
             Expanded(
               child: Visor(
                   lugares: lugares,
+                  state: this,
               ),
             ),
             BotonesInf(ancho: ancho),
@@ -190,6 +183,8 @@ class _FechaState extends State<Fecha> {
                 initialDate: widget.selectedDate,
                 firstDate: DateTime(widget.selectedDate.year - 10),
                 lastDate: DateTime(widget.selectedDate.year + 10),
+                // Asegúrate de que tu localización del dispositivo esté en español o establece manualmente la localización
+                locale : const Locale("es","ES"),
               );
               if (picked != null && picked != widget.selectedDate) {
                 widget.onDateSelected(picked);
@@ -203,11 +198,13 @@ class _FechaState extends State<Fecha> {
     );
   }
 }
-
 class Visor extends StatelessWidget {
   final List<Map<String, dynamic>> lugares;
 
-  Visor({Key? key, required this.lugares}) : super(key: key);
+  // Pasamos una referencia al estado del widget FrmRutaPropia
+  final _FrmRutaPropiaState state;
+
+  Visor({Key? key, required this.lugares, required this.state}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -219,19 +216,22 @@ class Visor extends StatelessWidget {
             nombre: lugar['nombre'],
             fecha: lugar['fecha'],
             id: lugar['id'],
-            // Aquí también deberás incluir los otros manejadores de eventos
-            // para editar fecha, marcar favorito y marcar completado...
+            state: state, // Pasar el estado a Tarjeta
           );
         }).toList(),
       ),
     );
   }
 }
+
 class Tarjeta extends StatelessWidget {
   final String url;
   final String nombre;
   final String fecha;
   final String id;
+
+  // Pasamos una referencia al estado del widget FrmRutaPropia
+  final _FrmRutaPropiaState state;
 
   Tarjeta({
     Key? key,
@@ -239,6 +239,7 @@ class Tarjeta extends StatelessWidget {
     required this.nombre,
     required this.fecha,
     required this.id,
+    required this.state, // Nuevo parámetro
   }) : super(key: key);
 
   @override
@@ -261,18 +262,25 @@ class Tarjeta extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    IconButton(onPressed: (){
-                    },
-                        icon: Icon(Icons.delete_outline_outlined)),
-                    IconButton(onPressed: () {
-                      mostrarDatePickerYEditarFecha(context, id);
-                    }, icon: Icon(Icons.access_time_rounded)),
+                    IconButton(
+                      onPressed: () async {
+                        await eliminarLugar(id);
+                        state.fetchData(state.selectedDate); // Actualizar la lista después de eliminar un lugar
+                      },
+                      icon: Icon(Icons.delete_outline_outlined),
+                    ),
+                    IconButton(
+                      onPressed: () {
+                        mostrarDatePickerYEditarFecha(context, id);
+                      },
+                      icon: Icon(Icons.access_time_rounded),
+                    ),
                   ],
                 ),
                 Row(
                   children: [
-                   Hecho(itemId: id),
-                   HeartButtonV2(itemId: id),
+                    Hecho(itemId: id),
+                    HeartButtonV2(itemId: id),
                   ],
                 ),
               ],
@@ -315,6 +323,30 @@ Future<void> mostrarDatePickerYEditarFecha(BuildContext context, String lugarId)
   if (fechaSeleccionada != null) {
     String fechaIso = fechaSeleccionada.toIso8601String();
     await editarFechaItinerario(lugarId, fechaIso);
+
+    // Actualizar la lista después de cambiar la fecha
+    final _FrmRutaPropiaState? state = context.findAncestorStateOfType<_FrmRutaPropiaState>();
+    if (state != null) {
+      state.fetchData(state.selectedDate);
+    }
+  }
+}
+
+Future<void> eliminarLugar(String id) async {
+  var user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    var docRef = FirebaseFirestore.instance
+        .collection('usuarios')
+        .doc(user.uid)
+        .collection('itinerario')
+        .doc(id);
+
+    try {
+      await docRef.delete();
+      print('Lugar eliminado con éxito.');
+    } catch (e) {
+      print('Error al eliminar lugar de Firestore: $e');
+    }
   }
 }
 
