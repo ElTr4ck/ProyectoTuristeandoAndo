@@ -1,0 +1,67 @@
+{
+  "project_info": {
+    "project_number": "62472566158",
+    "project_id": "turisteandoando-3938c",
+    "storage_bucket": "turisteandoando-3938c.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62472566158:android:87cb67c2693a5f934b20df",
+        "android_client_info": {
+          "package_name": "com.example.firebaste_con"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwLXf5zsCsjF4vgjrZ3nmAb-uGnL8y-Jg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62472566158:android:fe19910419aac0644b20df",
+        "android_client_info": {
+          "package_name": "com.example.turisteando_ando"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwLXf5zsCsjF4vgjrZ3nmAb-uGnL8y-Jg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    },
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:62472566158:android:9d0dd1093292eb444b20df",
+        "android_client_info": {
+          "package_name": "com.example.turisteandoando"
+        }
+      },
+      "oauth_client": [],
+      "api_key": [
+        {
+          "current_key": "AIzaSyBwLXf5zsCsjF4vgjrZ3nmAb-uGnL8y-Jg"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": []
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
