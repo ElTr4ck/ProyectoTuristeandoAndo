@@ -1,10 +1,23 @@
 import 'package:flutter/material.dart';
-import 'package:turisteando_ando/screens/frmCuestionario.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:turisteando_ando/blocs/autocomplete/auto_complete_bloc.dart';
+import 'package:turisteando_ando/blocs/geolocation/geolocation_bloc.dart';
+import 'package:turisteando_ando/blocs/place/place_bloc.dart';
+import 'package:turisteando_ando/core/app_export.dart';
+import 'package:turisteando_ando/repositories/auth/wrapper.dart';
+import 'package:turisteando_ando/repositories/geolocation/geolocation_repository.dart';
+import 'package:turisteando_ando/repositories/places/PlacesRepository.dart';
 
-import 'package:turisteando_ando/screens/frmSetLocation.dart'; // Importacion del frame de Set Location
-import 'package:turisteando_ando/screens/frmMapa.dart'; // Importacion del frame de Set Location
+import 'firebase_options.dart';
+import 'package:firebase_core/firebase_core.dart';
 
-void main() {
+void main() async {
+  WidgetsFlutterBinding.ensureInitialized();
+
+  await Firebase.initializeApp(
+    options: DefaultFirebaseOptions.currentPlatform,
+  );
+  ThemeHelper().changeTheme('primary');
   runApp(const MyApp());
 }
 
@@ -14,70 +27,44 @@ class MyApp extends StatelessWidget {
   // This widget is the root of your application.
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'Turisteando Ando',
-      theme: ThemeData(
-        colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
-        useMaterial3: true,
-      ),
-      //home: const MyHomePage(title: 'Flutter Demo Home Page'),
-      initialRoute: 'frmSetLocation',
-      routes: {
-        'frmSetLocation': ( _ ) => frmSetLocation(),
-        'frmMapa' : ( _ ) => frmMapa(),
-        'frmCuestionario' : ( _ ) => frmCuestionario()
-      },
-    );
-  }
-}
+    return MultiRepositoryProvider(
+      providers: [
+        RepositoryProvider<PlacesRepository>(
+          create: (_) => PlacesRepository(),
+        ),
+        RepositoryProvider<GeolocationRepository>(
+          create: (_) => GeolocationRepository(),
+        )
+      ],
+      child: MultiBlocProvider(
+        providers: [
+          BlocProvider(
+              create: (context) => AutoCompleteBloc(
+                  placesRepository: context.read<PlacesRepository>())
+                ..add(LoadAutoComplete())),
+          BlocProvider(
+              create: (context) => PlaceBloc(
+                  placesRepository: context.read<PlacesRepository>())),
+          BlocProvider(
+              create: (context) => GeolocationBloc(
+                  geolocationRepository: context.read<GeolocationRepository>())
+                ..add(LoadGeolocation()))
+        ],
+        child: MaterialApp(
+          theme: theme,
+          debugShowCheckedModeBanner: false,
+          title: 'Turisteando Ando',
 
-class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key, required this.title});
-
-  final String title;
-
-  @override
-  State<MyHomePage> createState() => _MyHomePageState();
-}
-
-class _MyHomePageState extends State<MyHomePage> {
-  int _counter = 0;
-
-  void _incrementCounter() {
-    setState(() {
-      _counter++;
-    });
-  }
-
-  @override
-  Widget build(BuildContext context) {
-
-    return Scaffold(
-      appBar: AppBar(
-
-        backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(widget.title),
-      ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
-            Text(
-              '$_counter',
-              style: Theme.of(context).textTheme.headlineMedium,
-            ),
-          ],
+          /* theme: ThemeData(
+            colorScheme: ColorScheme.fromSeed(seedColor: Colors.deepPurple),
+            useMaterial3: true,
+          ),*/
+          //home: const MyHomePage(title: 'Flutter Demo Home Page'),
+          //initialRoute: AppRoutes.frmwelcomeScreen,
+          home: Wrapper(),
+          routes: AppRoutes.routes,
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
-        tooltip: 'Increment',
-        child: const Icon(Icons.add),
-      ), // This trailing comma makes auto-formatting nicer for build methods.
     );
   }
 }
