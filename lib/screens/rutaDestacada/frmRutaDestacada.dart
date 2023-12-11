@@ -1,9 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
+import 'package:turisteando_ando/models/rutaDestacada/rutaDestacadaModel.dart';
+import 'package:turisteando_ando/models/users/user.dart';
 
 class FrmRutaDestacada extends StatelessWidget {
   const FrmRutaDestacada({super.key});
+
 
   @override
   Widget build(BuildContext context) {
@@ -54,42 +57,85 @@ class FrmRutaDestacada extends StatelessWidget {
                     ),
                   ),
                 ),
-                Expanded(
-                  child: Container(
-                    alignment: Alignment.topRight,
-                    padding: const EdgeInsets.only(right: 20),
-                    child: const Text(
-                      '27d15h23m', //TODO: Poner el timer de acuerdo a la BD
-                      style: TextStyle(
-                          fontFamily: 'Nunito',
-                          fontSize: 16,
-                          color: Colors.black,
-                          fontWeight: FontWeight.w100),
-                    ),
-                  ),
+                FutureBuilder<DateTime>(
+                  future: obtenerFechaInicio(),
+                  builder: (context, snapshotFechaInicio) {
+                    if (snapshotFechaInicio.connectionState == ConnectionState.waiting) {
+                      return const CircularProgressIndicator();
+                    } else if (snapshotFechaInicio.hasError) {
+                      return Text('Error: ${snapshotFechaInicio.error}');
+                    } else {
+                      final fechaFin = snapshotFechaInicio.data!.add(const Duration(days: 30));
+                      return Expanded(
+                        child: Container(
+                          alignment: Alignment.topRight,
+                          padding: const EdgeInsets.only(right: 20),
+                          child: StreamBuilder(
+                            stream: Stream.periodic(const Duration(seconds: 1), (i) => i),
+                            builder: (context, snapshot) {
+                              final duracion = fechaFin.difference(DateTime.now());
+                              final dias = duracion.inDays;
+                              final horas = duracion.inHours % 24;
+                              final minutos = duracion.inMinutes % 60;
+                              final segundos = duracion.inSeconds % 60;
+
+                              return Text(
+                                '${dias}d${horas}h${minutos}m${segundos}s',
+                                style: const TextStyle(
+                                    fontFamily: 'Nunito',
+                                    fontSize: 16,
+                                    color: Colors.black,
+                                    fontWeight: FontWeight.w100),
+                              );
+                            },
+                          ),
+                        ),
+                      );
+                    }
+                  },
                 ),
               ],
             ),
             //Titulo de 'RUTA MENSUAL
-            Container(
-              padding: const EdgeInsets.only(top: 10, left: 20, bottom: 20),
-              alignment: Alignment.topLeft,
-              child: Text(
-                'Ruta mensual: NOMBRE',
-                style: CustomTextStyles.titleLargeNunito,
-                textAlign: TextAlign.left,
-              ),
-            ),
-
+            FutureBuilder(
+              future: obtenerNombreRuta(), 
+              builder: (context, snapshot){
+                if(snapshot.connectionState == ConnectionState.waiting){
+                  return const Center(child: CircularProgressIndicator());
+                }
+                else if(snapshot.hasError){
+                  return Text('Error: ${snapshot.error}');
+                }
+                else{
+                  return Container(
+                    padding: const EdgeInsets.only(top: 10, left: 20, bottom: 20),
+                    alignment: Alignment.topLeft,
+                    child: Text(
+                      'Ruta mensual: ${snapshot.data}',
+                      style: CustomTextStyles.titleLargeNunito,
+                      textAlign: TextAlign.left,
+                    ),
+                  );
+                }
+              }),
+           
             //TARJETAS DE LUGAR
             Expanded(
-              child: ListView(scrollDirection: Axis.vertical, children: [
-                PlaceCardDestacada(),
-                PlaceCardDestacada(),
-                PlaceCardDestacada(),
-                PlaceCardDestacada(),
-                PlaceCardDestacada(),
-              ]),
+              child: FutureBuilder<List<LugarDestacado>>(
+                future: obtenerDatos(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return ListView(
+                      scrollDirection: Axis.vertical,
+                      children: snapshot.data!.map((lugar) => PlaceCardDestacada(lugar: lugar)).toList(),
+                    );
+                  }
+                },
+              ),
             ),
             CustomElevatedButton(
               text: 'Agendar ruta completa',
@@ -97,6 +143,9 @@ class FrmRutaDestacada extends StatelessWidget {
               buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
               margin: EdgeInsets.only(top: 20, left: 25.h, right: 25.h),
               height: 40.v,
+              onPressed: () {
+                
+              },
             ),
             CustomElevatedButton(
               text: 'Canjear recompensa',
@@ -115,9 +164,9 @@ class FrmRutaDestacada extends StatelessWidget {
 
 //TARJETAS DE LA RUTA ESTACADA
 class PlaceCardDestacada extends StatelessWidget {
-  const PlaceCardDestacada({
-    super.key,
-  });
+  final LugarDestacado lugar;
+
+  const PlaceCardDestacada({required this.lugar, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -140,8 +189,8 @@ class PlaceCardDestacada extends StatelessWidget {
               height: 49,
               child: ClipRRect(
                   borderRadius: BorderRadius.circular(10),
-                  child: Image.asset(
-                    'lib/assets/images/imgPruebaRutaDes.png',
+                  child: Image.network(
+                    lugar.imagen,
                     fit: BoxFit.cover,
                     height: 49,
                     width: 49,
@@ -156,12 +205,12 @@ class PlaceCardDestacada extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                    const Expanded(
+                     Expanded(
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
-                          'Titulo de lugar 1',
-                          style: TextStyle(
+                          lugar.nombre,
+                          style: const TextStyle(
                               fontFamily: 'Nunito',
                               fontSize: 18,
                               color: Colors.black),
@@ -173,27 +222,17 @@ class PlaceCardDestacada extends StatelessWidget {
                     const SizedBox(
                       width: 10,
                     ),
-                    IconButton(
-                      onPressed: () {
-                        //Logica para el boton de visitado (sonsultar caso de uso)
-                      },
-                      icon: const Icon(Icons.check_box_outlined),
-                    ), // Ajusta el espacio horizontal aquí
-                    IconButton(
-                      onPressed: () {
-                        //logica para el boton de añadir a marcadores
-                      },
-                      icon: const Icon(Icons.favorite_border_outlined),
-                    ),
+                    const BtnVisitado(), // Ajusta el espacio horizontal aquí
+                    const BtnMarcadores(),
                   ],
                 ),
-                const Align(
+                Align(
                   alignment: Alignment.topLeft,
                   child: SizedBox(
                     width: 280,
                     child: Text(
-                      'Descripción del lugar random aqui se debe de llenar con la api de places xdxdxd',
-                      style: TextStyle(
+                      lugar.descripcion,
+                      style: const TextStyle(
                           fontFamily: 'Nunito',
                           fontSize: 12,
                           color: Color.fromARGB(255, 122, 144, 138)),
@@ -208,6 +247,54 @@ class PlaceCardDestacada extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class BtnVisitado extends StatefulWidget {
+  const BtnVisitado({super.key});
+
+  @override
+  _BtnVisitadoState createState() => _BtnVisitadoState();
+}
+
+class _BtnVisitadoState extends State<BtnVisitado> {
+  bool presionado = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        setState(() {
+          presionado = !presionado;
+        });
+      },
+      color: presionado ? Colors.green : Colors.grey,
+      icon: presionado ? const Icon(Icons.check_box) : const Icon(Icons.check_box_outlined),
+    );
+  }
+}
+
+class BtnMarcadores extends StatefulWidget {
+  const BtnMarcadores({super.key});
+
+  @override
+  _BtnMarcadoresState createState() => _BtnMarcadoresState();
+}
+
+class _BtnMarcadoresState extends State<BtnMarcadores> {
+  bool presionado = false;
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      onPressed: () {
+        setState(() {
+          presionado = !presionado;
+        });
+      },
+      color: presionado ? Colors.red : Colors.grey,
+      icon: presionado ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
     );
   }
 }
