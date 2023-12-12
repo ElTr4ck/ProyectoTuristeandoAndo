@@ -59,7 +59,7 @@ class FrmreseATabContainerScreenState extends State<FrmreseATabContainerScreen>
                     width: 127.h,
                     margin: EdgeInsets.only(left: 21.h),
                     decoration: BoxDecoration(
-                      color: appTheme.gray10001,
+                      color: appTheme.blueA4000c,
                       borderRadius: BorderRadius.circular(
                         17.h,
                       ),
