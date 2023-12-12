@@ -1,10 +1,6 @@
-import 'dart:async';
-import 'package:flutter/foundation.dart';
 import 'package:flutter_rating_bar/flutter_rating_bar.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'dart:ui';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 void main() {
   runApp(const MyApp());

@@ -75,6 +75,7 @@ dependencies:
   get: ^4.6.5
   url_launcher: ^6.2.1
   qr_flutter: ^4.1.0
+  google_fonts: ^6.1.0
 
 dependency_overrides:
   http: ^1.1.0

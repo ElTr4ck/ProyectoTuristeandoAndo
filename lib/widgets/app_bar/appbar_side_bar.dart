@@ -41,7 +41,7 @@ class _SideBarState extends State<SideBar> {
       child: ListView(
         children: [
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               color: Color(0xFF114C5F),
             ),
             padding: const EdgeInsets.all(30),
@@ -133,7 +133,9 @@ class _SideBarState extends State<SideBar> {
                 fontFamily: 'Nunito',
               ),
             ),
-            onTap: () => null,
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.frm_ruta_propia);
+            },
           ),
           ListTile(
             leading: const Icon(
