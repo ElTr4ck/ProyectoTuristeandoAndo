@@ -102,7 +102,7 @@ class AppRoutes {
 
     frmperfilScreen: (context) => FrmperfilScreen(),
 
-    frmEditaPerfil: (context) => FrmeditaperfilScreen()
+    frmEditaPerfil: (context) => FrmeditaperfilScreen(),
 
     //rutasUno: (context) => RutaUno(predictionDescription: predictionDescription) //TODO: Aqui que onda jaja
   };

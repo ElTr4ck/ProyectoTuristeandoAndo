@@ -1,5 +1,4 @@
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:turisteando_ando/models/users/marcadores.dart';
 
 class User {
   final String name;
