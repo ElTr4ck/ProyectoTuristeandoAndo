@@ -86,7 +86,7 @@ class FrmreseAItemWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 16.v,
+                    height: 16,
                     width: 20.h,
                     margin: EdgeInsets.only(bottom: 56.v),
                     child: Stack(
@@ -126,7 +126,7 @@ class FrmreseAItemWidget extends StatelessWidget {
                       margin: EdgeInsets.only(left: 21.h),
                       child: Text(
                         "Este lugar es una porquería. El personal es tan inútil que me pregunto cómo consiguen trabajar aquí. No pierdan su tiempo ni su dinero",
-                        maxLines: 4,
+                        maxLines: 5,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodyMedium,
                       ),
@@ -136,6 +136,24 @@ class FrmreseAItemWidget extends StatelessWidget {
               ),
             ),
           ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              SizedBox(height: 10,width: 10,),
+              CustomImageView(
+                imagePath: ImageConstant.imgResena1,
+                height: 100,
+                width: 140,
+              ),
+              SizedBox(width: 5),
+              CustomImageView(
+                imagePath: ImageConstant.imgResena1,
+                height: 100,
+                width: 140,
+              ),
+              SizedBox(width: 10, height: 10,),
+            ],
+          )
         ],
       ),
     );

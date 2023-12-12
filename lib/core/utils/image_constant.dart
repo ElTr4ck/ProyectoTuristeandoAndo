@@ -229,4 +229,9 @@ class ImageConstant {
   static String imgClosesession = '$imagePath/img_closesession.svg';
 
   static String imgArrowRightBlack900 = '$imagePath/img_arrow_right_black_900.svg';
+
+  static String imgLogo = '$imagePath/img_ideaLogo.png';
+
+  static String imgResena1 = '$imagePath/img_resena1.jpeg';
+  static String imgResena2 = '$imagePath/img_resena2.jpg';
 }

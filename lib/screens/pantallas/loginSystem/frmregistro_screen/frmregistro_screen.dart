@@ -188,8 +188,8 @@ class FrmregistroScreen extends StatelessWidget {
 
     return CustomElevatedButton(
       height: 45.v,
-      text: "Registrarme",
-      buttonStyle: CustomButtonStyles.fillPrimaryTL22,
+      text: "Registrarse",
+      buttonStyle: CustomButtonStyles.fillPrimary,
       buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
       onPressed: () async {
         if (formkey.currentState!.validate()) {
@@ -210,7 +210,8 @@ class FrmregistroScreen extends StatelessWidget {
     return CustomElevatedButton(
         height: 46.v,
         text: "Continuar como invitado",
-        buttonStyle: CustomButtonStyles.radiusTL23,
+        buttonStyle: CustomButtonStyles.fillTeal,
+        buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
         onPressed: () async {
           bool res = await logInAnonymously();
           // ignore: use_build_context_synchronously

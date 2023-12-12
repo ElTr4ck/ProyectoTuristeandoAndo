@@ -43,8 +43,9 @@ class FrmcontraseAScreen extends StatelessWidget {
                           SizedBox(height: 51.v),
                           CustomElevatedButton(
                               text: "Enviar",
-                              margin: EdgeInsets.only(left: 46.h, right: 47.h),
-                              buttonStyle: CustomButtonStyles.fillPrimaryTL16,
+                              margin: EdgeInsets.only(
+                                  left: 30.h, right: 20.h, bottom: 10.h),
+                              buttonStyle: CustomButtonStyles.fillPrimary,
                               buttonTextStyle:
                                   CustomTextStyles.titleMediumOnPrimary17,
                               onPressed: () async {
@@ -56,8 +57,9 @@ class FrmcontraseAScreen extends StatelessWidget {
                           SizedBox(height: 14.v),
                           CustomElevatedButton(
                               text: "Cancelar",
-                              margin: EdgeInsets.only(left: 46.h, right: 47.h),
-                              buttonStyle: CustomButtonStyles.radiusTL23,
+                              margin: EdgeInsets.only(
+                                  left: 30.h, right: 20.h, bottom: 10.h),
+                              buttonStyle: CustomButtonStyles.fillTeal,
                               buttonTextStyle:
                                   CustomTextStyles.titleMediumOnPrimary17,
                               onPressed: () {

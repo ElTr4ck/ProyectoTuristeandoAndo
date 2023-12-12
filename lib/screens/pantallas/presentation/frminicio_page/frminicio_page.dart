@@ -52,20 +52,19 @@ class FrminicioPage extends StatelessWidget {
     mediaQueryData = MediaQuery.of(context);
     return SafeArea(
         child: Scaffold(
-          appBar: AppBar(title: null, 
-          backgroundColor: Colors.white,
-          elevation: 0,
-          leading: Builder(
-            builder: (BuildContext context){
-              return IconButton(
-                onPressed: (){
-                  Scaffold.of(context).openDrawer();
-                }, 
-                icon: const Icon(Icons.menu, color: Color.fromARGB(255,17,76,95))
-              );
-            }
-          ),
-          ),
+            appBar: AppBar(
+              title: null,
+              backgroundColor: Colors.white,
+              elevation: 0,
+              leading: Builder(builder: (BuildContext context) {
+                return IconButton(
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                    icon: const Icon(Icons.menu,
+                        color: Color.fromARGB(255, 17, 76, 95)));
+              }),
+            ),
             drawer: SideBar(),
             resizeToAvoidBottomInset: false,
             body: Container(
@@ -143,8 +142,12 @@ class FrminicioPage extends StatelessWidget {
           Container(
               margin: EdgeInsets.symmetric(horizontal: 5.h),
               decoration: AppDecoration.outlineBlack,
-              child:
-                  Text("¿A dónde vamos?", style: TextStyle(fontSize: 40.0, fontWeight: FontWeight.bold, fontFamily: 'Nunito',)))
+              child: Text("¿A dónde vamos?",
+                  style: TextStyle(
+                    fontSize: 40.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Nunito',
+                  )))
         ]));
   }
 
@@ -154,7 +157,11 @@ class FrminicioPage extends StatelessWidget {
         padding: EdgeInsets.only(left: 10.h),
         child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
           Text("Te recomendamos...",
-              style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, fontFamily: 'Nunito',)),
+              style: TextStyle(
+                fontSize: 20.0,
+                fontWeight: FontWeight.bold,
+                fontFamily: 'Nunito',
+              )),
           SizedBox(height: 20.v),
           /*SizedBox(
               height: 240.v,
@@ -182,7 +189,11 @@ class FrminicioPage extends StatelessWidget {
           Padding(
               padding: EdgeInsets.only(left: 9.h),
               child: Text("Tambien te podría interesar...",
-                  style: TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, fontFamily: 'Nunito',))),
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Nunito',
+                  ))),
           SizedBox(height: 14.v),
           /*SizedBox(
               height: 138.v,
@@ -238,14 +249,15 @@ class _HeartButtonState extends State<HeartButton> {
         ),
         child: Icon(
           Icons.favorite,
-          color: isHeartRed ? Colors.red : Colors.grey, // Cambia el color del corazón aquí
+          color: isHeartRed
+              ? Colors.red
+              : Colors.grey, // Cambia el color del corazón aquí
           size: 27.0,
         ),
       ),
     );
   }
 }
-
 
 class CarouselWithInfo extends StatefulWidget {
   @override
@@ -274,7 +286,11 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
         String uid = user.uid;
 
         // Referencia a la colección "usuarios" y subcolección "preferencias"
-        CollectionReference preferenciasCollection = FirebaseFirestore.instance.collection('usuarios').doc(uid).collection('preferencias');;
+        CollectionReference preferenciasCollection = FirebaseFirestore.instance
+            .collection('usuarios')
+            .doc(uid)
+            .collection('preferencias');
+        ;
 
         // Realizamos la consulta para obtener las preferencias del usuario
         QuerySnapshot querySnapshot = await preferenciasCollection.get();
@@ -300,7 +316,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
     // Tu lógica para obtener datos desde la API
     String url = 'https://places.googleapis.com/v1/places:searchNearby';
     // Los datos que enviarás en el cuerpo de la solicitud POST
-    if (preferencias.length == 1){
+    if (preferencias.length == 1) {
       requestData = {
         "includedTypes": preferencias,
         "maxResultCount": 3,
@@ -316,8 +332,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
           }
         },
       };
-    }
-    else if (preferencias.length == 2){
+    } else if (preferencias.length == 2) {
       requestData = {
         "includedTypes": preferencias,
         "maxResultCount": 5,
@@ -333,8 +348,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
           }
         },
       };
-    }
-    else if (preferencias.length >= 3){
+    } else if (preferencias.length >= 3) {
       requestData = {
         "includedTypes": preferencias,
         "maxResultCount": 10,
@@ -350,8 +364,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
           }
         },
       };
-    }
-    else {
+    } else {
       requestData = {
         "includedTypes": ['restaurant', 'hotel', 'museum'],
         "maxResultCount": 10,
@@ -369,12 +382,13 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
       };
     }
 
-
     // Las cabeceras de la solicitud
     Map<String, String> headers = {
       'Content-Type': 'application/json',
-      'X-Goog-Api-Key': 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM', // Reemplaza 'API_KEY' con tu clave real
-      'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.location,places.currentOpeningHours,places.photos,places.primaryTypeDisplayName,places.id,places.rating',
+      'X-Goog-Api-Key':
+          'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM', // Reemplaza 'API_KEY' con tu clave real
+      'X-Goog-FieldMask':
+          'places.displayName,places.formattedAddress,places.location,places.currentOpeningHours,places.photos,places.primaryTypeDisplayName,places.id,places.rating',
     };
 
     // Realiza la solicitud POST
@@ -422,13 +436,15 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
   void updateCarouselItems(List<dynamic> places) {
     List<Widget> items = [];
     for (var place in places) {
-      String title = place["displayName"]["text"];// + '-' + place["primaryTypeDisplayName"]["text"];
+      String title = place["displayName"]
+          ["text"]; // + '-' + place["primaryTypeDisplayName"]["text"];
       print(title);
       String description = place["rating"].toString();
       print(description);
       String photo = place["photos"][0]["name"];
       //print(photo);
-      String image = 'https://places.googleapis.com/v1/$photo/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
+      String image =
+          'https://places.googleapis.com/v1/$photo/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
       //print(image);
       //String image = 'imagen1.jpg';
       String id = place["id"];
@@ -447,24 +463,28 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
         height: 395.0,
         enlargeCenterPage: false,
         autoPlay: true,
-        aspectRatio: 16/9,
+        aspectRatio: 16 / 9,
         autoPlayCurve: Curves.fastOutSlowIn,
         enableInfiniteScroll: true,
         autoPlayAnimationDuration: Duration(milliseconds: 800),
         viewportFraction: 0.6,
       ),
       items: carouselItems.isEmpty
-          ? [buildLoadingItem()] // Puedes mostrar un indicador de carga mientras se obtienen los datos
+          ? [
+              buildLoadingItem()
+            ] // Puedes mostrar un indicador de carga mientras se obtienen los datos
           : carouselItems,
     );
   }
 
-  Widget buildCarouselItem(String title, String description, String image, String id) {
+  Widget buildCarouselItem(
+      String title, String description, String image, String id) {
     return GestureDetector(
       onTap: () {
         // Acción a realizar cuando se toca el elemento del carrusel
         print('Elemento del carrusel presionado: $id');
-        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (BuildContext context) {
           //String aux = '${prediction.lat}, ${prediction.lng}';
           return FrminfolugarScreen(id: id);
         }));
@@ -544,7 +564,11 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
                     ),
                     child: Text(
                       title,
-                      style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, fontFamily: 'Nunito', color: Colors.white),
+                      style: TextStyle(
+                          fontSize: 15.0,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Nunito',
+                          color: Colors.white),
                     ),
                   ),
                   SizedBox(height: 5.0),
@@ -559,12 +583,19 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
                       children: [
                         Icon(
                           Icons.star,
-                          color: Colors.yellow, // Puedes ajustar el color del icono
+                          color: Colors
+                              .yellow, // Puedes ajustar el color del icono
                         ),
-                        SizedBox(width: 8), // Ajusta el espacio entre el icono y el texto
+                        SizedBox(
+                            width:
+                                8), // Ajusta el espacio entre el icono y el texto
                         Text(
                           description,
-                          style: TextStyle(fontSize: 13.0, fontWeight: FontWeight.bold, fontFamily: 'Nunito', color: Colors.white),
+                          style: TextStyle(
+                              fontSize: 13.0,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Nunito',
+                              color: Colors.white),
                         ),
                       ],
                     ),
@@ -593,6 +624,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
       ),
     );
   }
+
   Future<Position> _determinePosition2() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -622,6 +654,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
     return position;
   }
 }
+
 class CarouselWithInfo2 extends StatefulWidget {
   @override
   _CarouselWithInfoState2 createState() => _CarouselWithInfoState2();
@@ -648,7 +681,11 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
         String uid = user.uid;
 
         // Referencia a la colección "usuarios" y subcolección "preferencias"
-        CollectionReference preferenciasCollection = FirebaseFirestore.instance.collection('usuarios').doc(uid).collection('preferencias');;
+        CollectionReference preferenciasCollection = FirebaseFirestore.instance
+            .collection('usuarios')
+            .doc(uid)
+            .collection('preferencias');
+        ;
 
         // Realizamos la consulta para obtener las preferencias del usuario
         QuerySnapshot querySnapshot = await preferenciasCollection.get();
@@ -674,7 +711,7 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
     // Tu lógica para obtener datos desde la API
     String url = 'https://places.googleapis.com/v1/places:searchNearby';
     // Los datos que enviarás en el cuerpo de la solicitud POST
-    if (preferencias.length == 1){
+    if (preferencias.length == 1) {
       requestData = {
         "excludedTypes": preferencias,
         "maxResultCount": 5,
@@ -690,8 +727,7 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
           }
         },
       };
-    }
-    else if (preferencias.length >= 2){
+    } else if (preferencias.length >= 2) {
       requestData = {
         "excludedTypes": preferencias,
         "maxResultCount": 5,
@@ -707,10 +743,19 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
           }
         },
       };
-    }
-    else {
+    } else {
       requestData = {
-        "includedTypes": ['park', 'movie_theater', 'aquarium', 'tourist_attraction', 'museum', 'market', 'night_club', 'historical_landmark', 'store'],
+        "includedTypes": [
+          'park',
+          'movie_theater',
+          'aquarium',
+          'tourist_attraction',
+          'museum',
+          'market',
+          'night_club',
+          'historical_landmark',
+          'store'
+        ],
         "maxResultCount": 5,
         //"rankPreference": "DISTANCE",
         "languageCode": "es",
@@ -725,13 +770,14 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
         },
       };
     }
-
 
     // Las cabeceras de la solicitud
     Map<String, String> headers = {
       'Content-Type': 'application/json',
-      'X-Goog-Api-Key': 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM', // Reemplaza 'API_KEY' con tu clave real
-      'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.location,places.currentOpeningHours,places.photos,places.primaryTypeDisplayName,places.id,places.rating',
+      'X-Goog-Api-Key':
+          'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM', // Reemplaza 'API_KEY' con tu clave real
+      'X-Goog-FieldMask':
+          'places.displayName,places.formattedAddress,places.location,places.currentOpeningHours,places.photos,places.primaryTypeDisplayName,places.id,places.rating',
     };
 
     // Realiza la solicitud POST
@@ -779,13 +825,15 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
   void updateCarouselItems(List<dynamic> places) {
     List<Widget> items = [];
     for (var place in places) {
-      String title = place["displayName"]["text"];// + '-' + place["primaryTypeDisplayName"]["text"];
+      String title = place["displayName"]
+          ["text"]; // + '-' + place["primaryTypeDisplayName"]["text"];
       print(title);
       String description = place["rating"].toString();
       print(description);
       String photo = place["photos"][0]["name"];
       //print(photo);
-      String image = 'https://places.googleapis.com/v1/$photo/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
+      String image =
+          'https://places.googleapis.com/v1/$photo/media?maxHeightPx=400&maxWidthPx=400&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
       //print(image);
       //String image = 'imagen1.jpg';
       String id = place["id"];
@@ -804,24 +852,28 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
         height: 180.0,
         enlargeCenterPage: false,
         autoPlay: true,
-        aspectRatio: 16/9,
+        aspectRatio: 16 / 9,
         autoPlayCurve: Curves.fastOutSlowIn,
         enableInfiniteScroll: true,
         autoPlayAnimationDuration: Duration(milliseconds: 920),
         viewportFraction: 0.6,
       ),
       items: carouselItems.isEmpty
-          ? [buildLoadingItem()] // Puedes mostrar un indicador de carga mientras se obtienen los datos
+          ? [
+              buildLoadingItem()
+            ] // Puedes mostrar un indicador de carga mientras se obtienen los datos
           : carouselItems,
     );
   }
 
-  Widget buildCarouselItem(String title, String description, String image, String id) {
+  Widget buildCarouselItem(
+      String title, String description, String image, String id) {
     return GestureDetector(
       onTap: () {
         // Acción a realizar cuando se toca el elemento del carrusel
         print('Elemento del carrusel presionado: $id');
-        Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+        Navigator.of(context)
+            .push(MaterialPageRoute(builder: (BuildContext context) {
           //String aux = '${prediction.lat}, ${prediction.lng}';
           return FrminfolugarScreen(id: id);
         }));
@@ -861,7 +913,6 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
                   Spacer(),
-
                   Align(
                     alignment: Alignment.center,
                     child: Container(
@@ -872,7 +923,11 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
                       ),
                       child: Text(
                         title,
-                        style: TextStyle(fontSize: 15.0, fontWeight: FontWeight.bold, fontFamily: 'Nunito', color: Colors.white),
+                        style: TextStyle(
+                            fontSize: 15.0,
+                            fontWeight: FontWeight.bold,
+                            fontFamily: 'Nunito',
+                            color: Colors.white),
                       ),
                     ),
                   ),
@@ -900,6 +955,7 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
       ),
     );
   }
+
   Future<Position> _determinePosition2() async {
     bool serviceEnabled;
     LocationPermission permission;

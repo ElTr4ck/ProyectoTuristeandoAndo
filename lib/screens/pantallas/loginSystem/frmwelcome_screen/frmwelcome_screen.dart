@@ -31,9 +31,9 @@ class FrmwelcomeScreen extends StatelessWidget {
                           height: 51.v,
                           text: "Iniciar sesión",
                           margin: EdgeInsets.only(left: 30.h, right: 20.h),
-                          buttonStyle: CustomButtonStyles.fillPrimaryTL22,
-                          buttonTextStyle:
-                              CustomTextStyles.titleMediumOnPrimary17,
+                          buttonStyle: CustomButtonStyles.fillPrimary,
+                              buttonTextStyle:
+                                  CustomTextStyles.titleMediumOnPrimary17,
                           onPressed: () {
                             onTapIniciarSesin(context);
                           }),

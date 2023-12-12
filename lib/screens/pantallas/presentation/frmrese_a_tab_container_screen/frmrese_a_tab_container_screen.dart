@@ -35,13 +35,14 @@ class FrmreseATabContainerScreenState extends State<FrmreseATabContainerScreen>
 
   @override
   Widget build(BuildContext context) {
-    mediaQueryData = MediaQuery.of(context);
+    //mediaQueryData = MediaQuery.of(context);
 
     return SafeArea(
       child: Scaffold(
         resizeToAvoidBottomInset: false,
-        body: SizedBox(
-          width: double.maxFinite,
+        body: SingleChildScrollView(
+          //width: double.maxFinite,
+          physics: BouncingScrollPhysics(),
           child: Column(
             children: [
               _buildTwelve(context),
@@ -87,6 +88,7 @@ class FrmreseATabContainerScreenState extends State<FrmreseATabContainerScreen>
                                     16.h,
                                   ),
                                   alignment: Alignment.center,
+                                  color: const Color.fromARGB(255, 246, 246, 246),
                                 ),
                                 Align(
                                   alignment: Alignment.bottomLeft,
@@ -126,7 +128,7 @@ class FrmreseATabContainerScreenState extends State<FrmreseATabContainerScreen>
   /// Section Widget
   Widget _buildTwelve(BuildContext context) {
     return SizedBox(
-      height: 217.v,
+      //height: 217.v,
       width: double.maxFinite,
       child: Stack(
         alignment: Alignment.topCenter,
@@ -463,7 +465,7 @@ class FrmreseATabContainerScreenState extends State<FrmreseATabContainerScreen>
   /// Section Widget
   Widget _buildTabBarView(BuildContext context) {
     return SizedBox(
-      height: 346.v,
+      height: 700.v,
       child: TabBarView(
         controller: tabviewController,
         children: [
