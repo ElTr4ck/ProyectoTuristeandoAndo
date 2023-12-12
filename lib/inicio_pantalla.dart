@@ -1,10 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/pantallas/mapa_simple.dart';
 import 'package:turisteando_ando/pantallas/ubicacion_usuario.dart';
-import 'package:turisteando_ando/pantallas/buscar_lugares.dart';
 import 'package:turisteando_ando/pantallas/lugares_cercanos.dart';
 import 'package:turisteando_ando/pantallas/rutas.dart';
-import 'package:turisteando_ando/pantallas/busquedaGPF.dart';
 class InicioPantalla extends StatefulWidget {
   const InicioPantalla({super.key});
 

@@ -1,6 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:turisteando_ando/pantallas/rutaUno.dart';
 import 'package:turisteando_ando/pantallas/rutas.dart';
+import 'package:turisteando_ando/screens/frm_ruta_propia.dart';
 import 'package:turisteando_ando/screens/perfilUsuario/frmeditaperfil_screen/frmeditaperfil_screen.dart';
 import 'package:turisteando_ando/screens/perfilUsuario/frmperfil_screen/frmperfil_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_container_screen/frminicio_container_screen.dart';
@@ -75,6 +75,8 @@ class AppRoutes {
 
   static const String frmEditaPerfil = '/frmeditaperfil_screen.dart';
 
+  static const String frm_ruta_propia = '/frm_ruta_propia.dart';
+
   static Map<String, WidgetBuilder> routes = {
     frminicioContainerScreen: (context) => FrminicioContainerScreen(),
     frmporvisitarScreen: (context) => FrmporvisitarScreen(),
@@ -103,6 +105,8 @@ class AppRoutes {
     frmperfilScreen: (context) => FrmperfilScreen(),
 
     frmEditaPerfil: (context) => FrmeditaperfilScreen(),
+
+    frm_ruta_propia: (context) => FrmRutaPropia(),
 
     //rutasUno: (context) => RutaUno(predictionDescription: predictionDescription) //TODO: Aqui que onda jaja
   };

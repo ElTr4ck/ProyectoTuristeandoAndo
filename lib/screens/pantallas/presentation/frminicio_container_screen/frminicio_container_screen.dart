@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/pantallas/rutas.dart';
+import 'package:turisteando_ando/screens/frm_ruta_propia.dart';
 import 'package:turisteando_ando/screens/perfilUsuario/frmeditaperfil_screen/frmeditaperfil_screen.dart';
 import 'package:turisteando_ando/screens/perfilUsuario/frmperfil_screen/frmperfil_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminfolugar_screen/frminfolugar_screen.dart';
@@ -74,6 +75,8 @@ class FrminicioContainerScreen extends StatelessWidget {
         return FrmperfilScreen();
       case AppRoutes.frmEditaPerfil:
         return FrmeditaperfilScreen();
+      case AppRoutes.frm_ruta_propia:
+        return FrmRutaPropia();
       default:
         return DefaultWidget();
     }
