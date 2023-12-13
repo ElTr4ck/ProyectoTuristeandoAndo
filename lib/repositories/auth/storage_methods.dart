@@ -11,7 +11,7 @@ class StorageMethods {
   //adding image
   Future<String> uploadImageToStorage(String childName, Uint8List file) async {
     Reference ref =
-        _storage.ref().child(childName).child(_auth.currentUser!.uid);
+    _storage.ref().child(childName).child(_auth.currentUser!.uid);
     UploadTask uploadTask = ref.putData(file);
     TaskSnapshot snap = await uploadTask;
     String downloadUrl = await snap.ref.getDownloadURL();
@@ -27,7 +27,7 @@ class StorageMethods {
     //print('no image selected');
   }
 
-  /*Uint8List? _image;
+/*Uint8List? _image;
 
   void selectImage() async {
     Uint8List im = await pickImage(ImageSource.gallery);

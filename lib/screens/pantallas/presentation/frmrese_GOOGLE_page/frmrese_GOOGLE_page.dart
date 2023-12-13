@@ -74,7 +74,7 @@ class FrmreseAPageState extends State<FrmreseAPageG>
                                       decoration: AppDecoration.outlineBlack,
                                       child: Text("Reseñas de Google",
                                           style:
-                                          TextStyle(fontSize: 20.0, fontWeight: FontWeight.bold, fontFamily: 'Nunito'))),
+                                          TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold, fontFamily: 'Nunito'))),
                                 ])),
                         SizedBox(height: 5.v),
                         Container(

@@ -14,11 +14,11 @@ class RutaDestacada {
   });
   //json to object
   Map<String, dynamic> toJson() => {
-        "fechaInicio": fechaInicio,
-        "nombre": nombre,
-        "id": id,
-        "recompensa": recompensa,
-      };
+    "fechaInicio": fechaInicio,
+    "nombre": nombre,
+    "id": id,
+    "recompensa": recompensa,
+  };
   static RutaDestacada formSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
     return RutaDestacada(

@@ -48,12 +48,17 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
   }
 
   Future<model.User> getUser() async {
-    model.User data = await AuthMethods().getUserDetails();
-    name = data.name;
-    lastname = data.lastName;
-    avatar = data.photo;
-    infoUser = data;
-    return data;
+    try {
+      model.User data = await AuthMethods().getUserDetails();
+      name = data.name;
+      lastname = data.lastName;
+      avatar = data.photo;
+      infoUser = data;
+      return data;
+    } catch (e) {
+      print('Error al obtener información del usuario: $e');
+      throw e; // Re-lanza la excepción para que sea capturada por FutureBuilder
+    }
   }
 
   Future<Map<String, dynamic>> fetchPlaceDetailsFromApi(String placeId) async {
@@ -126,13 +131,39 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
                           width: 286.h,
                           margin: EdgeInsets.only(left: 18.h, right: 19.h),
                           child: Text(
-                            "¡Nos encantaría conocer tu opinión acerca de este lugar! Comparte tu experiencia y ayuda a otros a descubrir lo que hace especial a este destino.",
-                            maxLines: 5,
-                            overflow: TextOverflow.ellipsis,
-                            textAlign: TextAlign.center,
-                            style: CustomTextStyles.titleSmallMontserratGray600,
-                          )),
-                      SizedBox(height: 43.v),
+                              "¡Nos encantaría conocer tu opinión acerca de este lugar! Comparte tu experiencia y ayuda a otros a descubrir lo que hace especial a este destino.",
+                              maxLines: 3,
+                              overflow: TextOverflow.ellipsis,
+                              textAlign: TextAlign.center,
+                              style: theme.textTheme.bodyMedium)),
+                      SizedBox(height: 35.v),
+                      _buildReview(context),
+                      Spacer(),
+                      CustomElevatedButton(
+                        width: 104.h,
+                        text: "Agregar fotos",
+                        buttonStyle: CustomButtonStyles.fillTealTL12,
+                        buttonTextStyle: theme.textTheme.labelMedium!,
+                        onPressed: () async {
+                          Uint8List file = await StorageMethods().pickImage(ImageSource.gallery);
+                          _images.add(file);
+                          setState(() {});
+                          print("Subido");
+                        },
+                      ),
+                      Container(
+                        height: 100,
+                        child: ListView.builder(
+                          scrollDirection: Axis.horizontal,
+                          itemCount: _images.length,
+                          itemBuilder: (context, index) {
+                            return Padding(
+                              padding: const EdgeInsets.all(8.0),
+                              child: Image.memory(_images[index]),
+                            );
+                          },
+                        ),
+                      ),
                       Text("Califica este lugar",
                           style: theme.textTheme.titleLarge),
                       SizedBox(height: 15.v),
@@ -143,8 +174,8 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
                               horizontal: 8.h, vertical: 10.v),
                           decoration: AppDecoration.fillErrorContainer1
                               .copyWith(
-                                  borderRadius:
-                                      BorderRadiusStyle.roundedBorder27),
+                              borderRadius:
+                              BorderRadiusStyle.roundedBorder27),
                           child: CustomRatingBar(
                             initialRating: 5,
                             onRatingUpdate: (rating) {
@@ -218,13 +249,14 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
   /// Section Widget
   /// Section Widget
   Widget _buildReview(BuildContext context) {
+
     return FutureBuilder<model.User?>(
       future: userFuture,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
         } else if (snapshot.hasError || snapshot.data == null) {
-          return Text('Error al obtener información de usuario');
+          return Text('Error al obtener información del usuario: ${snapshot.error}');
         } else {
           return Container(
               width: 317.h,

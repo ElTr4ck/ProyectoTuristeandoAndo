@@ -7,8 +7,8 @@ class Foto {
   const Foto({required this.foto});
   //json to object
   Map<String, dynamic> toJson() => {
-        "foto": foto,
-      };
+    "foto": foto,
+  };
   static Foto formSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
     return Foto(

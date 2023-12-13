@@ -12,20 +12,20 @@ class Review {
 
   const Review(
       {required this.idplace,
-      required this.comentario,
-      required this.calificacion,
-      required this.fecha,
-      this.fotos,
-      this.idu});
+        required this.comentario,
+        required this.calificacion,
+        required this.fecha,
+        this.fotos,
+        this.idu});
   //json to object
   Map<String, dynamic> toJson() => {
-        "idplace": idplace,
-        "comentario": comentario,
-        "calificacion": calificacion,
-        "fecha": fecha,
-        "fotos": fotos,
-        "idu": idu
-      };
+    "idplace": idplace,
+    "comentario": comentario,
+    "calificacion": calificacion,
+    "fecha": fecha,
+    "fotos": fotos,
+    "idu": idu
+  };
   static Review formSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
     return Review(

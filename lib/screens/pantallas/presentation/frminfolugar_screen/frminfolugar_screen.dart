@@ -14,9 +14,7 @@ import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/f
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:turisteando_ando/pantallas/rutaUno.dart';
-
-import '../frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
-
+import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
 
 // ignore_for_file: must_be_immutable
 class FrminfolugarScreen extends StatefulWidget {
@@ -430,7 +428,7 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                     height: 16.v,
                     width: 53.h,
                     text: "Reseñas",
-                    margin: EdgeInsets.only(right: 13.h),
+                    margin: EdgeInsets.only(right: 13.h), //ChIJeTrFnori0YURXup_x_Ws2t8
                     buttonStyle: CustomButtonStyles.fillTeal,
                     buttonTextStyle: theme.textTheme.labelSmall!,
                     onPressed: () {

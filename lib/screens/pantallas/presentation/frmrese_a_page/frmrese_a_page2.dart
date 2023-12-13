@@ -17,12 +17,14 @@ class FrmreseAPage extends StatefulWidget {
 
 class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClientMixin<FrmreseAPage> {
   List<Map<String, dynamic>> listaDatos = [];
+  late String usuario;
   void onTapTxtAceptar(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.frmnewreseAScreen);
   }
 
   Future<List<Map<String, dynamic>>> fetchData() async {
     try {
+      listaDatos.clear();
       // Tu lógica para obtener datos asíncronamente
       QuerySnapshot<Map<String, dynamic>> usuariosSnapshot =
       await FirebaseFirestore.instance.collection('usuarios').get();
@@ -62,10 +64,12 @@ class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClien
       print('Error al obtener preferencias: $e');
       return [];
     }
+
   }
 
   @override
   Widget build(BuildContext context) {
+    print(widget.id);
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: fetchData(),
       builder: (context, snapshot) {
@@ -117,13 +121,41 @@ class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClien
                         Align(
                           alignment: Alignment.center,
                           child: GestureDetector(
-                            onTap: () {
-                              Navigator.push(
+                            onTap: () async {
+                              // Llamada asíncrona para mostrar FrmnewreseAScreen
+                              await Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => FrmnewreseAScreen(id: widget.id,),
+                                  builder: (context) => FrmnewreseAScreen(id: widget.id),
                                 ),
                               );
+
+                              // Muestra el indicador de carga mientras se actualizan las reseñas
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        CircularProgressIndicator(),
+                                        SizedBox(height: 16.0),
+                                        Text("Actualizando reseñas..."),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+
+                              // Llamada asíncrona para actualizar las reseñas después de haber interactuado con FrmnewreseAScreen
+                              await fetchData(); // Asegúrate de que fetchData sea async
+
+                              // Cierra el AlertDialog después de la actualización
+
+
+                              // Actualiza la interfaz de usuario
+                              setState(() {});
                             },
                             child: Text(
                               "Escribir una reseña",
@@ -176,10 +208,42 @@ class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClien
                             borderRadius: BorderRadiusStyle.roundedBorder9,
                           ),
                           child: ElevatedButton(
-                            onPressed: () => Navigator.push(
-                              context,
-                              MaterialPageRoute(builder: (context) => FrmnewreseAScreen(id: widget.id)),
-                            ),
+                            onPressed: () async {
+                              // Llamada asíncrona para mostrar FrmnewreseAScreen
+                              await Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => FrmnewreseAScreen(id: widget.id),
+                                ),
+                              );
+
+                              // Muestra el indicador de carga mientras se actualizan las reseñas
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        CircularProgressIndicator(),
+                                        SizedBox(height: 16.0),
+                                        Text("Actualizando reseñas..."),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+
+                              // Llamada asíncrona para actualizar las reseñas después de haber interactuado con FrmnewreseAScreen
+                              await fetchData(); // Asegúrate de que fetchData sea async
+
+                              // Cierra el AlertDialog después de la actualización
+                              Navigator.pop(context);
+
+                              // Actualiza la interfaz de usuario
+                              setState(() {});
+                            },
                             style: ElevatedButton.styleFrom(
                               primary: Theme.of(context).colorScheme.primary,
                               shape: RoundedRectangleBorder(
@@ -191,6 +255,7 @@ class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClien
                               style: CustomTextStyles.labelLargeNunitoGray5002,
                             ),
                           ),
+
                         ),
                       ),
                     ),
@@ -254,16 +319,16 @@ class CustomCircularProgressIndicator extends StatelessWidget {
         decoration: AppDecoration.fillGray.copyWith(
           borderRadius: BorderRadiusStyle.roundedBorder33,
         ),
-      width: size,
-      height: size,
-          child: Center(
+        width: size,
+        height: size,
+        child: Center(
           child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF114C5F)),
-    strokeWidth: 6.0,
-    backgroundColor: Colors.grey,
-    value: size / 10.0,
-    ),
-    ),
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF114C5F)),
+            strokeWidth: 6.0,
+            backgroundColor: Colors.grey,
+            value: size / 10.0,
+          ),
+        ),
       ),
     );
   }
