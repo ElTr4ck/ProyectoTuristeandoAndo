@@ -33,7 +33,7 @@ class AuthMethods extends GetxController {
   Future<model.User> getUserDetails() async {
     User currenUser = _auth.currentUser!;
     DocumentSnapshot snap =
-        await _firestore.collection('users').doc(currenUser.uid).get();
+    await _firestore.collection('usuarios').doc(currenUser.uid).get();
     return model.User.formSnap(snap);
   }
 

@@ -28,11 +28,12 @@ class User {
   static User formSnap(DocumentSnapshot snap) {
     var snapshot = snap.data() as Map<String, dynamic>;
     return User(
-        name: snapshot['name'],
-        lastName: snapshot['lastname'],
-        email: snapshot['email'],
-        uid: snapshot['uid'],
-        photo: snapshot['photos'],
-        marcadores: snapshot['uid']['marcadores']);
+      name: snapshot["name"],
+      lastName: snapshot["lastname"],
+      email: snapshot["emal"],
+      uid: snapshot["uid"],
+      photo: snapshot["photo"],
+      marcadores: [],
+    );
   }
 }

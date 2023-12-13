@@ -81,7 +81,7 @@ class AppRoutes {
     frminfolugarScreen: (context) => FrminfolugarScreen(id: '',),
     frmreseATabContainerScreen2: (context) => FrmreseATabContainerScreen2(id: '',),
     frmreseATabContainerScreen: (context) => FrmreseATabContainerScreen(jsonData: null),
-    frmnewreseAScreen: (context) => FrmnewreseAScreen(),
+    frmnewreseAScreen: (context) => FrmnewreseAScreen(id: '',),
     frmreportarreseAScreen: (context) => FrmreportarreseAScreen(),
     appNavigationScreen: (context) => AppNavigationScreen(),
     frmwelcomeScreen: (context) => FrmwelcomeScreen(),

@@ -17,11 +17,14 @@ class FrmreseAPage extends StatefulWidget {
 
 class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClientMixin<FrmreseAPage> {
   List<Map<String, dynamic>> listaDatos = [];
+  late String usuario;
   void onTapTxtAceptar(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.frmnewreseAScreen);
   }
+
   Future<List<Map<String, dynamic>>> fetchData() async {
     try {
+      listaDatos.clear();
       // Tu lógica para obtener datos asíncronamente
       QuerySnapshot<Map<String, dynamic>> usuariosSnapshot =
       await FirebaseFirestore.instance.collection('usuarios').get();
@@ -61,10 +64,12 @@ class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClien
       print('Error al obtener preferencias: $e');
       return [];
     }
+
   }
 
   @override
   Widget build(BuildContext context) {
+    print(widget.id);
     return FutureBuilder<List<Map<String, dynamic>>>(
       future: fetchData(),
       builder: (context, snapshot) {
@@ -72,120 +77,197 @@ class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClien
           return CustomCircularProgressIndicator(size: 1.0);
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
-        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+        }else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Padding(
-            padding: EdgeInsets.only(left: 44.0, top: 5.0), // Ajusta el valor según sea necesario
-            child: Text(
-              "No hay reseñas registradas.",
-              style: TextStyle(
-                fontSize: 25.0,
-                fontWeight: FontWeight.bold,
-                fontFamily: 'Nunito',
-              ),
+            padding: EdgeInsets.only(top: 5.0), // Ajusta el valor según sea necesario
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.start,
+              children: <Widget>[
+                Text(
+                  "No hay reseñas registradas.",
+                  style: TextStyle(
+                    fontSize: 20.0,
+                    fontWeight: FontWeight.bold,
+                    fontFamily: 'Nunito',
+                  ),
+                ),
+                Card(
+                  clipBehavior: Clip.antiAlias,
+                  elevation: 0,
+                  margin: EdgeInsets.symmetric(vertical: 6.0),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadiusStyle.roundedBorder9,
+                  ),
+                  child: Container(
+                    height: 17.0,
+                    width: 138.0,
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadiusStyle.roundedBorder9,
+                    ),
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            height: 17.0,
+                            width: 129.0,
+                            decoration: BoxDecoration(
+                              color: Theme.of(context).colorScheme.primary,
+                              borderRadius: BorderRadius.circular(8.0),
+                            ),
+                          ),
+                        ),
+                        Align(
+                          alignment: Alignment.center,
+                          child: GestureDetector(
+                            onTap: () async {
+                              // Llamada asíncrona para mostrar FrmnewreseAScreen
+                              await Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => FrmnewreseAScreen(id: widget.id),
+                                ),
+                              );
+
+                              // Muestra el indicador de carga mientras se actualizan las reseñas
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        CircularProgressIndicator(),
+                                        SizedBox(height: 16.0),
+                                        Text("Actualizando reseñas..."),
+                                      ],
+                                    ),
+                                  );
+                                },
+                              );
+
+                              // Llamada asíncrona para actualizar las reseñas después de haber interactuado con FrmnewreseAScreen
+                              await fetchData(); // Asegúrate de que fetchData sea async
+
+                              // Cierra el AlertDialog después de la actualización
+
+
+                              // Actualiza la interfaz de usuario
+                              setState(() {});
+                            },
+                            child: Text(
+                              "Escribir una reseña",
+                              style: CustomTextStyles.labelLargeNunitoGray5002,
+                            ),
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ],
             ),
           );
         } else {
           // Cuando la consulta está completa, construye la interfaz de usuario
           List<Map<String, dynamic>> listaDatos = snapshot.data!;
-
           return SafeArea(
             child: Scaffold(
-              body: Container(
-                width: double.maxFinite,
-                decoration: AppDecoration.fillOnPrimary,
+              body: Padding(
+                padding: EdgeInsets.symmetric(horizontal: 21.0),
                 child: Column(
                   children: [
                     SizedBox(height: 5.0),
                     Padding(
-                      padding: EdgeInsets.symmetric(horizontal: 21.0),
-                      child: Column(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.only(left: 4.0),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Container(
-                                  decoration: AppDecoration.outlineBlack,
-                                  child: Text(
-                                    "Reseñas de la aplicación",
-                                    style: TextStyle(
-                                      fontSize: 22.0,
-                                      fontWeight: FontWeight.bold,
-                                      fontFamily: 'Nunito',
-                                    ),
-                                  ),
-                                ),
-                                Card(
-                                  clipBehavior: Clip.antiAlias,
-                                  elevation: 0,
-                                  margin: EdgeInsets.symmetric(vertical: 6.0),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadiusStyle.roundedBorder9,
-                                  ),
-                                  child: Container(
-                                    height: 17.0,
-                                    width: 138.0,
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadiusStyle.roundedBorder9,
-                                    ),
-                                    child: Stack(
-                                      alignment: Alignment.center,
-                                      children: [
-                                        Align(
-                                          alignment: Alignment.bottomCenter,
-                                          child: Container(
-                                            height: 17.0,
-                                            width: 129.0,
-                                            decoration: BoxDecoration(
-                                              color: theme.colorScheme.primary,
-                                              borderRadius: BorderRadius.circular(8.0),
-                                            ),
-                                          ),
-                                        ),
-                                        Align(
-                                          alignment: Alignment.center,
-                                          child: GestureDetector(
-                                            onTap: () {
-                                              Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
-                                                //String aux = '${prediction.lat}, ${prediction.lng}';
-                                                return FrmnewreseAScreen();
-                                              }));
-                                            },
-                                            child: Text(
-                                              "Escribir una reseña",
-                                              style: CustomTextStyles.labelLargeNunitoGray5002,
-                                            ),
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
-                              ],
+                      padding: EdgeInsets.only(left: 4.0),
+                      child: Align(
+                        alignment: Alignment.center, // Alineación cambiada a centro
+                        child: Container(
+                          decoration: AppDecoration.outlineBlack,
+                          child: Text(
+                            "Reseñas de la aplicación",
+                            style: TextStyle(
+                              fontSize: 20.0,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Nunito',
                             ),
                           ),
-                          Container(
-                            constraints: BoxConstraints(
-                              maxHeight: 350, // o el valor máximo deseado
-                            ),
-                            child: SingleChildScrollView(
-                              scrollDirection: Axis.vertical,
-                              child: ListView.builder(
-                                physics: NeverScrollableScrollPhysics(),
-                                shrinkWrap: true,
-                                itemCount: generateResenasWidgets().length,
-                                itemBuilder: (context, index) {
-                                  return Padding(
-                                    padding: EdgeInsets.symmetric(vertical: 5.v),
-                                    child: generateResenasWidgets()[index],
+                        ),
+                      ),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(vertical: 10.0),
+                      child: Align(
+                        alignment: Alignment.topCenter,
+                        child: Container(
+                          height: 17.0,
+                          width: 138.0,
+                          decoration: BoxDecoration(
+                            borderRadius: BorderRadiusStyle.roundedBorder9,
+                          ),
+                          child: ElevatedButton(
+                            onPressed: () async {
+                              // Llamada asíncrona para mostrar FrmnewreseAScreen
+                              await Navigator.pushReplacement(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => FrmnewreseAScreen(id: widget.id),
+                                ),
+                              );
+
+                              // Muestra el indicador de carga mientras se actualizan las reseñas
+                              showDialog(
+                                context: context,
+                                barrierDismissible: false,
+                                builder: (BuildContext context) {
+                                  return AlertDialog(
+                                    content: Column(
+                                      mainAxisSize: MainAxisSize.min,
+                                      children: [
+                                        CircularProgressIndicator(),
+                                        SizedBox(height: 16.0),
+                                        Text("Actualizando reseñas..."),
+                                      ],
+                                    ),
                                   );
                                 },
+                              );
+
+                              // Llamada asíncrona para actualizar las reseñas después de haber interactuado con FrmnewreseAScreen
+                              await fetchData(); // Asegúrate de que fetchData sea async
+
+                              // Cierra el AlertDialog después de la actualización
+                              Navigator.pop(context);
+
+                              // Actualiza la interfaz de usuario
+                              setState(() {});
+                            },
+                            style: ElevatedButton.styleFrom(
+                              primary: Theme.of(context).colorScheme.primary,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadiusStyle.roundedBorder9,
                               ),
                             ),
-                          )
-                        ],
+                            child: Text(
+                              "Escribir una reseña",
+                              style: CustomTextStyles.labelLargeNunitoGray5002,
+                            ),
+                          ),
+
+                        ),
+                      ),
+                    ),
+                    Expanded(
+                      child: ListView.builder(
+                        physics: ScrollPhysics(),
+                        itemCount: generateResenasWidgets().length,
+                        itemBuilder: (context, index) =>
+                            Padding(
+                              padding: EdgeInsets.symmetric(vertical: 5.v),
+                              child: generateResenasWidgets()[index],
+                            ),
                       ),
                     ),
                   ],
@@ -197,22 +279,29 @@ class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClien
       },
     );
   }
-  List<Widget> generateResenasWidgets() {
-    return listaDatos.map((resena) {
-      return FrmreseAItemWidget(
-        // ... otras propiedades únicas
-        onTapView: () {
-          onTapView(context, jsonData: resena);
-        },
-        jsonData: resena,
-      );
-    }).toList();
-  }
 
+  List<Widget> generateResenasWidgets() {
+    List<Widget> reviewWidgets = [];
+    for (var userReviewData in listaDatos) {
+      for (var review in userReviewData['revisiones']) {
+        // Pasa tanto los datos de la revisión como los datos del usuario al widget
+        reviewWidgets.add(
+          FrmreseAItemWidget(
+            onTapView: (jsonData) => print('Revisada: $jsonData'),
+            userData: userReviewData['usuarioDatos'],  // <-- aquí pasamos los datos del usuario
+            reviewData: review,                        // <-- aquí pasamos la revisión individual
+          ),
+        );
+      }
+    }
+    return reviewWidgets;
+  }
   @override
   bool get wantKeepAlive => true;
 
-  void onTapView(BuildContext context, {required Map<String, dynamic> jsonData}) {}
+  void onTapView(BuildContext context, {required Map<String, dynamic> jsonData}) {
+    print('Revision presionada: $jsonData');
+  }
 
 }
 
@@ -223,15 +312,22 @@ class CustomCircularProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      width: size,
-      height: size,
-      child: Center(
-        child: CircularProgressIndicator(
-          valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF114C5F)),
-          strokeWidth: 6.0,
-          backgroundColor: Colors.grey,
-          value: size / 10.0,
+
+    return SingleChildScrollView(
+      child: Container(
+        padding: EdgeInsets.all(12.h),
+        decoration: AppDecoration.fillGray.copyWith(
+          borderRadius: BorderRadiusStyle.roundedBorder33,
+        ),
+        width: size,
+        height: size,
+        child: Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Color(0xFF114C5F)),
+            strokeWidth: 6.0,
+            backgroundColor: Colors.grey,
+            value: size / 10.0,
+          ),
         ),
       ),
     );
