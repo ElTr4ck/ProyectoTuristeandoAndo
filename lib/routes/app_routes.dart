@@ -65,6 +65,9 @@ class AppRoutes {
   static const String frmreseATabContainerScreen =
       '/frmrese_a_tab_container_screen';
 
+  static const String frmreseATabContainerScreen2 =
+      '/frmrese_a_tab_container_screen2';
+
   static const String frmnewreseAScreen = '/frmnewrese_a_screen';
 
   static const String frmreportarreseAScreen = '/frmreportarrese_a_screen';
@@ -73,13 +76,13 @@ class AppRoutes {
 
   static const String rutasUno = '/rutasUno.dart';
 
-  static const String frmRutaDestacada = '/frmRutaDestacada.dart';
+  static const String frmRutaDestacada = '/frmRutaDestacada';
 
-  static const String frmperfilScreen = '/frmperfil_screen.dart';
+  static const String frmperfilScreen = '/frmperfil_screen';
 
-  static const String frmEditaPerfil = '/frmeditaperfil_screen.dart';
+  static const String frmEditaPerfil = '/frmeditaperfil_screen';
 
-  static const String frm_ruta_propia = '/frm_ruta_propia.dart';
+  static const String frm_ruta_propia = '/frm_ruta_propia';
 
   static const String frmfaqsScreen = '/frmfaqs_screen';
 
