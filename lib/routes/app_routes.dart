@@ -25,6 +25,8 @@ import 'package:turisteando_ando/screens/pantallas/loginSystem/app_navigation_sc
 import 'package:turisteando_ando/screens/resenas/frmtusrese_as_screen.dart';
 import 'package:turisteando_ando/screens/rutaDestacada/frmRutaDestacada.dart';
 
+import '../screens/pantallas/presentation/frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
+
 class AppRoutes {
   static const String frmwelcomeScreen = '/frmwelcome_screen';
 
@@ -89,8 +91,8 @@ class AppRoutes {
     frmmarcadoresScreen: (context) => FrmmarcadoresScreen(),
     frmmarcmapaScreen: (context) => FrmmarcmapaScreen(),
     frminfolugarScreen: (context) => FrminfolugarScreen(id: '',),
-    frmreseATabContainerScreen: (context) => FrmreseATabContainerScreen(),
-    frmnewreseAScreen: (context) => FrmnewreseAScreen(),
+    frmreseATabContainerScreen2: (context) => FrmreseATabContainerScreen2(id: '',),
+    frmreseATabContainerScreen: (context) => FrmreseATabContainerScreen(jsonData: null),
     frmreportarreseAScreen: (context) => FrmreportarreseAScreen(),
     appNavigationScreen: (context) => AppNavigationScreen(),
     frmwelcomeScreen: (context) => FrmwelcomeScreen(),
