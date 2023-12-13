@@ -1,5 +1,7 @@
 import 'dart:convert';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
 
 import '../frminfolugar_screen/widgets/componentlugares_item_widget.dart';
@@ -15,6 +17,27 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:turisteando_ando/pantallas/rutaUno.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
+
+import 'dart:convert';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/gestures.dart';
+import 'package:turisteando_ando/screens/frmMapa.dart';
+import 'package:turisteando_ando/screens/frm_ruta_propia.dart';
+
+import '../frminfolugar_screen/widgets/componentlugares_item_widget.dart';
+import 'package:flutter/material.dart';
+import 'package:turisteando_ando/core/app_export.dart';
+import 'package:turisteando_ando/widgets/app_bar/appbar_leading_image.dart';
+import 'package:turisteando_ando/widgets/app_bar/appbar_title.dart';
+import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
+import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
+import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
+import 'package:turisteando_ando/pantallas/rutaUno.dart';
+
+import '../frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
 
 // ignore_for_file: must_be_immutable
 class FrminfolugarScreen extends StatefulWidget {
@@ -344,14 +367,9 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
             buttonStyle: CustomButtonStyles.fillPrimary,
             buttonTextStyle: CustomTextStyles.bodySmallRegular,
             onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
-                //String aux = '${prediction.lat}, ${prediction.lng}';
-                return MyApp(jsonData?["id"]
-                    as String); //A esta app NO LO MANDES, MANDA A LA TUYA
-                //Aqui mandamos al itinerario con el ID
-              }));
-              // Agrega la lógica que deseas ejecutar cuando se presiona el botón
+              Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => FrmRutaPropia()));
+              guardarEnItinerario(widget.id);
             },
           ),
 
@@ -428,12 +446,14 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                     height: 16.v,
                     width: 53.h,
                     text: "Reseñas",
-                    margin: EdgeInsets.only(right: 13.h), //ChIJeTrFnori0YURXup_x_Ws2t8
+                    margin: EdgeInsets.only(
+                        right: 13.h), //ChIJeTrFnori0YURXup_x_Ws2t8
                     buttonStyle: CustomButtonStyles.fillTeal,
                     buttonTextStyle: theme.textTheme.labelSmall!,
                     onPressed: () {
                       print('Elemento del carrusel presionado: ${widget.id}');
-                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
                         //String aux = '${prediction.lat}, ${prediction.lng}';
                         return FrmreseATabContainerScreen2(id: widget.id);
                       }));
@@ -501,6 +521,34 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
   }
 
   /// Section Widget
+  Future<void> guardarEnItinerario(String lugarId) async {
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var fechaActual = DateTime.now(); // Obtiene la fecha y hora actual
+      var docRef = FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid)
+          .collection('itinerario')
+          .doc(lugarId);
+      try {
+        var doc = await docRef.get();
+        if (!doc.exists) {
+          await docRef.set({
+            'id': lugarId,
+            'fechaSeleccionado':
+                fechaActual.toIso8601String() // Guarda la fecha
+          });
+          print('Lugar guardado con éxito en el itinerario');
+        } else {
+          print('El lugar ya está en el itinerario');
+        }
+      } catch (e) {
+        print('Error al guardar en el itinerario: $e');
+      }
+    } else {
+      print('Usuario no autenticado');
+    }
+  }
 
   /// Navigates to the frmmarcadoresScreen when the action is triggered.
   onTapRegresar(BuildContext context) {

@@ -17,7 +17,8 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminfolugar_screen/frminfolugar_screen.dart';
 
-final GoogleMapsPlaces places = GoogleMapsPlaces(apiKey: "AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM");
+final GoogleMapsPlaces places =
+    GoogleMapsPlaces(apiKey: "AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM");
 
 // ignore_for_file: must_be_immutable
 class FrminicioPage extends StatelessWidget {
@@ -27,13 +28,16 @@ class FrminicioPage extends StatelessWidget {
   //AUTOCOMPLETAR
   Future<List<String>> fetchSuggestions(String query) async {
     const String apiKey = 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
-    final String url = 'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$query&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
+    final String url =
+        'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$query&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
 
     final response = await http.get(Uri.parse(url));
 
     if (response.statusCode == 200) {
       final predictions = json.decode(response.body)['predictions'];
-      return predictions.map<String>((prediction) => prediction['description']).toList();
+      return predictions
+          .map<String>((prediction) => prediction['description'])
+          .toList();
     } else {
       throw Exception('Failed to load suggestions');
     }
@@ -82,35 +86,47 @@ class FrminicioPage extends StatelessWidget {
                             padding: EdgeInsets.only(left: 10.0, right: 16.0),
                             //AUTOCOMPLETAR
                             child: Autocomplete<String>(
-                              optionsBuilder: (TextEditingValue textEditingValue) async {
+                              optionsBuilder:
+                                  (TextEditingValue textEditingValue) async {
                                 if (textEditingValue.text == '') {
                                   return const Iterable<String>.empty();
                                 }
-                                return await fetchSuggestions(textEditingValue.text);
+                                return await fetchSuggestions(
+                                    textEditingValue.text);
                               },
                               onSelected: (String selection) {
                                 print('Has seleccionado: $selection');
                               },
-                              fieldViewBuilder: (BuildContext context, TextEditingController textEditingController, FocusNode focusNode, VoidCallback onFieldSubmitted) {
+                              fieldViewBuilder: (BuildContext context,
+                                  TextEditingController textEditingController,
+                                  FocusNode focusNode,
+                                  VoidCallback onFieldSubmitted) {
                                 return Container(
                                   decoration: BoxDecoration(
-                                    color: const Color(0xFF9CD2D3), // Puedes cambiar este color según tus preferencias
+                                    color: const Color(
+                                        0xFF9CD2D3), // Puedes cambiar este color según tus preferencias
                                     borderRadius: BorderRadius.circular(12.0),
                                   ),
                                   child: Row(
                                     children: [
                                       const Padding(
-                                        padding: EdgeInsets.symmetric(horizontal: 8.0), // Ajusta este valor según tus preferencias
-                                        child: Icon(Icons.search_sharp, color: Colors.white, size: 24.0), // Icono de lupa
+                                        padding: EdgeInsets.symmetric(
+                                            horizontal:
+                                                8.0), // Ajusta este valor según tus preferencias
+                                        child: Icon(Icons.search_sharp,
+                                            color: Colors.white,
+                                            size: 24.0), // Icono de lupa
                                       ),
                                       Expanded(
                                         child: TextField(
                                           controller: textEditingController,
                                           focusNode: focusNode,
                                           decoration: const InputDecoration(
-                                            hintText: "¿Buscas hacer algo en particular en ...",
+                                            hintText:
+                                                "¿Buscas hacer algo en particular en ...",
                                             border: InputBorder.none,
-                                            contentPadding: EdgeInsets.all(16.0),
+                                            contentPadding:
+                                                EdgeInsets.all(16.0),
                                           ),
                                         ),
                                       ),
@@ -219,41 +235,82 @@ class FrminicioPage extends StatelessWidget {
 }
 
 class HeartButton extends StatefulWidget {
+  final String itemId;
+  HeartButton({required this.itemId});
+
   @override
   _HeartButtonState createState() => _HeartButtonState();
 }
 
 class _HeartButtonState extends State<HeartButton> {
-  bool isHeartRed = false;
+  bool isFavorited = false;
+
+  @override
+  void initState() {
+    super.initState();
+    checkIfFavorited();
+  }
+
+  void checkIfFavorited() async {
+    // Lógica para verificar si el ítem está en los favoritos del usuario
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var doc = await FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid)
+          .collection('favoritos')
+          .doc(widget.itemId)
+          .get();
+
+      setState(() {
+        isFavorited = doc.exists;
+      });
+    }
+  }
+
+  void toggleFavorite() async {
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var docRef = FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid)
+          .collection('favoritos')
+          .doc(widget.itemId);
+
+      if (isFavorited) {
+        // Si ya es favorito, eliminar de la base de datos
+        await docRef.delete();
+      } else {
+        // Si no es favorito, agregar a la base de datos
+        await docRef.set({'id': widget.itemId});
+      }
+
+      setState(() {
+        isFavorited = !isFavorited;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        setState(() {
-          // Cambia el color del corazón al contrario del estado actual
-          isHeartRed = !isHeartRed;
-        });
-        // Lógica cuando se presiona el botón de corazón
-      },
-      child: Container(
-        padding: EdgeInsets.all(12.0),
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          color: Colors.white, // Cambia el color de fondo del círculo aquí
-          border: Border.all(
-            color: Colors.white,
-            //color: Colors.white, // Cambia el color del contorno aquí
-            width: 0.5,
-          ),
+    return Container(
+      padding: EdgeInsets.all(2), // Espaciado entre el borde y el ícono
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        color: Colors.white, // Color de fondo del círculo
+        border: Border.all(
+          color: Colors.grey, // Color del borde
+          width: 1.5, // Grosor del borde
         ),
-        child: Icon(
-          Icons.favorite,
-          color: isHeartRed
-              ? Colors.red
-              : Colors.grey, // Cambia el color del corazón aquí
-          size: 27.0,
-        ),
+      ),
+      child: IconButton(
+        icon: Icon(isFavorited ? Icons.favorite : Icons.favorite_border),
+        color: isFavorited
+            ? Colors.red
+            : Colors.grey, // Color del icono según el estado
+        onPressed:
+            toggleFavorite, // Llamada a la función para cambiar el estado
+        iconSize: 27.0, // Tamaño del icono
       ),
     );
   }
@@ -520,7 +577,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
             Positioned(
               bottom: 4.0,
               right: 16.0,
-              child: HeartButton(),
+              child: HeartButton(itemId: id),
               /*child: GestureDetector(
                 onTap: () {
                   setState(() {
