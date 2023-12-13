@@ -1,15 +1,24 @@
+import 'dart:io';
+
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:turisteando_ando/core/app_export.dart';
-import 'package:turisteando_ando/widgets/app_bar/appbar_leading_image.dart';
-import 'package:turisteando_ando/widgets/app_bar/appbar_title.dart';
+import 'package:turisteando_ando/screens/perfilUsuario/frmperfil_screen/firestorePerfil_methods.dart';
 import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 import 'package:turisteando_ando/widgets/custom_text_form_field.dart';
 
 // ignore_for_file: must_be_immutable
-class FrmeditaperfilScreen extends StatelessWidget {
+class FrmeditaperfilScreen extends StatefulWidget {
   FrmeditaperfilScreen({Key? key}) : super(key: key);
+  @override
+  _FrmeditaperfilScreenState createState() => _FrmeditaperfilScreenState();
+}
 
+class _FrmeditaperfilScreenState extends State<FrmeditaperfilScreen> {
   TextEditingController fullNameController = TextEditingController();
 
   TextEditingController usernameController = TextEditingController();
@@ -20,7 +29,14 @@ class FrmeditaperfilScreen extends StatelessWidget {
 
   TextEditingController passwordController = TextEditingController();
 
-  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+  final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
+
+  bool _obscureText = true;
+  void _toggleObscureText() {
+    setState(() {
+      _obscureText = !_obscureText;
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -52,7 +68,7 @@ class FrmeditaperfilScreen extends StatelessWidget {
                                 SizedBox(height: 12.v),
                                 Padding(
                                     padding: EdgeInsets.only(left: 21.h),
-                                    child: Text("Nombre de usuario",
+                                    child: Text("Apellido",
                                         style: CustomTextStyles
                                             .titleSmallSemiBold)),
                                 SizedBox(height: 3.v),
@@ -65,14 +81,6 @@ class FrmeditaperfilScreen extends StatelessWidget {
                                             .titleSmallSemiBold)),
                                 SizedBox(height: 3.v),
                                 _buildEmail(context),
-                                SizedBox(height: 11.v),
-                                Padding(
-                                    padding: EdgeInsets.only(left: 21.h),
-                                    child: Text("Dirección",
-                                        style: CustomTextStyles
-                                            .titleSmallSemiBold)),
-                                SizedBox(height: 7.v),
-                                _buildAddress(context),
                                 SizedBox(height: 11.v),
                                 Padding(
                                     padding: EdgeInsets.only(left: 21.h),
@@ -120,8 +128,26 @@ class FrmeditaperfilScreen extends StatelessWidget {
                                 color: Colors.grey,
                               ))),
                       centerTitle: true,
-                      title: Text("UserNameXx",
-                          style: TextStyle(color: Colors.black)),
+                      title: FutureBuilder<String>(
+                        future: obtenerNombreUsuarioActual(),
+                        builder: (BuildContext context,
+                            AsyncSnapshot<String> snapshot) {
+                          if (snapshot.connectionState ==
+                              ConnectionState.waiting) {
+                            return const LinearProgressIndicator(); // Muestra un indicador de carga mientras se espera el nombre de usuario
+                          } else if (snapshot.hasError) {
+                            return Text('Error: ${snapshot.error}');
+                          } else {
+                            return Text(
+                              snapshot.data ??
+                                  'Nombre de usuario no disponible',
+                              style: theme.textTheme.headlineSmall
+                                      ?.copyWith(color: Colors.black) ??
+                                  const TextStyle(color: Colors.black),
+                            );
+                          }
+                        },
+                      ),
                     ),
                   ]))),
           Align(
@@ -135,14 +161,66 @@ class FrmeditaperfilScreen extends StatelessWidget {
                         padding: EdgeInsets.all(5.h),
                         decoration: AppDecoration.outlineBlack900.copyWith(
                             borderRadius: BorderRadiusStyle.roundedBorder57),
-                        child: CustomImageView(
-                            imagePath: ImageConstant.imgImgprofile105x105,
-                            height: 105.adaptSize,
-                            width: 105.adaptSize,
-                            radius: BorderRadius.circular(52.h),
-                            alignment: Alignment.center)),
+                        child: FutureBuilder<String>(
+                          future: obtenerImagenUsuarioActual(),
+                          builder: (BuildContext context,
+                              AsyncSnapshot<String> snapshot) {
+                            if (snapshot.connectionState ==
+                                ConnectionState.waiting) {
+                              return const CircularProgressIndicator(); // Muestra un indicador de carga mientras se espera la foto del usuario
+                            } else if (snapshot.hasError) {
+                              return Text('Error: ${snapshot.error}');
+                            } else {
+                              return CustomImageView(
+                                imagePath: snapshot.data ??
+                                    ImageConstant
+                                        .imageNotFound, // Usa la foto del usuario, o una imagen por defecto si no hay foto
+                                height: 105.adaptSize,
+                                width: 105.adaptSize,
+                                radius: BorderRadius.circular(44.h),
+                                alignment: Alignment.center,
+                              );
+                            }
+                          },
+                        )),
                     SizedBox(height: 7.v),
-                    Container(
+
+                    /// Opens the image picker to select an image from the gallery.
+                    /// Returns the picked image file.
+                    GestureDetector(
+                      onTap: () async {
+                        final picker = ImagePicker();
+                        final pickedFile = await picker.pickImage(
+                          source: ImageSource.gallery,
+                          imageQuality: 50,
+                          maxWidth: 150.h,
+                          maxHeight: 150.h,
+                        );
+
+                        if (pickedFile != null) {
+                          final File imageFile = File(pickedFile.path);
+
+                          // Sube la imagen a Firestore
+                          final ref = FirebaseStorage.instance
+                              .ref()
+                              .child('profilePics')
+                              .child(
+                                  '${FirebaseAuth.instance.currentUser!.uid}.jpg');
+
+                          await ref.putFile(imageFile);
+
+                          final url = await ref.getDownloadURL();
+
+                          // Actualiza el usuario en Firestore
+                          await FirebaseFirestore.instance
+                              .collection('usuarios')
+                              .doc(FirebaseAuth.instance.currentUser?.uid)
+                              .update({'photo': url});
+
+                          setState(() {});
+                        }
+                      },
+                      child: Container(
                         width: 96.h,
                         padding: EdgeInsets.symmetric(
                             horizontal: 17.h, vertical: 1.v),
@@ -150,7 +228,9 @@ class FrmeditaperfilScreen extends StatelessWidget {
                             borderRadius: BorderRadiusStyle.circleBorder8),
                         child: Text("Cambiar foto",
                             textAlign: TextAlign.center,
-                            style: theme.textTheme.labelMedium))
+                            style: theme.textTheme.labelMedium),
+                      ),
+                    )
                   ])))
         ]));
   }
@@ -162,11 +242,19 @@ class FrmeditaperfilScreen extends StatelessWidget {
 
   Widget _buildFullName(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 21.h),
-        child: CustomTextFormField(
-            controller: fullNameController,
-            hintText: "Nombre completo",
-            alignment: Alignment.center));
+      padding: EdgeInsets.symmetric(horizontal: 21.h),
+      child: CustomTextFormField(
+          controller: fullNameController,
+          hintText: "Nombre(s)",
+          alignment: Alignment.center,
+          autofocus: false,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Por favor ingrese su nombre';
+            }
+            return null;
+          }),
+    );
   }
 
   Widget _buildUsername(BuildContext context) {
@@ -174,57 +262,100 @@ class FrmeditaperfilScreen extends StatelessWidget {
         padding: EdgeInsets.symmetric(horizontal: 21.h),
         child: CustomTextFormField(
             controller: usernameController,
-            hintText: "Nombre de usuario",
-            alignment: Alignment.center));
+            hintText: "Apellido",
+            alignment: Alignment.center,
+            autofocus: false,
+            validator: (value) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor ingrese su apellido';
+              }
+              return null;
+            }));
   }
 
   Widget _buildEmail(BuildContext context) {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 21.h),
         child: CustomTextFormField(
-            controller: emailController,
-            hintText: "correo_ejemplo@gmail.com",
-            textInputType: TextInputType.emailAddress,
-            alignment: Alignment.center));
-  }
-
-  Widget _buildAddress(BuildContext context) {
-    return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 21.h),
-        child: CustomTextFormField(
-            controller: addressController,
-            hintText: "Calle, número. Código postal, Localidad...",
-            alignment: Alignment.center));
+          controller: emailController,
+          hintText: "correo_ejemplo@gmail.com",
+          textInputType: TextInputType.emailAddress,
+          alignment: Alignment.center,
+          autofocus: false,
+          validator: (value) {
+            if (value == null || value.isEmpty) {
+              return 'Por favor ingrese su correo electrónico';
+            }
+            return null;
+          },
+        ));
   }
 
   Widget _buildPassword(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 21.h),
-        child: CustomTextFormField(
-            controller: passwordController,
-            hintText: "Contraseña de la cuenta",
-            textInputAction: TextInputAction.done,
-            alignment: Alignment.center,
-            suffix: Container(
-                margin: EdgeInsets.fromLTRB(30.h, 13.v, 12.h, 12.v),
-                child: CustomImageView(
-                    imagePath: ImageConstant.imgMostrar,
-                    height: 15.v,
-                    width: 16.h)),
-            suffixConstraints: BoxConstraints(maxHeight: 40.v),
-            obscureText: true,
-            contentPadding:
-                EdgeInsets.only(left: 12.h, top: 11.v, bottom: 11.v)));
+      padding: EdgeInsets.symmetric(horizontal: 21.h),
+      child: CustomTextFormField(
+        autofocus: false,
+        controller: passwordController,
+        hintText: "Contraseña de la cuenta",
+        textInputAction: TextInputAction.done,
+        alignment: Alignment.centerLeft,
+        suffix: IconButton(
+          icon: Icon(
+            _obscureText ? Icons.visibility : Icons.visibility_off,
+          ),
+          onPressed: _toggleObscureText,
+        ),
+        obscureText: _obscureText,
+        contentPadding: EdgeInsets.only(top: 11.v, bottom: 11.v),
+        validator: (value) =>
+            value!.isEmpty ? 'Por favor ingrese su contraseña' : null,
+      ),
+    );
   }
 
   Widget _buildUpdateInfoButton(BuildContext context) {
     return CustomElevatedButton(
-        height: 33.v,
-        width: 235.h,
-        text: "Actualizar Información",
-        margin: EdgeInsets.only(left: 61.h, right: 64.h, bottom: 15.v),
-        buttonStyle: CustomButtonStyles.fillPrimary,
-        buttonTextStyle: CustomTextStyles.titleSmallPoppinsGray5002);
+      height: 33.v,
+      width: 235.h,
+      text: "Actualizar Información",
+      margin: EdgeInsets.only(left: 61.h, right: 64.h, bottom: 15.v),
+      buttonStyle: CustomButtonStyles.fillPrimary,
+      buttonTextStyle: CustomTextStyles.titleSmallPoppinsGray5002,
+      onPressed: () async {
+        if (_formKey.currentState!.validate()) {
+          try {
+            User? user = FirebaseAuth.instance.currentUser;
+            await user?.updateEmail(emailController.text);
+            await user?.updatePassword(passwordController.text);
+
+            await FirebaseFirestore.instance
+                .collection('usuarios')
+                .doc(user?.uid)
+                .set({
+              'name': fullNameController.text,
+              'lastname': usernameController.text,
+              'emal': emailController.text,
+            }, SetOptions(merge: true));
+
+            ScaffoldMessenger.of(context).showSnackBar(
+              const SnackBar(
+                  content: Text('Información actualizada con éxito')),
+            );
+          } catch (e) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Error al actualizar la información: $e')),
+            );
+          }
+        } else {
+          // Si al menos un campo no es válido, entonces muestra un mensaje
+          ScaffoldMessenger.of(context).showSnackBar(
+            const SnackBar(
+                content: Text('Por favor complete todos los campos')),
+          );
+        }
+      },
+    );
   }
 
   onTapRegresar(BuildContext context) {

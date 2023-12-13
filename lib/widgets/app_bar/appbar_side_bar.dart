@@ -97,9 +97,9 @@ class _SideBarState extends State<SideBar> {
             onTap: () => null,
           ),
           ListTile(
-            leading: Icon(
+            leading: const Icon(
               Icons.rate_review,
-              color: const Color.fromARGB(255, 128, 128, 128),
+              color:  Color.fromARGB(255, 128, 128, 128),
             ),
             title: Text(
               'Tus reseñas',
@@ -107,7 +107,9 @@ class _SideBarState extends State<SideBar> {
                 fontFamily: 'Nunito',
               ),
             ),
-            onTap: () => null,
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.frmtusreseAsScreen);
+            },
           ),
           ListTile(
             leading: Icon(
@@ -163,7 +165,9 @@ class _SideBarState extends State<SideBar> {
                 fontFamily: 'Nunito',
               ),
             ),
-            onTap: () => null,
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.frmfaqsScreen);
+            },
           ),
           ListTile(
             leading: Icon(

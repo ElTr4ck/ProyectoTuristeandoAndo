@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/pantallas/rutas.dart';
+import 'package:turisteando_ando/screens/FAQs/frmfaqs_screen.dart';
 import 'package:turisteando_ando/screens/frm_ruta_propia.dart';
 import 'package:turisteando_ando/screens/perfilUsuario/frmeditaperfil_screen/frmeditaperfil_screen.dart';
 import 'package:turisteando_ando/screens/perfilUsuario/frmperfil_screen/frmperfil_screen.dart';
@@ -9,6 +10,7 @@ import 'package:turisteando_ando/screens/pantallas/presentation/frmmarcadores_sc
 import 'package:turisteando_ando/screens/pantallas/presentation/frmmarcmapa_screen/frmmarcmapa_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminfolugar_screen/frminfolugar_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_a_tab_container_screen/frmrese_a_tab_container_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmnewrese_a_screen/frmnewrese_a_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmreportarrese_a_screen/frmreportarrese_a_screen.dart';
 import 'package:turisteando_ando/screens/frmSetLocation.dart';
@@ -21,7 +23,10 @@ import 'package:turisteando_ando/screens/pantallas/loginSystem/frmcambiocont_scr
 import 'package:turisteando_ando/screens/pantallas/loginSystem/frmregistro_screen/frmregistro_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/loginSystem/frminvitado_screen/frminvitado_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/loginSystem/app_navigation_screen/app_navigation_screen.dart';
+import 'package:turisteando_ando/screens/resenas/frmtusrese_as_screen.dart';
 import 'package:turisteando_ando/screens/rutaDestacada/frmRutaDestacada.dart';
+
+import '../screens/pantallas/presentation/frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
 
 class AppRoutes {
   static const String frmwelcomeScreen = '/frmwelcome_screen';
@@ -58,6 +63,9 @@ class AppRoutes {
 
   static const String frmreseAPage = '/frmrese_a_page';
 
+  static const String frmreseATabContainerScreen2 =
+      '/frmrese_a_tab_container_screen2';
+
   static const String frmreseATabContainerScreen =
       '/frmrese_a_tab_container_screen';
 
@@ -69,13 +77,17 @@ class AppRoutes {
 
   static const String rutasUno = '/rutasUno.dart';
 
-  static const String frmRutaDestacada = '/frmRutaDestacada.dart';
+  static const String frmRutaDestacada = '/frmRutaDestacada';
 
-  static const String frmperfilScreen = '/frmperfil_screen.dart';
+  static const String frmperfilScreen = '/frmperfil_screen';
 
-  static const String frmEditaPerfil = '/frmeditaperfil_screen.dart';
+  static const String frmEditaPerfil = '/frmeditaperfil_screen';
 
-  static const String frm_ruta_propia = '/frm_ruta_propia.dart';
+  static const String frm_ruta_propia = '/frm_ruta_propia';
+
+  static const String frmfaqsScreen = '/frmfaqs_screen';
+
+  static const String frmtusreseAsScreen = '/frmtusrese_as_screen';
 
   static Map<String, WidgetBuilder> routes = {
     frminicioContainerScreen: (context) => FrminicioContainerScreen(),
@@ -83,8 +95,9 @@ class AppRoutes {
     frmmarcadoresScreen: (context) => FrmmarcadoresScreen(),
     frmmarcmapaScreen: (context) => FrmmarcmapaScreen(),
     frminfolugarScreen: (context) => FrminfolugarScreen(id: '',),
-    frmreseATabContainerScreen: (context) => FrmreseATabContainerScreen(),
-    frmnewreseAScreen: (context) => FrmnewreseAScreen(),
+    frmreseATabContainerScreen2: (context) => FrmreseATabContainerScreen2(id: '',),
+    frmreseATabContainerScreen: (context) => FrmreseATabContainerScreen(jsonData: null),
+    frmnewreseAScreen: (context) => FrmnewreseAScreen(id: '',),
     frmreportarreseAScreen: (context) => FrmreportarreseAScreen(),
     appNavigationScreen: (context) => AppNavigationScreen(),
     frmwelcomeScreen: (context) => FrmwelcomeScreen(),
@@ -107,6 +120,10 @@ class AppRoutes {
     frmEditaPerfil: (context) => FrmeditaperfilScreen(),
 
     frm_ruta_propia: (context) => FrmRutaPropia(),
+
+    frmfaqsScreen: (context) => FrmfaqsScreen(),
+
+    frmtusreseAsScreen: (context) => FrmtusreseAsScreen(),
 
     //rutasUno: (context) => RutaUno(predictionDescription: predictionDescription) //TODO: Aqui que onda jaja
   };

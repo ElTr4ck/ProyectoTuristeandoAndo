@@ -3,18 +3,14 @@ import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/widgets/custom_rating_bar.dart';
 
 // ignore: must_be_immutable
-class FrmreseAItemWidget extends StatelessWidget {
-  FrmreseAItemWidget({
-    Key? key,
-    this.onTapView,
-  }) : super(
-          key: key,
-        );
-
+class FrmreseAItemWidget2 extends StatelessWidget {
+  final Map<String, dynamic>? jsonData;
+  FrmreseAItemWidget2({required this.jsonData, Key? key, required Null Function() onTapView}) : super(key: key);
   VoidCallback? onTapView;
 
   @override
   Widget build(BuildContext context) {
+    //print(jsonData);
     return Container(
       padding: EdgeInsets.all(12.h),
       decoration: AppDecoration.fillGray.copyWith(
@@ -31,16 +27,15 @@ class FrmreseAItemWidget extends StatelessWidget {
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                CustomImageView(
-                  imagePath: ImageConstant.imgAvatar,
-                  height: 32.adaptSize,
-                  width: 32.adaptSize,
-                  radius: BorderRadius.circular(
-                    16.h,
-                  ),
-                  margin: EdgeInsets.only(
-                    top: 3.v,
-                    bottom: 6.v,
+                Container(
+                  margin: EdgeInsets.only(top: 3.v, bottom: 6.v),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(16.h),
+                    child: Image.network(
+                      jsonData?["authorAttribution"]['photoUri'],
+                      height: 32.adaptSize,
+                      width: 32.adaptSize,
+                    ),
                   ),
                 ),
                 Padding(
@@ -49,7 +44,7 @@ class FrmreseAItemWidget extends StatelessWidget {
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
                       Text(
-                        "Anonimo",
+                        '${jsonData?["authorAttribution"]["displayName"]}',
                         style: theme.textTheme.titleMedium,
                       ),
                       SizedBox(height: 6.v),
@@ -59,13 +54,13 @@ class FrmreseAItemWidget extends StatelessWidget {
                           Padding(
                             padding: EdgeInsets.only(bottom: 1.v),
                             child: CustomRatingBar(
-                              ignoreGestures: true,
-                              initialRating: 0,
-                              itemSize: 12,
+                              initialRating: jsonData?['rating'].toDouble(),
+                              itemSize: 13,
+                              color: appTheme.yellow700,
                             ),
                           ),
                           Text(
-                            "10/25/2023 7:23:23 PM",
+                            "${jsonData?["relativePublishTimeDescription"]}",
                             style: theme.textTheme.labelLarge,
                           ),
                         ],
@@ -86,7 +81,7 @@ class FrmreseAItemWidget extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Container(
-                    height: 16,
+                    height: 16.v,
                     width: 20.h,
                     margin: EdgeInsets.only(bottom: 56.v),
                     child: Stack(
@@ -125,8 +120,8 @@ class FrmreseAItemWidget extends StatelessWidget {
                       width: 231.h,
                       margin: EdgeInsets.only(left: 21.h),
                       child: Text(
-                        "Este lugar es una porquería. El personal es tan inútil que me pregunto cómo consiguen trabajar aquí. No pierdan su tiempo ni su dinero",
-                        maxLines: 5,
+                        "${jsonData?["text"]["text"]}",
+                        maxLines: 4,
                         overflow: TextOverflow.ellipsis,
                         style: theme.textTheme.bodyMedium,
                       ),
@@ -136,24 +131,6 @@ class FrmreseAItemWidget extends StatelessWidget {
               ),
             ),
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              SizedBox(height: 10,width: 10,),
-              CustomImageView(
-                imagePath: ImageConstant.imgResena1,
-                height: 100,
-                width: 140,
-              ),
-              SizedBox(width: 5),
-              CustomImageView(
-                imagePath: ImageConstant.imgResena1,
-                height: 100,
-                width: 140,
-              ),
-              SizedBox(width: 10, height: 10,),
-            ],
-          )
         ],
       ),
     );
