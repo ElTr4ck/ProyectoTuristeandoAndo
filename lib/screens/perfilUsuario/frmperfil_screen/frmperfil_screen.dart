@@ -18,50 +18,47 @@ class FrmperfilScreen extends StatelessWidget {
     mediaQueryData = MediaQuery.of(context);
     return SafeArea(
         child: Scaffold(
-            body: SizedBox(
-      width: double.maxFinite,
-      child: SingleChildScrollView(
-          child: Column(children: [
-        _buildTen(context),
-        Container(
-            padding: EdgeInsets.symmetric(vertical: 26.v),
-            child: Column(children: [
-              _buildTuContenidoPersonalizado(context),
-              SizedBox(height: 19.v),
-              Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 13.h),
-                  child: _buildBestCalif(context,
-                      mejorCalificados: "Lugares para ti")),
-              SizedBox(height: 8.v),
-              Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 13.h),
-                  child: _buildBestCalif(context,
-                      mejorCalificados: "Mejor calificados")),
-              SizedBox(height: 6.v),
-              Padding(
-                  padding: EdgeInsets.symmetric(horizontal: 13.h),
-                  child: _buildBestCalif(context,
-                      mejorCalificados: "En tendencia")),
-              SizedBox(height: 47.v),
-              _buildContenido(context),
-              SizedBox(height: 14.v),
-              _buildMarcadores(context),
-              SizedBox(height: 6.v),
-              _buildHistorial(context),
-              SizedBox(height: 5.v),
-              _buildRutaMensual(context),
-              SizedBox(height: 50.v),
-              _buildPreferencias(context),
-              SizedBox(height: 16.v),
-              _buildLenguaje(context),
-              SizedBox(height: 5.v),
-              _buildModoOscuro(context),
-              SizedBox(height: 5.v),
-              _buildCerrarSesion(context),
-              SizedBox(height: 5.v)
-            ]))
-      ])),
-    )));
+            body: SingleChildScrollView(
+                child: Column(children: [
+              _buildTen(context),
+              Container(
+                  padding: EdgeInsets.symmetric(vertical: 26.v),
+                  child: Column(children: [
+                    _buildTuContenidoPersonalizado(context),
+                    SizedBox(height: 19.v),
+                    Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 13.h),
+                        child: _buildBestCalif(context,
+                            mejorCalificados: "Lugares para ti")),
+                    SizedBox(height: 8.v),
+                    Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 13.h),
+                        child: _buildBestCalif(context,
+                            mejorCalificados: "Mejor calificados")),
+                    SizedBox(height: 6.v),
+                    Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 13.h),
+                        child: _buildBestCalif(context,
+                            mejorCalificados: "En tendencia")),
+                    SizedBox(height: 47.v),
+                    _buildContenido(context),
+                    SizedBox(height: 14.v),
+                    _buildMarcadores(context),
+                    SizedBox(height: 6.v),
+                    _buildHistorial(context),
+                    SizedBox(height: 5.v),
+                    _buildRutaMensual(context),
+                    SizedBox(height: 50.v),
+                    _buildPreferencias(context),
+                    SizedBox(height: 16.v),
+                    _buildLenguaje(context),
+                    SizedBox(height: 5.v),
+                    _buildModoOscuro(context),
+                    SizedBox(height: 5.v),
+                    _buildCerrarSesion(context),
+                    SizedBox(height: 5.v)
+                  ]))
+            ]))));
   }
 
   /// Section Widget

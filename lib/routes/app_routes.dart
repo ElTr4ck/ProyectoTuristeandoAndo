@@ -69,9 +69,6 @@ class AppRoutes {
   static const String frmreseATabContainerScreen =
       '/frmrese_a_tab_container_screen';
 
-  static const String frmreseATabContainerScreen2 =
-      '/frmrese_a_tab_container_screen2';
-
   static const String frmnewreseAScreen = '/frmnewrese_a_screen';
 
   static const String frmreportarreseAScreen = '/frmreportarrese_a_screen';
