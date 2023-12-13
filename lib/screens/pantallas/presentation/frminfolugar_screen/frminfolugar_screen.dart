@@ -17,6 +17,8 @@ import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:turisteando_ando/pantallas/rutaUno.dart';
 
+import '../frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
+
 
 // ignore_for_file: must_be_immutable
 class FrminfolugarScreen extends StatefulWidget {
@@ -432,7 +434,11 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                     buttonStyle: CustomButtonStyles.fillTeal,
                     buttonTextStyle: theme.textTheme.labelSmall!,
                     onPressed: () {
-                      onTapReseas(context);
+                      print('Elemento del carrusel presionado: ${widget.id}');
+                      Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+                        //String aux = '${prediction.lat}, ${prediction.lng}';
+                        return FrmreseATabContainerScreen2(id: widget.id);
+                      }));
                     },
                     alignment: Alignment.bottomRight),
                 Align(
@@ -483,8 +489,5 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
   }
 
   /// Navigates to the frmnewreseAScreen when the action is triggered.
-  onTapReseas(BuildContext context) {
-    Navigator.pushNamed(context, AppRoutes.frmnewreseAScreen);
-  }
 
 }

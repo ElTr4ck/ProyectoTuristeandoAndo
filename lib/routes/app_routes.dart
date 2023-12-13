@@ -23,6 +23,8 @@ import 'package:turisteando_ando/screens/pantallas/loginSystem/frminvitado_scree
 import 'package:turisteando_ando/screens/pantallas/loginSystem/app_navigation_screen/app_navigation_screen.dart';
 import 'package:turisteando_ando/screens/rutaDestacada/frmRutaDestacada.dart';
 
+import '../screens/pantallas/presentation/frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
+
 class AppRoutes {
   static const String frmwelcomeScreen = '/frmwelcome_screen';
 
@@ -74,6 +76,8 @@ class AppRoutes {
   static const String frmperfilScreen = '/frmperfil_screen.dart';
 
   static const String frmEditaPerfil = '/frmeditaperfil_screen.dart';
+  static const String frmreseATabContainerScreen2 = '/frmrese_a_tab_container_screen2';
+
 
   static Map<String, WidgetBuilder> routes = {
     frminicioContainerScreen: (context) => FrminicioContainerScreen(),
@@ -81,8 +85,8 @@ class AppRoutes {
     frmmarcadoresScreen: (context) => FrmmarcadoresScreen(),
     frmmarcmapaScreen: (context) => FrmmarcmapaScreen(),
     frminfolugarScreen: (context) => FrminfolugarScreen(id: '',),
-    frmreseATabContainerScreen: (context) => FrmreseATabContainerScreen(),
-    frmnewreseAScreen: (context) => FrmnewreseAScreen(),
+    frmreseATabContainerScreen2: (context) => FrmreseATabContainerScreen2(id: '',),
+    frmreseATabContainerScreen: (context) => FrmreseATabContainerScreen(jsonData: null),
     frmreportarreseAScreen: (context) => FrmreportarreseAScreen(),
     appNavigationScreen: (context) => AppNavigationScreen(),
     frmwelcomeScreen: (context) => FrmwelcomeScreen(),
