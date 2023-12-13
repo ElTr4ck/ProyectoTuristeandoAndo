@@ -234,4 +234,23 @@ class ImageConstant {
 
   static String imgResena1 = '$imagePath/img_resena1.jpeg';
   static String imgResena2 = '$imagePath/img_resena2.jpg';
+
+  // frmFAQs images
+  static String imgImage22 = '$imagePath/img_image_22.png';
+
+  static String imgShowinfo = '$imagePath/img_showinfo.svg';
+
+  // frmTusReseñas images
+
+  static String imgTrash = '$imagePath/img_trash.svg';
+
+  static String imgRectangle996 = '$imagePath/img_rectangle_996.png';
+
+  static String imgRectangle995 = '$imagePath/img_rectangle_995.png';
+
+  static String imgAvatar32x32 = '$imagePath/img_avatar_32x32.png';
+
+  static String imgTrashBlack900 = '$imagePath/img_trash_black_900.svg';
+
+  static String imgClose = '$imagePath/img_close.svg';
 }

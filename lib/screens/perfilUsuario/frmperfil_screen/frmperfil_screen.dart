@@ -1,6 +1,9 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
+import 'package:turisteando_ando/repositories/auth/controlers/signout_controller.dart';
+import 'package:turisteando_ando/repositories/auth/wrapper.dart';
+import 'package:turisteando_ando/screens/perfilUsuario/frmperfil_screen/firestorePerfil_methods.dart';
 import 'package:turisteando_ando/widgets/app_bar/appbar_leading_image.dart';
 import 'package:turisteando_ando/widgets/app_bar/appbar_subtitle.dart';
 import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
@@ -120,7 +123,7 @@ class FrmperfilScreen extends StatelessWidget {
                             alignment: Alignment.center,
                             child: Row(
                                 mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceEvenly,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
@@ -131,34 +134,78 @@ class FrmperfilScreen extends StatelessWidget {
                                           .copyWith(
                                               borderRadius: BorderRadiusStyle
                                                   .roundedBorder52),
-                                      child: CustomImageView(
-                                          imagePath:
-                                              ImageConstant.imgImgprofile,
-                                          height: 95.adaptSize,
-                                          width: 95.adaptSize,
-                                          radius: BorderRadius.circular(44.h),
-                                          alignment: Alignment.center)),
+                                      child: FutureBuilder<String>(
+                                        future: obtenerImagenUsuarioActual(),
+                                        builder: (BuildContext context,
+                                            AsyncSnapshot<String> snapshot) {
+                                          if (snapshot.connectionState ==
+                                              ConnectionState.waiting) {
+                                            return CircularProgressIndicator(); // Muestra un indicador de carga mientras se espera la foto del usuario
+                                          } else if (snapshot.hasError) {
+                                            return Text(
+                                                'Error: ${snapshot.error}');
+                                          } else {
+                                            return CustomImageView(
+                                              imagePath: snapshot.data ??
+                                                  ImageConstant.imageNotFound, // Usa la foto del usuario, o una imagen por defecto si no hay foto
+                                              height: 95.adaptSize,
+                                              width: 95.adaptSize,
+                                              radius:
+                                                  BorderRadius.circular(44.h),
+                                              alignment: Alignment.center,
+                                            );
+                                          }
+                                        },
+                                      )),
                                   Padding(
                                       padding: EdgeInsets.only(
-                                          top: 19.v, bottom: 24.v),
+                                          top: 8.v, bottom: 24.v),
                                       child: Column(
                                           crossAxisAlignment:
-                                              CrossAxisAlignment.start,
+                                              CrossAxisAlignment.center,
                                           children: [
                                             Container(
                                                 decoration:
                                                     AppDecoration.outlineBlack,
-                                                child: Text(
-                                                  "UserNameXXx",
-                                                  style: theme.textTheme
-                                                          .headlineSmall
-                                                          ?.copyWith(
-                                                              color: Colors
-                                                                  .white) ??
-                                                      TextStyle(
-                                                          color: Colors.white),
+                                                alignment: Alignment.center,
+                                                child: //Obtener el nombre de usuario de la BD
+                                                    FutureBuilder<String>(
+                                                  future:
+                                                      obtenerNombreUsuarioActual(),
+                                                  builder:
+                                                      (BuildContext context,
+                                                          AsyncSnapshot<String>
+                                                              snapshot) {
+                                                    if (snapshot
+                                                            .connectionState ==
+                                                        ConnectionState
+                                                            .waiting) {
+                                                      return LinearProgressIndicator(); // Muestra un indicador de carga mientras se espera el nombre de usuario
+                                                    } else if (snapshot
+                                                        .hasError) {
+                                                      return Text(
+                                                          'Error: ${snapshot.error}');
+                                                    } else {
+                                                      return Text(
+                                                        snapshot.data ??
+                                                            'Nombre de usuario no disponible',
+                                                        style: theme.textTheme
+                                                                .headlineSmall
+                                                                ?.copyWith(
+                                                                    color: Colors
+                                                                        .white) ??
+                                                            TextStyle(
+                                                                color: Colors
+                                                                    .white),
+                                                      );
+                                                    }
+                                                  },
                                                 )),
-                                            SizedBox(height: 5.v),
+                                            Padding(
+                                              padding: const EdgeInsets.only(
+                                                  top: 15),
+                                              child: SizedBox(height: 5.v),
+                                            ),
                                             _buildEditarPerfil(context)
                                           ]))
                                 ]))
@@ -336,31 +383,46 @@ class FrmperfilScreen extends StatelessWidget {
 
   /// Section Widget
   Widget _buildCerrarSesion(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 13.h),
-      child: SingleChildScrollView(
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.end,
-              children: [
-            CustomImageView(
-                imagePath: ImageConstant.imgClosesession,
-                height: 17.v,
-                width: 19.h,
-                margin: EdgeInsets.only(top: 4.v)),
-            Padding(
-                padding: EdgeInsets.only(left: 4.h),
-                child: Text("Cerrar Sesión",
-                    style: CustomTextStyles.titleSmallSemiBold)),
-            Spacer(),
-            Padding(
-                padding: EdgeInsets.only(top: 7.v, bottom: 3.v),
-                child: CustomIconButton(
-                    height: 10.v,
-                    width: 6.h,
-                    child: CustomImageView(
-                        imagePath: ImageConstant.imgArrowRight10x6)))
-          ])),
+    
+    final controllerSignOut = SignoutController(context: context);
+    Future<void> signOut() async {
+      await controllerSignOut.signout();
+    }
+
+    return InkWell(
+      onTap: () async {
+              await signOut();
+              // ignore: use_build_context_synchronously
+              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                  MaterialPageRoute(builder: (context) => Wrapper()),
+                  (route) => false);
+            },
+      child: Padding(
+        padding: EdgeInsets.symmetric(horizontal: 13.h),
+        child: SingleChildScrollView(
+            child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+              CustomImageView(
+                  imagePath: ImageConstant.imgClosesession,
+                  height: 17.v,
+                  width: 19.h,
+                  margin: EdgeInsets.only(top: 4.v)),
+              Padding(
+                  padding: EdgeInsets.only(left: 4.h),
+                  child: Text("Cerrar Sesión",
+                      style: CustomTextStyles.titleSmallSemiBold)),
+              Spacer(),
+              Padding(
+                  padding: EdgeInsets.only(top: 7.v, bottom: 3.v),
+                  child: CustomIconButton(
+                      height: 10.v,
+                      width: 6.h,
+                      child: CustomImageView(
+                          imagePath: ImageConstant.imgArrowRight10x6)))
+            ])),
+      ),
     );
   }
 

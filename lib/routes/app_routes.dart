@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/pantallas/rutas.dart';
+import 'package:turisteando_ando/screens/FAQs/frmfaqs_screen.dart';
 import 'package:turisteando_ando/screens/frm_ruta_propia.dart';
 import 'package:turisteando_ando/screens/perfilUsuario/frmeditaperfil_screen/frmeditaperfil_screen.dart';
 import 'package:turisteando_ando/screens/perfilUsuario/frmperfil_screen/frmperfil_screen.dart';
@@ -21,6 +22,7 @@ import 'package:turisteando_ando/screens/pantallas/loginSystem/frmcambiocont_scr
 import 'package:turisteando_ando/screens/pantallas/loginSystem/frmregistro_screen/frmregistro_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/loginSystem/frminvitado_screen/frminvitado_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/loginSystem/app_navigation_screen/app_navigation_screen.dart';
+import 'package:turisteando_ando/screens/resenas/frmtusrese_as_screen.dart';
 import 'package:turisteando_ando/screens/rutaDestacada/frmRutaDestacada.dart';
 
 class AppRoutes {
@@ -77,6 +79,10 @@ class AppRoutes {
 
   static const String frm_ruta_propia = '/frm_ruta_propia.dart';
 
+  static const String frmfaqsScreen = '/frmfaqs_screen';
+
+  static const String frmtusreseAsScreen = '/frmtusrese_as_screen';
+
   static Map<String, WidgetBuilder> routes = {
     frminicioContainerScreen: (context) => FrminicioContainerScreen(),
     frmporvisitarScreen: (context) => FrmporvisitarScreen(),
@@ -107,6 +113,10 @@ class AppRoutes {
     frmEditaPerfil: (context) => FrmeditaperfilScreen(),
 
     frm_ruta_propia: (context) => FrmRutaPropia(),
+
+    frmfaqsScreen: (context) => FrmfaqsScreen(),
+
+    frmtusreseAsScreen: (context) => FrmtusreseAsScreen(),
 
     //rutasUno: (context) => RutaUno(predictionDescription: predictionDescription) //TODO: Aqui que onda jaja
   };
