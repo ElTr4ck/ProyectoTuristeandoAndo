@@ -1,5 +1,7 @@
 import 'dart:convert';
 import 'dart:math';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -9,11 +11,8 @@ import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_widget/google_maps_widget.dart';
 
-final GoogleMapsPlaces places = GoogleMapsPlaces(apiKey: "AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM");
-
-/*void main() {
-  runApp(const MyApp());
-}*/
+final GoogleMapsPlaces places =
+    GoogleMapsPlaces(apiKey: "AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM");
 
 class MyApp extends StatelessWidget {
   final String predictionDescription;
@@ -31,7 +30,11 @@ class MyApp extends StatelessWidget {
       ),
       //home: const MyHomePage(title: 'Flutter Demo Home Page'),
       initialRoute: 'rutaNav',
-      routes: {'rutaNav': (_) => RutaUno(predictionDescription: predictionDescription,)},
+      routes: {
+        'rutaNav': (_) => RutaUno(
+              predictionDescription: predictionDescription,
+            )
+      },
     );
   }
 }
@@ -43,7 +46,6 @@ class MyHomePage extends StatefulWidget {
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
-
 }
 
 class _MyHomePageState extends State<MyHomePage> {
@@ -57,9 +59,7 @@ class _MyHomePageState extends State<MyHomePage> {
 
   @override
   Widget build(BuildContext context) {
-
     return Scaffold(
-
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: Text(widget.title),
@@ -83,20 +83,18 @@ class _MyHomePageState extends State<MyHomePage> {
         tooltip: 'Increment',
         child: const Icon(Icons.add),
       ), // This trailing comma makes auto-formatting nicer for build methods.
-
     );
-
   }
 }
 
-class SelectLocationScreen extends StatefulWidget{
+class SelectLocationScreen extends StatefulWidget {
   _SelectLocationScreenState createState() => _SelectLocationScreenState();
 }
 
-class _SelectLocationScreenState extends State<SelectLocationScreen>{
+class _SelectLocationScreenState extends State<SelectLocationScreen> {
   LatLng _currentLocation = LatLng(0, 0);
   final TextEditingController _searchController = TextEditingController();
-  Set<Marker> _markers ={};
+  Set<Marker> _markers = {};
   GoogleMapController? _mapController;
 
   void initState() {
@@ -131,7 +129,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen>{
     LatLng currentLantLng = LatLng(position.latitude, position.longitude);
 
     setState(() {
-      _currentLocation=currentLantLng;
+      _currentLocation = currentLantLng;
     });
     _updateCameraPosition(LatLng(position.latitude, position.longitude));
   }
@@ -148,18 +146,18 @@ class _SelectLocationScreenState extends State<SelectLocationScreen>{
       if (response.status == "OK" && response.results.isNotEmpty) {
         PlacesSearchResult place = response.results.first;
 
-        LatLng newLocation = LatLng(place.geometry!.location.lat, place.geometry!.location.lng);
+        LatLng newLocation =
+            LatLng(place.geometry!.location.lat, place.geometry!.location.lng);
         setState(() {
           _currentLocation = newLocation;
           _markers.clear();
-          _markers.add(
-              Marker(
-                markerId: const MarkerId("Ubicacion"),
-                position: newLocation,
-                infoWindow: InfoWindow(title: place.name),
-              )
-          );
-          _mapController!.animateCamera(
+          _markers.add(Marker(
+            markerId: const MarkerId("Ubicacion"),
+            position: newLocation,
+            infoWindow: InfoWindow(title: place.name),
+          ));
+          _mapController!
+              .animateCamera(
             CameraUpdate.newLatLng(newLocation),
           )
               .then((Result) {
@@ -195,19 +193,16 @@ class _SelectLocationScreenState extends State<SelectLocationScreen>{
     });
   }
 
-  void _handleLongPress(LatLng position){
+  void _handleLongPress(LatLng position) {
     setState(() {
       _currentLocation = position;
       _markers.clear();
-      _markers.add(
-          Marker(
-            markerId: const MarkerId("newMarker"),
-            position: position,
-            infoWindow: const InfoWindow(title: "Ubicacion"),
-          )
-      );
+      _markers.add(Marker(
+        markerId: const MarkerId("newMarker"),
+        position: position,
+        infoWindow: const InfoWindow(title: "Ubicacion"),
+      ));
       _mapController!.animateCamera(
-
         CameraUpdate.newLatLng(position),
       );
     });
@@ -229,35 +224,34 @@ class _SelectLocationScreenState extends State<SelectLocationScreen>{
       body: Column(
         children: [
           Padding(
-            padding: const EdgeInsets.all(16.0),
-            child:TextField(
-             controller: _searchController,
-             decoration: InputDecoration(
-               hintText: 'Buscar lugar',
-               suffixIcon: IconButton(
-                 icon: Icon(Icons.search),
-                 onPressed: (){
-                   _searchPlace(_searchController.text);
-                 },
-               ),
-             ),
-             onSubmitted: _searchPlace,
-            )
-          ),
-          Expanded(child:
-          GoogleMap(
+              padding: const EdgeInsets.all(16.0),
+              child: TextField(
+                controller: _searchController,
+                decoration: InputDecoration(
+                  hintText: 'Buscar lugar',
+                  suffixIcon: IconButton(
+                    icon: Icon(Icons.search),
+                    onPressed: () {
+                      _searchPlace(_searchController.text);
+                    },
+                  ),
+                ),
+                onSubmitted: _searchPlace,
+              )),
+          Expanded(
+              child: GoogleMap(
             onMapCreated: (controller) => _mapController = controller,
             onTap: _selectLocation,
             initialCameraPosition: CameraPosition(
-              target: LatLng(0, 0), // Posición inicial, podría ser la ubicación actual
+              target: LatLng(
+                  0, 0), // Posición inicial, podría ser la ubicación actual
               zoom: 14,
             ),
             markers: _markers,
             onLongPress: _handleLongPress,
             myLocationButtonEnabled: true,
             myLocationEnabled: true,
-          )
-          )
+          ))
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -271,32 +265,27 @@ class _SelectLocationScreenState extends State<SelectLocationScreen>{
     );
   }
 }
-final Set<Marker> _markers={};
 
-class RutaUno extends StatefulWidget{
+final Set<Marker> _markers = {};
+
+class RutaUno extends StatefulWidget {
   final String predictionDescription;
 
   RutaUno({required this.predictionDescription});
   @override
-  _RutaUnoState createState() =>_RutaUnoState();
+  _RutaUnoState createState() => _RutaUnoState();
 }
 
 class _RutaUnoState extends State<RutaUno> {
-
   GoogleMapController? _mapController;
   LatLng _currentLocation = LatLng(0, 0);
   LatLng _secondLocation = LatLng(0, 0); // Para la segunda ubicación
-  String secondLocationName = 'Buscar ubicación'; // Texto inicial del segundo botón
+  String secondLocationName =
+      'Buscar ubicación'; // Texto inicial del segundo botón
   String buttonText = 'Tu ubicacion';
   String travelTimeButton = "0"; // Valor inicial
   double km = 0.0;
   int x = 0;
-
-
-  /*void initState() {
-    super.initState();
-    _determinePosition();
-  }*/
 
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
@@ -327,12 +316,11 @@ class _RutaUnoState extends State<RutaUno> {
     LatLng currentLantLng = LatLng(position.latitude, position.longitude);
 
     setState(() {
-      _currentLocation=currentLantLng;
+      _currentLocation = currentLantLng;
     });
     _updateCameraPosition(LatLng(position.latitude, position.longitude));
 
     return position;
-
   }
 
   void _updateCameraPosition(LatLng location) {
@@ -346,13 +334,12 @@ class _RutaUnoState extends State<RutaUno> {
 
   void _onMapCreated(GoogleMapController controller) {
     _mapController = controller;
-    if(_currentLocation.latitude != 0 && _currentLocation.longitude != 0){
+    if (_currentLocation.latitude != 0 && _currentLocation.longitude != 0) {
       controller.animateCamera(
         CameraUpdate.newLatLng(_currentLocation),
       );
     }
   }
-
 
   Future<void> _selectLocation() async {
     Position position = await _determinePosition();
@@ -362,13 +349,16 @@ class _RutaUnoState extends State<RutaUno> {
       context,
       MaterialPageRoute(builder: (context) => SelectLocationScreen()),
     );
-    print("Ubicación seleccionada: $selectedLocation"); // Agregar esta línea para depuración
+    print(
+        "Ubicación seleccionada: $selectedLocation"); // Agregar esta línea para depuración
     if (selectedLocation != null) {
-      String placeName = await getPlaceName(selectedLocation); // Obtén el nombre del lugar
+      String placeName =
+          await getPlaceName(selectedLocation); // Obtén el nombre del lugar
 
       //Eliminar
       setState(() {
-        _markers.removeWhere((marker) => marker.markerId==MarkerId('inicialLocation'));
+        _markers.removeWhere(
+            (marker) => marker.markerId == MarkerId('inicialLocation'));
       });
 
       Marker updatedMarker = Marker(
@@ -384,7 +374,8 @@ class _RutaUnoState extends State<RutaUno> {
         _polylines.clear();
         _markers.add(updatedMarker);
       });
-      _updateCameraPosition(selectedLocation); // Centra el mapa en la nueva ubicación
+      _updateCameraPosition(
+          selectedLocation); // Centra el mapa en la nueva ubicación
     }
   }
 
@@ -392,17 +383,21 @@ class _RutaUnoState extends State<RutaUno> {
     Position position = await _determinePosition();
     double latitude = position.latitude;
     double longitude = position.longitude;
-    LatLng selectedLocation = LatLng(latitude, longitude);/*await Navigator.push(
+    LatLng selectedLocation = LatLng(latitude,
+        longitude); /*await Navigator.push(
       context,
       MaterialPageRoute(builder: (context) => SelectLocationScreen()),
     );*/
-    print("Ubicación seleccionada: $selectedLocation"); // Agregar esta línea para depuración
+    print(
+        "Ubicación seleccionada: $selectedLocation"); // Agregar esta línea para depuración
     if (selectedLocation != null) {
-      String placeName = await getPlaceName(selectedLocation); // Obtén el nombre del lugar
+      String placeName =
+          await getPlaceName(selectedLocation); // Obtén el nombre del lugar
 
       //Eliminar
       setState(() {
-        _markers.removeWhere((marker) => marker.markerId==MarkerId('inicialLocation'));
+        _markers.removeWhere(
+            (marker) => marker.markerId == MarkerId('inicialLocation'));
       });
 
       Marker updatedMarker = Marker(
@@ -419,12 +414,12 @@ class _RutaUnoState extends State<RutaUno> {
         //_markers.clear();
         _markers.add(updatedMarker);
       });
-      _updateCameraPosition(selectedLocation); // Centra el mapa en la nueva ubicación
+      _updateCameraPosition(
+          selectedLocation); // Centra el mapa en la nueva ubicación
     }
   }
 
   Future<void> _searchAndSelectSecondLocationDefault() async {
-
     LatLng defaults = LatLng(0, 0);
     String url = 'https://places.googleapis.com/v1/places:searchText';
     // Los datos que enviarás en el cuerpo de la solicitud POST
@@ -435,7 +430,8 @@ class _RutaUnoState extends State<RutaUno> {
     // Las cabeceras de la solicitud
     Map<String, String> headers = {
       'Content-Type': 'application/json',
-      'X-Goog-Api-Key': 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM', // Reemplaza 'API_KEY' con tu clave real
+      'X-Goog-Api-Key':
+          'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM', // Reemplaza 'API_KEY' con tu clave real
       'X-Goog-FieldMask': 'places.location',
     };
 
@@ -453,9 +449,11 @@ class _RutaUnoState extends State<RutaUno> {
         //print('Respuesta exitosa: ${response.body}');
         Map<String, dynamic> jsonData = json.decode(response.body);
         //print('${jsonData["places"][0]["location"]["latitude"]}');
-        double lat = double.parse('${jsonData["places"][0]["location"]["latitude"]}');
+        double lat =
+            double.parse('${jsonData["places"][0]["location"]["latitude"]}');
         //print('${jsonData["places"][0]["location"]["longitude"]}');
-        double lon = double.parse('${jsonData["places"][0]["location"]["longitude"]}');
+        double lon =
+            double.parse('${jsonData["places"][0]["location"]["longitude"]}');
         defaults = LatLng(lat, lon);
         //print('AQUI ESTOY $lat');
         //print('${jsonData["places"][0]["formattedAddress"]}');
@@ -488,7 +486,8 @@ class _RutaUnoState extends State<RutaUno> {
     print('AQUI ESTOY $newLocation');
 
     if (newLocation != null) {
-      String placeName = await getPlaceName(newLocation); // Obtén el nombre del lugar
+      String placeName =
+          await getPlaceName(newLocation); // Obtén el nombre del lugar
       Marker searchedLocationMarker = Marker(
         markerId: MarkerId('searchedLocation'),
         position: newLocation,
@@ -510,11 +509,14 @@ class _RutaUnoState extends State<RutaUno> {
   Future<void> _searchAndSelectSecondLocation() async {
     LatLng newLocation = await Navigator.push(
       context,
-      MaterialPageRoute(builder: (context) => SelectLocationScreen()), // Asegúrate de que este widget permita seleccionar una ubicación
+      MaterialPageRoute(
+          builder: (context) =>
+              SelectLocationScreen()), // Asegúrate de que este widget permita seleccionar una ubicación
     );
 
     if (newLocation != null) {
-      String placeName = await getPlaceName(newLocation); // Obtén el nombre del lugar
+      String placeName =
+          await getPlaceName(newLocation); // Obtén el nombre del lugar
       Marker searchedLocationMarker = Marker(
         markerId: MarkerId('searchedLocation'),
         position: newLocation,
@@ -535,13 +537,15 @@ class _RutaUnoState extends State<RutaUno> {
 
   Future<String> getPlaceName(LatLng coordinates) async {
     String googleApiKey = 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
-    String url = 'https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.latitude},${coordinates.longitude}&key=$googleApiKey';
+    String url =
+        'https://maps.googleapis.com/maps/api/geocode/json?latlng=${coordinates.latitude},${coordinates.longitude}&key=$googleApiKey';
 
     try {
       var response = await http.get(Uri.parse(url));
       if (response.statusCode == 200) {
         var jsonResponse = json.decode(response.body);
-        if (jsonResponse['results'] != null && jsonResponse['results'].length > 0) {
+        if (jsonResponse['results'] != null &&
+            jsonResponse['results'].length > 0) {
           // Asume que el primer resultado es el nombre del lugar más relevante
           return jsonResponse['results'][0]['formatted_address'];
         } else {
@@ -557,7 +561,8 @@ class _RutaUnoState extends State<RutaUno> {
 
   Future getDirections(LatLng start, LatLng end, String mode) async {
     String baseUrl = "https://maps.googleapis.com/maps/api/directions/json";
-    String url = "$baseUrl?origin=${start.latitude},${start.longitude}&destination=${end.latitude},${end.longitude}&mode=$mode&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM";
+    String url =
+        "$baseUrl?origin=${start.latitude},${start.longitude}&destination=${end.latitude},${end.longitude}&mode=$mode&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM";
 
     var response = await http.get(Uri.parse(url));
     if (response.statusCode == 200) {
@@ -570,20 +575,26 @@ class _RutaUnoState extends State<RutaUno> {
   }
 
   void _showRoute() async {
-    var directions = await getDirections(_currentLocation, _secondLocation,'driving');
-    String encodedPolyline = directions['routes'][0]['overview_polyline']['points'];
+    var directions =
+        await getDirections(_currentLocation, _secondLocation, 'driving');
+    String encodedPolyline =
+        directions['routes'][0]['overview_polyline']['points'];
     showRouteOnMap(encodedPolyline);
   }
 
   void _showRoutePie() async {
-    var directions = await getDirections(_currentLocation, _secondLocation,'walking');
-    String encodedPolyline = directions['routes'][0]['overview_polyline']['points'];
+    var directions =
+        await getDirections(_currentLocation, _secondLocation, 'walking');
+    String encodedPolyline =
+        directions['routes'][0]['overview_polyline']['points'];
     showRouteOnMap(encodedPolyline);
   }
 
   void _showRouteTrans() async {
-    var directions = await getDirections(_currentLocation, _secondLocation,'transit');
-    String encodedPolyline = directions['routes'][0]['overview_polyline']['points'];
+    var directions =
+        await getDirections(_currentLocation, _secondLocation, 'transit');
+    String encodedPolyline =
+        directions['routes'][0]['overview_polyline']['points'];
     showRouteOnMap(encodedPolyline);
   }
 
@@ -636,20 +647,23 @@ class _RutaUnoState extends State<RutaUno> {
   }
 
   Future<void> drawRoute() async {
-    LatLng startLocation= _currentLocation; // Tu ubicación de inicio
-    LatLng endLocation= _secondLocation; // Tu ubicación de destino
+    LatLng startLocation = _currentLocation; // Tu ubicación de inicio
+    LatLng endLocation = _secondLocation; // Tu ubicación de destino
 
     // Suponiendo que tienes una función para obtener las direcciones
-    var directions = await getDirections(startLocation, endLocation, "driving"); // o "walking"
+    var directions = await getDirections(
+        startLocation, endLocation, "driving"); // o "walking"
 
     // Obtener el polilíneo codificado de la respuesta
-    String encodedPolyline = directions['routes'][0]['overview_polyline']['points'];
+    String encodedPolyline =
+        directions['routes'][0]['overview_polyline']['points'];
 
     // Dibujar la ruta en el mapa
     showRouteOnMap(encodedPolyline);
   }
 
-  Future<String> calculateTravelTime(LatLng start, LatLng end, String mode) async {
+  Future<String> calculateTravelTime(
+      LatLng start, LatLng end, String mode) async {
     try {
       var directions = await getDirections(start, end, mode);
       if (directions['routes'] != null && directions['routes'].isNotEmpty) {
@@ -666,9 +680,11 @@ class _RutaUnoState extends State<RutaUno> {
   }
 
   void _updateTravelTime() async {
-    String travelTime = await calculateTravelTime(_currentLocation, _secondLocation, "driving");
+    String travelTime =
+        await calculateTravelTime(_currentLocation, _secondLocation, "driving");
     setState(() {
-      travelTimeButton = travelTime; // Actualiza el estado con el tiempo de viaje
+      travelTimeButton =
+          travelTime; // Actualiza el estado con el tiempo de viaje
     });
   }
 
@@ -676,6 +692,75 @@ class _RutaUnoState extends State<RutaUno> {
     _currentLocation = start;
     _secondLocation = end;
     _updateTravelTime();
+  }
+
+  void fetchPlaces() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+    User? user = auth.currentUser;
+    if (user != null) {
+      var snapshot = await FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid)
+          .collection('favoritos')
+          .get();
+
+      for (var doc in snapshot.docs) {
+        String placeId = doc.data()['id'];
+        var placeDetails = await fetchPlaceDetailsFromApi(placeId);
+        _addMarker(placeDetails, placeId); // Pasar placeId a _addMarker
+      }
+    }
+  }
+
+  Future<Map<String, dynamic>> fetchPlaceDetailsFromApi(String placeId) async {
+    String apiKey =
+        'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM'; // Reemplaza con tu clave API de Google
+    String url =
+        'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=$apiKey';
+
+    try {
+      var response = await http.get(Uri.parse(url));
+      if (response.statusCode == 200) {
+        var json = jsonDecode(response.body);
+
+        if (json['status'] == 'OK') {
+          var result = json['result'];
+
+          double latitude = result['geometry']['location']['lat'];
+          double longitude = result['geometry']['location']['lng'];
+          String name = result['name']; // Nombre del lugar
+
+          return {
+            'latitude': latitude,
+            'longitude': longitude,
+            'title': name,
+          };
+        } else {
+          throw Exception('Failed to load place details');
+        }
+      } else {
+        throw Exception('Failed to load place details');
+      }
+    } catch (e) {
+      print('Error al obtener detalles del lugar: $e');
+      return {}; // Retorna un mapa vacío o maneja el error como prefieras
+    }
+  }
+
+  void _addMarker(Map<String, dynamic> placeDetails, String placeId) {
+    final marker = Marker(
+      markerId:
+          MarkerId(placeId), // Usar placeId como identificador del marcador
+      position: LatLng(placeDetails['latitude'], placeDetails['longitude']),
+      infoWindow: InfoWindow(
+          title: placeDetails['title']), // Usar 'title' que has definido
+      icon: BitmapDescriptor.defaultMarkerWithHue(
+          BitmapDescriptor.hueRose), // Marcador azul
+    );
+
+    setState(() {
+      _markers.add(marker);
+    });
   }
 
   Widget buildButtonHome(IconData icon, Color color) {
@@ -690,6 +775,7 @@ class _RutaUnoState extends State<RutaUno> {
       },
     );
   }
+
   Widget buildButtonMap(IconData icon, Color color) {
     return IconButton(
       icon: Icon(
@@ -702,6 +788,7 @@ class _RutaUnoState extends State<RutaUno> {
       },
     );
   }
+
   Widget buildButtonFav(IconData icon, Color color) {
     return IconButton(
       icon: Icon(
@@ -714,6 +801,7 @@ class _RutaUnoState extends State<RutaUno> {
       },
     );
   }
+
   Widget buildButtonUsser(IconData icon, Color color) {
     return IconButton(
       icon: Icon(
@@ -734,11 +822,12 @@ class _RutaUnoState extends State<RutaUno> {
     _polylines.clear();
     _selectLocationDefault();
     _searchAndSelectSecondLocationDefault();
+    fetchPlaces();
   }
+
   Widget build(BuildContext context) {
     print(widget.predictionDescription);
     return MaterialApp(
-
       home: Scaffold(
         //key: _scafoldKey,
         body: Stack(children: [
@@ -755,13 +844,11 @@ class _RutaUnoState extends State<RutaUno> {
           // Fondo de pantalla
           GoogleMap(
             onMapCreated: _onMapCreated,
-              markers: Set<Marker>.of(_markers),
-              mapType: MapType.terrain,
-              polylines: Set<Polyline>.of(_polylines),
-              initialCameraPosition: CameraPosition(
-                target: _currentLocation,
-                zoom: 14
-              ),
+            markers: Set<Marker>.of(_markers),
+            mapType: MapType.terrain,
+            polylines: Set<Polyline>.of(_polylines),
+            initialCameraPosition:
+                CameraPosition(target: _currentLocation, zoom: 14),
             myLocationButtonEnabled: false,
             myLocationEnabled: true,
           ),
@@ -773,7 +860,8 @@ class _RutaUnoState extends State<RutaUno> {
                 color: Colors.white.withOpacity(0.8),
                 // Ajusta la opacidad y el color del fondo difuminado
                 boxShadow: [
-                  BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.2))
+                  BoxShadow(
+                      blurRadius: 10, color: Colors.black.withOpacity(0.2))
                 ], // Efecto de desenfoque
               ),
               //width: MediaQuery.of(context).size.width,
@@ -802,13 +890,14 @@ class _RutaUnoState extends State<RutaUno> {
                             ),
                             style: ButtonStyle(
                               backgroundColor: MaterialStateColor.resolveWith(
-                                      (states) => Colors.white),
-                              minimumSize: MaterialStateProperty.all(Size(150.0, 50.0)),
+                                  (states) => Colors.white),
+                              minimumSize:
+                                  MaterialStateProperty.all(Size(150.0, 50.0)),
                               shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
+                                      RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  )),
+                                borderRadius: BorderRadius.circular(10.0),
+                              )),
                             ),
                           ),
                         )),
@@ -829,14 +918,15 @@ class _RutaUnoState extends State<RutaUno> {
                               ),
                             ),
                             style: ButtonStyle(
-                              minimumSize: MaterialStateProperty.all(Size(150.0, 50.0)),
+                              minimumSize:
+                                  MaterialStateProperty.all(Size(150.0, 50.0)),
                               backgroundColor: MaterialStateColor.resolveWith(
-                                      (states) => Colors.white),
+                                  (states) => Colors.white),
                               shape: MaterialStateProperty.all<
-                                  RoundedRectangleBorder>(
+                                      RoundedRectangleBorder>(
                                   RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(10.0),
-                                  )),
+                                borderRadius: BorderRadius.circular(10.0),
+                              )),
                             ),
                           ),
                         )),
@@ -854,7 +944,7 @@ class _RutaUnoState extends State<RutaUno> {
                                       left: 8.0, right: 8.0, top: 7.0),
                                   child: ElevatedButton(
                                     //Transporte
-                                    onPressed:_showRoute,
+                                    onPressed: _showRoute,
                                     style: ButtonStyle(
                                       backgroundColor: MaterialStateProperty
                                           .resolveWith<Color?>(
@@ -882,13 +972,13 @@ class _RutaUnoState extends State<RutaUno> {
                                           ), // Tu condición aquí
                                           Text(
                                             //Tiempo de transporte publico
-                                            '${((((sqrt(pow((_secondLocation.latitude-_currentLocation.latitude), 2) + pow((_secondLocation.longitude - _currentLocation.longitude), 2)))*100))*5).toStringAsFixed(0)} min',
+                                            '${((((sqrt(pow((_secondLocation.latitude - _currentLocation.latitude), 2) + pow((_secondLocation.longitude - _currentLocation.longitude), 2))) * 100)) * 5).toStringAsFixed(0)} min',
                                             //travelTimeButton,
                                             style: TextStyle(
                                               fontSize: 10,
                                               fontWeight: FontWeight.bold,
                                               color:
-                                              Color.fromARGB(255, 0, 0, 0),
+                                                  Color.fromARGB(255, 0, 0, 0),
                                               fontFamily: 'Nunito',
                                             ),
                                           )
@@ -932,7 +1022,7 @@ class _RutaUnoState extends State<RutaUno> {
                                           ),
                                           Text(
                                             //Tiempo de transporte publico
-                                            '${((((sqrt(pow((_secondLocation.latitude-_currentLocation.latitude), 2) + pow((_secondLocation.longitude - _currentLocation.longitude), 2)))*100))*6).toStringAsFixed(0)} min',
+                                            '${((((sqrt(pow((_secondLocation.latitude - _currentLocation.latitude), 2) + pow((_secondLocation.longitude - _currentLocation.longitude), 2))) * 100)) * 6).toStringAsFixed(0)} min',
                                             style: TextStyle(
                                               fontSize: 10,
                                               fontWeight: FontWeight.bold,
@@ -981,7 +1071,7 @@ class _RutaUnoState extends State<RutaUno> {
                                           ),
                                           Text(
                                             //Tiempo de transporte publico
-                                            '${((((sqrt(pow((_secondLocation.latitude-_currentLocation.latitude), 2) + pow((_secondLocation.longitude - _currentLocation.longitude), 2)))*100))*16).toStringAsFixed(0)} min',
+                                            '${((((sqrt(pow((_secondLocation.latitude - _currentLocation.latitude), 2) + pow((_secondLocation.longitude - _currentLocation.longitude), 2))) * 100)) * 16).toStringAsFixed(0)} min',
                                             style: TextStyle(
                                               fontSize: 10,
                                               fontWeight: FontWeight.bold,
