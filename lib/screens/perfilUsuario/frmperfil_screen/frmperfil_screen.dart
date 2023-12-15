@@ -93,120 +93,126 @@ class FrmperfilScreen extends StatelessWidget {
               child: Padding(
                   padding: EdgeInsets.only(left: 31.h, right: 21.h),
                   child: SingleChildScrollView(
-                      child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                        CustomAppBar(
-                          leadingWidth: 30.h,
-                          leading: Padding(
-                              padding: EdgeInsets.only(top: 7.v, bottom: 16.v),
-                              child: GestureDetector(
-                                  onTap: () {
-                                    Navigator.pushNamed(
-                                        context, '/frminicio_page');
-                                  },
-                                  child: Icon(
-                                    Icons.arrow_back_outlined,
-                                    size: 30.h,
-                                    color: Colors.grey,
-                                  ))),
-                          centerTitle: true,
-                          title: Text("Perfil",
-                              style: TextStyle(color: Colors.white)),
-                        ),
-                        SizedBox(height: 90.v),
-                        Align(
-                            alignment: Alignment.center,
-                            child: Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceEvenly,
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Container(
-                                      height: 105.adaptSize,
-                                      width: 105.adaptSize,
-                                      padding: EdgeInsets.all(5.h),
-                                      decoration: AppDecoration.outlineBlack900
-                                          .copyWith(
-                                              borderRadius: BorderRadiusStyle
-                                                  .roundedBorder52),
-                                      child: FutureBuilder<String>(
-                                        future: obtenerImagenUsuarioActual(),
-                                        builder: (BuildContext context,
-                                            AsyncSnapshot<String> snapshot) {
-                                          if (snapshot.connectionState ==
-                                              ConnectionState.waiting) {
-                                            return CircularProgressIndicator(); // Muestra un indicador de carga mientras se espera la foto del usuario
-                                          } else if (snapshot.hasError) {
-                                            return Text(
-                                                'Error: ${snapshot.error}');
-                                          } else {
-                                            return CustomImageView(
-                                              imagePath: snapshot.data ??
-                                                  ImageConstant.imageNotFound, // Usa la foto del usuario, o una imagen por defecto si no hay foto
-                                              height: 95.adaptSize,
-                                              width: 95.adaptSize,
-                                              radius:
-                                                  BorderRadius.circular(44.h),
-                                              alignment: Alignment.center,
-                                            );
-                                          }
-                                        },
-                                      )),
-                                  Padding(
-                                      padding: EdgeInsets.only(
-                                          top: 8.v, bottom: 24.v),
-                                      child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.center,
-                                          children: [
-                                            Container(
-                                                decoration:
-                                                    AppDecoration.outlineBlack,
+                      child: ConstrainedBox(
+                        constraints: BoxConstraints(minHeight: 500.v),
+                        child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                          CustomAppBar(
+                            leadingWidth: 30.h,
+                            leading: Padding(
+                                padding: EdgeInsets.only(top: 7.v, bottom: 16.v),
+                                child: GestureDetector(
+                                    onTap: () {
+                                      Navigator.pushNamed(
+                                          context, '/frminicio_page');
+                                    },
+                                    child: Icon(
+                                      Icons.arrow_back_outlined,
+                                      size: 30.h,
+                                      color: Colors.grey,
+                                    ))),
+                            centerTitle: true,
+                            title: Text("Perfil",
+                                style: TextStyle(color: Colors.white)),
+                          ),
+                          SizedBox(height: 90.v),
+                          Align(
+                              alignment: Alignment.center,
+                              child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceEvenly,
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                        height: 105.adaptSize,
+                                        width: 105.adaptSize,
+                                        padding: EdgeInsets.all(5.h),
+                                        decoration: AppDecoration.outlineBlack900
+                                            .copyWith(
+                                                borderRadius: BorderRadiusStyle
+                                                    .roundedBorder52),
+                                        child: FutureBuilder<String>(
+                                          future: obtenerImagenUsuarioActual(),
+                                          builder: (BuildContext context,
+                                              AsyncSnapshot<String> snapshot) {
+                                            if (snapshot.connectionState ==
+                                                ConnectionState.waiting) {
+                                              return CircularProgressIndicator(); // Muestra un indicador de carga mientras se espera la foto del usuario
+                                            } else if (snapshot.hasError) {
+                                              return Text(
+                                                  'Error: ${snapshot.error}');
+                                            } else {
+                                              return CustomImageView(
+                                                imagePath: snapshot.data ??
+                                                    ImageConstant.imageNotFound, // Usa la foto del usuario, o una imagen por defecto si no hay foto
+                                                height: 95.adaptSize,
+                                                width: 95.adaptSize,
+                                                radius:
+                                                    BorderRadius.circular(44.h),
                                                 alignment: Alignment.center,
-                                                child: //Obtener el nombre de usuario de la BD
-                                                    FutureBuilder<String>(
-                                                  future:
-                                                      obtenerNombreUsuarioActual(),
-                                                  builder:
-                                                      (BuildContext context,
-                                                          AsyncSnapshot<String>
-                                                              snapshot) {
-                                                    if (snapshot
-                                                            .connectionState ==
-                                                        ConnectionState
-                                                            .waiting) {
-                                                      return LinearProgressIndicator(); // Muestra un indicador de carga mientras se espera el nombre de usuario
-                                                    } else if (snapshot
-                                                        .hasError) {
-                                                      return Text(
-                                                          'Error: ${snapshot.error}');
-                                                    } else {
-                                                      return Text(
-                                                        snapshot.data ??
-                                                            'Nombre de usuario no disponible',
-                                                        style: theme.textTheme
-                                                                .headlineSmall
-                                                                ?.copyWith(
-                                                                    color: Colors
-                                                                        .white) ??
-                                                            TextStyle(
-                                                                color: Colors
-                                                                    .white),
-                                                      );
-                                                    }
-                                                  },
-                                                )),
-                                            Padding(
-                                              padding: const EdgeInsets.only(
-                                                  top: 15),
-                                              child: SizedBox(height: 5.v),
-                                            ),
-                                            _buildEditarPerfil(context)
-                                          ]))
-                                ]))
-                      ]))))
+                                              );
+                                            }
+                                          },
+                                        )),
+                                    Padding(
+                                        padding: EdgeInsets.only(
+                                            top: 8.v, bottom: 24.v),
+                                        child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              Container(
+                                                  width: 200.h,
+                                                  decoration:
+                                                      AppDecoration.outlineBlack,
+                                                  alignment: Alignment.center,
+                                                  child: //Obtener el nombre de usuario de la BD
+                                                      FutureBuilder<String>(
+                                                    future:
+                                                        obtenerNombreUsuarioActual(),
+                                                    builder:
+                                                        (BuildContext context,
+                                                            AsyncSnapshot<String>
+                                                                snapshot) {
+                                                      if (snapshot
+                                                              .connectionState ==
+                                                          ConnectionState
+                                                              .waiting) {
+                                                        return LinearProgressIndicator(); // Muestra un indicador de carga mientras se espera el nombre de usuario
+                                                      } else if (snapshot
+                                                          .hasError) {
+                                                        return Text(
+                                                            'Error: ${snapshot.error}');
+                                                      } else {
+                                                        return Text(
+                                                          snapshot.data ??
+                                                              'Nombre de usuario no disponible',
+                                                          style: theme.textTheme
+                                                                  .headlineSmall
+                                                                  ?.copyWith(
+                                                                      color: Colors
+                                                                          .white) ??
+                                                              const TextStyle(
+                                                                  color: Colors
+                                                                      .white),
+                                                            overflow: TextOverflow
+                                                                .ellipsis,
+                                                        );
+                                                      }
+                                                    },
+                                                  )),
+                                              Padding(
+                                                padding: const EdgeInsets.only(
+                                                    top: 15),
+                                                child: SizedBox(height: 5.v),
+                                              ),
+                                              _buildEditarPerfil(context)
+                                            ]))
+                                  ]))
+                        ]),
+                      ))))
         ]));
   }
 

@@ -29,6 +29,12 @@ class _FrmeditaperfilScreenState extends State<FrmeditaperfilScreen> {
 
   TextEditingController passwordController = TextEditingController();
 
+  TextEditingController confirmPasswordController = TextEditingController();
+
+  TextEditingController nuevoemailController = TextEditingController();
+
+  TextEditingController oldpasswordController = TextEditingController();
+
   final GlobalKey<FormState> _formKey = GlobalKey<FormState>();
 
   bool _obscureText = true;
@@ -76,7 +82,15 @@ class _FrmeditaperfilScreenState extends State<FrmeditaperfilScreen> {
                                 SizedBox(height: 12.v),
                                 Padding(
                                     padding: EdgeInsets.only(left: 21.h),
-                                    child: Text("E-mail",
+                                    child: Text("Anterior E-mail",
+                                        style: CustomTextStyles
+                                            .titleSmallSemiBold)),
+                                SizedBox(height: 3.v),
+                                _buildOldEmail(context),
+                                SizedBox(height: 12.v),
+                                Padding(
+                                    padding: EdgeInsets.only(left: 21.h),
+                                    child: Text("Nuevo E-mail",
                                         style: CustomTextStyles
                                             .titleSmallSemiBold)),
                                 SizedBox(height: 3.v),
@@ -84,7 +98,15 @@ class _FrmeditaperfilScreenState extends State<FrmeditaperfilScreen> {
                                 SizedBox(height: 11.v),
                                 Padding(
                                     padding: EdgeInsets.only(left: 21.h),
-                                    child: Text("Contraseña",
+                                    child: Text("Contraseña anterior",
+                                        style: CustomTextStyles
+                                            .titleSmallSemiBold)),
+                                SizedBox(height: 6.v),
+                                _buildOldPassword(context),
+                                SizedBox(height: 11.v),
+                                Padding(
+                                    padding: EdgeInsets.only(left: 21.h),
+                                    child: Text("Nueva contraseña",
                                         style: CustomTextStyles
                                             .titleSmallSemiBold)),
                                 SizedBox(height: 6.v),
@@ -249,6 +271,10 @@ class _FrmeditaperfilScreenState extends State<FrmeditaperfilScreen> {
           alignment: Alignment.center,
           autofocus: false,
           validator: (value) {
+            if (nuevoemailController.text.isNotEmpty ||
+                passwordController.text.isNotEmpty) {
+              return null;
+            }
             if (value == null || value.isEmpty) {
               return 'Por favor ingrese su nombre';
             }
@@ -259,58 +285,120 @@ class _FrmeditaperfilScreenState extends State<FrmeditaperfilScreen> {
 
   Widget _buildUsername(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 21.h),
-        child: CustomTextFormField(
-            controller: usernameController,
-            hintText: "Apellido",
-            alignment: Alignment.center,
-            autofocus: false,
-            validator: (value) {
-              if (value == null || value.isEmpty) {
-                return 'Por favor ingrese su apellido';
-              }
+      padding: EdgeInsets.symmetric(horizontal: 21.h),
+      child: CustomTextFormField(
+          controller: usernameController,
+          hintText: "Apellido",
+          alignment: Alignment.center,
+          autofocus: false,
+          validator: (value) {
+            if (nuevoemailController.text.isNotEmpty ||
+                passwordController.text.isNotEmpty) {
               return null;
-            }));
+            }
+            if (value == null || value.isEmpty) {
+              return 'Por favor ingrese su apellido';
+            }
+            return null;
+          }),
+    );
+  }
+
+  Widget _buildOldEmail(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 21.h),
+      child: CustomTextFormField(
+          controller: emailController,
+          hintText: "Correo anterior registrado",
+          textInputType: TextInputType.emailAddress,
+          alignment: Alignment.center,
+          autofocus: false,
+          validator: (value) {
+            if (nuevoemailController.text.isNotEmpty ||
+                passwordController.text.isNotEmpty) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor ingrese su anterior correo electrónico';
+              }
+            }
+            if (value!.isNotEmpty &&
+                (nuevoemailController.text.isEmpty ||
+                    passwordController.text.isEmpty)) {
+              return 'Debe de llenar todos los campos';
+            }
+            return null;
+          }),
+    );
   }
 
   Widget _buildEmail(BuildContext context) {
     return Padding(
-        padding: EdgeInsets.symmetric(horizontal: 21.h),
-        child: CustomTextFormField(
-          controller: emailController,
+      padding: EdgeInsets.symmetric(horizontal: 21.h),
+      child: CustomTextFormField(
+          controller: nuevoemailController,
           hintText: "correo_ejemplo@gmail.com",
           textInputType: TextInputType.emailAddress,
           alignment: Alignment.center,
           autofocus: false,
           validator: (value) {
-            if (value == null || value.isEmpty) {
-              return 'Por favor ingrese su correo electrónico';
+            return null;
+          }),
+    );
+  }
+
+  Widget _buildOldPassword(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: 21.h),
+      child: CustomTextFormField(
+          autofocus: false,
+          controller: oldpasswordController,
+          hintText: "Contraseña anterior",
+          textInputAction: TextInputAction.done,
+          alignment: Alignment.centerLeft,
+          suffix: IconButton(
+            icon: Icon(
+              _obscureText ? Icons.visibility : Icons.visibility_off,
+            ),
+            onPressed: _toggleObscureText,
+          ),
+          obscureText: _obscureText,
+          contentPadding: EdgeInsets.only(top: 11.v, bottom: 11.v),
+          validator: (value) {
+            if (nuevoemailController.text.isNotEmpty ||
+                passwordController.text.isNotEmpty) {
+              if (value == null || value.isEmpty) {
+                return 'Por favor ingrese su contraseña anterior';
+              }
+            }
+            if (value!.isNotEmpty &&
+                (nuevoemailController.text.isEmpty ||
+                    passwordController.text.isEmpty)) {
+              return 'Debe de llenar todos los campos';
             }
             return null;
-          },
-        ));
+          }),
+    );
   }
 
   Widget _buildPassword(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(horizontal: 21.h),
       child: CustomTextFormField(
-        autofocus: false,
-        controller: passwordController,
-        hintText: "Contraseña de la cuenta",
-        textInputAction: TextInputAction.done,
-        alignment: Alignment.centerLeft,
-        suffix: IconButton(
-          icon: Icon(
-            _obscureText ? Icons.visibility : Icons.visibility_off,
+          autofocus: false,
+          controller: passwordController,
+          hintText: "Contraseña de la cuenta",
+          textInputAction: TextInputAction.done,
+          alignment: Alignment.centerLeft,
+          suffix: IconButton(
+            icon: Icon(
+              _obscureText ? Icons.visibility : Icons.visibility_off,
+            ),
+            onPressed: _toggleObscureText,
           ),
-          onPressed: _toggleObscureText,
-        ),
-        obscureText: _obscureText,
-        contentPadding: EdgeInsets.only(top: 11.v, bottom: 11.v),
-        validator: (value) =>
-            value!.isEmpty ? 'Por favor ingrese su contraseña' : null,
-      ),
+          obscureText: _obscureText,
+          contentPadding: EdgeInsets.only(top: 11.v, bottom: 11.v),
+          validator: (value) {
+            return null;
+          }),
     );
   }
 
@@ -326,17 +414,71 @@ class _FrmeditaperfilScreenState extends State<FrmeditaperfilScreen> {
         if (_formKey.currentState!.validate()) {
           try {
             User? user = FirebaseAuth.instance.currentUser;
-            await user?.updateEmail(emailController.text);
-            await user?.updatePassword(passwordController.text);
 
-            await FirebaseFirestore.instance
-                .collection('usuarios')
-                .doc(user?.uid)
-                .set({
-              'name': fullNameController.text,
-              'lastname': usernameController.text,
-              'emal': emailController.text,
-            }, SetOptions(merge: true));
+            // Actualizar nombre y apellido sin confirmación
+            if (fullNameController.text.isNotEmpty || usernameController.text.isNotEmpty) {
+              await FirebaseFirestore.instance
+                  .collection('usuarios')
+                  .doc(user?.uid)
+                  .set({
+                'name': fullNameController.text,
+                'lastname': usernameController.text,
+              }, SetOptions(merge: true));
+            }
+
+            // Si el usuario quiere cambiar el correo electrónico o la contraseña
+            if (nuevoemailController.text.isNotEmpty ||
+                passwordController.text.isNotEmpty) {
+              // Confirmar correo electrónico y contraseña actuales
+              AuthCredential credential = EmailAuthProvider.credential(
+                  email: emailController.text,
+                  password: oldpasswordController.text);
+
+              try {
+                // Intentar autenticar al usuario
+                await FirebaseAuth.instance.signInWithEmailAndPassword(
+                  email: emailController.text,
+                  password: oldpasswordController.text,
+                );
+              } on FirebaseAuthException catch (e) {
+                if (e.code == 'user-not-found') {
+                  // Si el usuario no se encuentra, mostrar un mensaje de error
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('No se encontró un usuario con este correo electrónico: ${e.message}')),
+                  );
+                } else if (e.code == 'wrong-password') {
+                  // Si la contraseña es incorrecta, mostrar un mensaje de error
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('La contraseña proporcionada es incorrecta: ${e.message}')),
+                  );
+                } else {
+                  // Si ocurre otro error, mostrar un mensaje de error
+                  ScaffoldMessenger.of(context).showSnackBar(
+                    SnackBar(content: Text('Error al autenticar: ${e.message}')),
+                  );
+                }
+                return;
+              }
+
+              try {
+                // Si la reautenticación es exitosa, actualizar correo electrónico y contraseña
+                await user?.updateEmail(nuevoemailController.text);
+                await user?.updatePassword(passwordController.text);
+
+                await FirebaseFirestore.instance
+                    .collection('usuarios')
+                    .doc(user?.uid)
+                    .set({
+                  'emal': nuevoemailController.text,
+                }, SetOptions(merge: true));
+              } catch (e) {
+                // Si la actualización falla, mostrar un mensaje de error
+                ScaffoldMessenger.of(context).showSnackBar(
+                  SnackBar(content: Text('Error al actualizar la información: $e')),
+                );
+                return;
+              }
+            }
 
             ScaffoldMessenger.of(context).showSnackBar(
               const SnackBar(
@@ -344,7 +486,9 @@ class _FrmeditaperfilScreenState extends State<FrmeditaperfilScreen> {
             );
           } catch (e) {
             ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text('Error al actualizar la información: $e')),
+              const SnackBar(
+                  content: Text(
+                      'Error al actualizar la información: Usuario o contraseña incorrectos.')),
             );
           }
         } else {

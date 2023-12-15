@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:rxdart/rxdart.dart';
 import 'package:turisteando_ando/screens/pantallas/loginSystem/frmcorreo_screen/frmcorreo_screen.dart';
 import 'package:turisteando_ando/screens/pantallas/loginSystem/frmwelcome_screen/frmwelcome_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_container_screen/frminicio_container_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
 
 class Wrapper extends StatefulWidget {
   const Wrapper({Key? key}) : super(key: key);
@@ -36,6 +38,6 @@ class _WrapperState extends State<Wrapper> {
     if (user == null)
       return FrmwelcomeScreen();
     else
-      return FrmcorreoScreen();
+      return FrminicioContainerScreen();
   }
 }

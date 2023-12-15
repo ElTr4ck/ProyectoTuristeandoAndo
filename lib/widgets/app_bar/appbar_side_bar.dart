@@ -45,17 +45,18 @@ class _SideBarState extends State<SideBar> {
               color: Color(0xFF114C5F),
             ),
             padding: const EdgeInsets.all(30),
+            alignment: Alignment.center,
             child: Column(
               children: [
                 Text(
-                  name + lastname, //Modificar el nombre de acuerdo a la BD
-                  style: TextStyle(
+                  "$name $lastname", //Modificar el nombre de acuerdo a la BD
+                  style: const TextStyle(
                       fontWeight: FontWeight.bold,
                       fontSize: 16,
                       fontFamily: 'Nunito',
                       color: Colors.white),
                 ),
-                Text(
+                const Text(
                   'Turisteando Ando',
                   style: TextStyle(
                       fontWeight: FontWeight.bold,
@@ -65,14 +66,13 @@ class _SideBarState extends State<SideBar> {
                 ),
               ],
             ),
-            alignment: Alignment.center,
           ),
           ListTile(
-            leading: Icon(
+            leading: const Icon(
               Icons.save,
-              color: const Color.fromARGB(255, 128, 128, 128),
+              color: Color.fromARGB(255, 128, 128, 128),
             ),
-            title: Text(
+            title: const Text(
               'Por visitar',
               style: TextStyle(
                 color: Colors.black,
@@ -84,11 +84,11 @@ class _SideBarState extends State<SideBar> {
             },
           ),
           ListTile(
-            leading: Icon(
+            leading: const Icon(
               Icons.update,
-              color: const Color.fromARGB(255, 128, 128, 128),
+              color: Color.fromARGB(255, 128, 128, 128),
             ),
-            title: Text(
+            title: const Text(
               'Reciente',
               style: TextStyle(
                 fontFamily: 'Nunito',
@@ -101,7 +101,7 @@ class _SideBarState extends State<SideBar> {
               Icons.rate_review,
               color:  Color.fromARGB(255, 128, 128, 128),
             ),
-            title: Text(
+            title: const Text(
               'Tus reseñas',
               style: TextStyle(
                 fontFamily: 'Nunito',
@@ -112,11 +112,11 @@ class _SideBarState extends State<SideBar> {
             },
           ),
           ListTile(
-            leading: Icon(
+            leading: const Icon(
               Icons.share,
-              color: const Color.fromARGB(255, 128, 128, 128),
+              color:Color.fromARGB(255, 128, 128, 128),
             ),
-            title: Text(
+            title: const Text(
               'Compartir',
               style: TextStyle(
                 fontFamily: 'Nunito',
@@ -125,11 +125,11 @@ class _SideBarState extends State<SideBar> {
             onTap: () => null,
           ),
           ListTile(
-            leading: Icon(
+            leading: const Icon(
               Icons.place,
-              color: const Color.fromARGB(255, 128, 128, 128),
+              color: Color.fromARGB(255, 128, 128, 128),
             ),
-            title: Text(
+            title: const Text(
               'Rutas',
               style: TextStyle(
                 fontFamily: 'Nunito',
@@ -155,11 +155,11 @@ class _SideBarState extends State<SideBar> {
             },
           ),
           ListTile(
-            leading: Icon(
+            leading: const Icon(
               Icons.question_answer_rounded,
-              color: const Color.fromARGB(255, 128, 128, 128),
+              color: Color.fromARGB(255, 128, 128, 128),
             ),
-            title: Text(
+            title: const Text(
               'FAQs',
               style: TextStyle(
                 fontFamily: 'Nunito',
@@ -170,11 +170,26 @@ class _SideBarState extends State<SideBar> {
             },
           ),
           ListTile(
-            leading: Icon(
-              Icons.language,
-              color: const Color.fromARGB(255, 128, 128, 128),
+            leading: const Icon(
+              Icons.favorite,
+              color:  Color.fromARGB(255, 128, 128, 128),
             ),
-            title: Text(
+            title: const Text(
+              'Preferencias',
+              style: TextStyle(
+                fontFamily: 'Nunito',
+              ),
+            ),
+            onTap: () {
+              Navigator.pushNamed(context, AppRoutes.frmCuestionario);
+            },
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.language,
+              color: Color.fromARGB(255, 128, 128, 128),
+            ),
+            title: const Text(
               'Idioma',
               style: TextStyle(
                 fontFamily: 'Nunito',
@@ -183,11 +198,11 @@ class _SideBarState extends State<SideBar> {
             onTap: () => null,
           ),
           ListTile(
-            leading: Icon(
+            leading: const Icon(
               Icons.contact_support,
-              color: const Color.fromARGB(255, 128, 128, 128),
+              color:Color.fromARGB(255, 128, 128, 128),
             ),
-            title: Text(
+            title:const Text(
               'Obtener ayuda',
               style: TextStyle(
                 fontFamily: 'Nunito',
@@ -196,11 +211,11 @@ class _SideBarState extends State<SideBar> {
             onTap: () => null,
           ),
           ListTile(
-            leading: Icon(
+            leading: const Icon(
               Icons.exit_to_app,
               color: const Color.fromARGB(255, 128, 128, 128),
             ),
-            title: Text(
+            title: const Text(
               'Cerrar sesión',
               style: TextStyle(
                 fontFamily: 'Nunito',
