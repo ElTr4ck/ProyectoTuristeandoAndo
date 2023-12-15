@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/pantallas/rutas.dart';
 import 'package:turisteando_ando/screens/FAQs/frmfaqs_screen.dart';
+import 'package:turisteando_ando/screens/frmCuestionario.dart';
 import 'package:turisteando_ando/screens/frm_ruta_propia.dart';
 import 'package:turisteando_ando/screens/perfilUsuario/frmeditaperfil_screen/frmeditaperfil_screen.dart';
 import 'package:turisteando_ando/screens/perfilUsuario/frmperfil_screen/frmperfil_screen.dart';
@@ -63,6 +64,8 @@ class FrminicioContainerScreen extends StatelessWidget {
     switch (currentRoute) {
       case AppRoutes.frminicioPage:
         return FrminicioPage();
+      case AppRoutes.frminicioContainerScreen:
+        return FrminicioPage();
       case AppRoutes.frmmarcadoresScreen:
         return FrmmarcadoresScreen();
       case AppRoutes.frminfolugarScreen:
@@ -83,6 +86,8 @@ class FrminicioContainerScreen extends StatelessWidget {
         return FrmfaqsScreen();
       case AppRoutes.frmtusreseAsScreen:
         return FrmtusreseAsScreen();
+      case AppRoutes.frmCuestionario:
+        return FrmCuestionario();
       default:
         return DefaultWidget();
     }

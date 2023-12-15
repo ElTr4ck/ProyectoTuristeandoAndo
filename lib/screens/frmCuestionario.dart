@@ -21,22 +21,53 @@ class ElementList extends StatefulWidget {
 class _ElementListState extends State<ElementList> {
   List<ElementItem> elements = [
     ElementItem(
-        "Museos", "Obras contemporáneas y nacionales.", Icons.account_balance),
-    ElementItem("Cines", "El séptimo arte, más explicación no hay.",
-        Icons.local_movies),
+      icon: Icons.account_balance,
+      name: "Museos",
+      subtitle: "Obras contemporáneas y nacionales.",
+      isLiked: ValueNotifier<bool>(false),
+    ),
     ElementItem(
-        "Parques", "Una caminata tranquila, ¿por qué no?.", Icons.park_rounded),
-    ElementItem("Galerías de arte", "Siempre se puede descubrir algo nuevo.",
-        FontAwesomeIcons.palette),
-    ElementItem("Acuarios", "Bellos animales acuáticos, no te lo puedes perder!",
-        Icons.set_meal),
-    ElementItem("Zoológicos", "Disfruta de la naturaleza como nunca antes!",
-        Icons.cruelty_free),
-    ElementItem("Hoteles", "Los mejores hospedajes y buffetes.",
-        FontAwesomeIcons.hotel),
-    ElementItem("Alimentos", "Recuerda que panza llena, corazón contento.",
-        Icons.fastfood),
-
+      icon: Icons.local_movies,
+      name: "Cines",
+      subtitle: "El séptimo arte, más explicación no hay.",
+      isLiked: ValueNotifier<bool>(false),
+    ),
+    ElementItem(
+      icon: Icons.park_rounded,
+      name: "Parques",
+      subtitle: "Una caminata tranquila, ¿por qué no?.",
+      isLiked: ValueNotifier<bool>(false),
+    ),
+    ElementItem(
+      icon: FontAwesomeIcons.palette,
+      name: "Galerías de arte",
+      subtitle: "Siempre se puede descubrir algo nuevo.",
+      isLiked: ValueNotifier<bool>(false),
+    ),
+    ElementItem(
+      icon: Icons.set_meal,
+      name: "Acuarios",
+      subtitle: "Bellos animales acuáticos, no te lo puedes perder!",
+      isLiked: ValueNotifier<bool>(false),
+    ),
+    ElementItem(
+      icon: Icons.cruelty_free,
+      name: "Zoológicos",
+      subtitle: "Disfruta de la naturaleza como nunca antes!",
+      isLiked: ValueNotifier<bool>(false),
+    ),
+    ElementItem(
+      icon: FontAwesomeIcons.hotel,
+      name: "Hoteles",
+      subtitle: "Los mejores hospedajes y buffetes.",
+      isLiked: ValueNotifier<bool>(false),
+    ),
+    ElementItem(
+      icon: Icons.fastfood,
+      name: "Alimentos",
+      subtitle: "Recuerda que panza llena, corazón contento.",
+      isLiked: ValueNotifier<bool>(false),
+    ),
   ];
 
   @override
@@ -117,7 +148,8 @@ class _ElementListState extends State<ElementList> {
                   ),
                 ), //Style
                 onPressed: () {
-                  // Lógica para el botón "Finalizar"
+                  Navigator.pushReplacementNamed(
+                      context, AppRoutes.frminicioContainerScreen);
                 },
                 child: const Text(
                   'Recordar más tarde',
@@ -140,19 +172,64 @@ class ElementItem extends StatefulWidget {
   final String name;
   final String subtitle;
   final IconData icon;
-  bool isLiked = false;
+  final ValueNotifier<bool> isLiked;
 
-  ElementItem(this.name, this.subtitle, this.icon);
+  ElementItem({
+    required this.icon,
+    required this.name,
+    required this.subtitle,
+    required this.isLiked,
+  });
 
   @override
   _ElementItemState createState() => _ElementItemState();
 }
 
 class _ElementItemState extends State<ElementItem> {
+  final _auth = FirebaseAuth.instance;
+  final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+
   @override
+  void initState() {
+    super.initState();
+    _loadPreferences();
+  }
+
+  void _loadPreferences() async {
+    var nombre;
+    if (widget.name == "Museos") {
+      nombre = "museum";
+    } else if (widget.name == "Cines") {
+      nombre = "movie_theater";
+    } else if (widget.name == "Parques") {
+      nombre = "park";
+    } else if (widget.name == "Galerías de arte") {
+      nombre = "art_gallery";
+    } else if (widget.name == "Acuarios") {
+      nombre = "aquarium";
+    } else if (widget.name == "Zoológicos") {
+      nombre = "zoo";
+    } else if (widget.name == "Hoteles") {
+      nombre = "hotel";
+    } else if (widget.name == "Alimentos") {
+      nombre = "restaurant";
+    }
+
+    DocumentReference docRef = _firestore
+        .collection('usuarios')
+        .doc(_auth.currentUser!.uid)
+        .collection('preferencias')
+        .doc(nombre);
+
+    var docSnapshot = await docRef.get();
+
+    setState(() {
+      widget.isLiked.value = docSnapshot.exists;
+    });
+  }
+
   Widget build(BuildContext context) {
-    final _auth = FirebaseAuth.instance;
-    final FirebaseFirestore _firestore = FirebaseFirestore.instance;
+    
 
     return Container(
       margin: EdgeInsets.symmetric(horizontal: 16, vertical: 4),
@@ -165,7 +242,7 @@ class _ElementItemState extends State<ElementItem> {
         contentPadding: EdgeInsets.all(2),
         title: Text(
           widget.name,
-          style: TextStyle(
+          style: const TextStyle(
             fontFamily: 'Nunito',
             fontSize: 18,
             fontWeight: FontWeight.bold,
@@ -173,9 +250,10 @@ class _ElementItemState extends State<ElementItem> {
         ),
         subtitle: Text(
           widget.subtitle,
-          style: TextStyle(
+          style: const TextStyle(
             fontFamily: 'Nunito',
             fontSize: 16,
+            color: Colors.black,
           ),
         ),
         leading: Icon(widget.icon),
@@ -183,9 +261,14 @@ class _ElementItemState extends State<ElementItem> {
           mainAxisSize: MainAxisSize.min,
           children: <Widget>[
             GestureDetector(
-              child: Icon(
-                Icons.favorite,
-                color: widget.isLiked ? Colors.red : Colors.grey,
+              child: ValueListenableBuilder<bool>(
+                valueListenable: widget.isLiked,
+                builder: (context, value, child) {
+                  return Icon(
+                    Icons.favorite,
+                    color: value ? Colors.red : Colors.grey,
+                  );
+                },
               ),
               onTap: () async {
                 var nombre;
@@ -223,7 +306,7 @@ class _ElementItemState extends State<ElementItem> {
                   await docRef.set({'nombre': nombre});
                 }
                 setState(() {
-                  widget.isLiked = !widget.isLiked;
+                  widget.isLiked.value = !widget.isLiked.value;
                 });
               },
             ),
