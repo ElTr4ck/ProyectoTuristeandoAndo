@@ -15,26 +15,28 @@ class _MyFrmfaqsScreenState extends State<FrmfaqsScreen> {
   @override
   void initState() {
     super.initState();
-    fetchData();
+    fetchData(); //obtengo las faq de la bd
   }
 
 //QUESTIONS AND ANSWERS CREATED BY DOCUMENTATION TEAM
   List<List<String>> dropdownItemList = [];
-  List<bool> _isExpandedList = [];
+  List<bool> _isExpandedList = []; //variable para lista expandida
   fetchData() async {
     List<Map<String, dynamic>> datos = await StoreMethods().getFAQS();
     List<List<String>> aux = [];
 
     for (int i = 0; i < datos.length; i++) {
       List<String> faq = [];
-      faq.add(datos[i]["pregunta"]);
+      faq.add(
+          datos[i]["pregunta"]); //guardo la pregunta y repuesta en una lista
       faq.add(datos[i]["respuesta"]);
-      _isExpandedList.add(false);
-      aux.add(faq);
+      _isExpandedList
+          .add(false); //variable para saber si se meustra la lista expandida
+      aux.add(faq); //guardo la lista faq en otra lista
     }
 
     setState(() {
-      dropdownItemList.addAll(aux);
+      dropdownItemList.addAll(aux); //actualizo la listas de preguntas
       print(dropdownItemList);
     });
   }
@@ -144,9 +146,9 @@ class _MyFrmfaqsScreenState extends State<FrmfaqsScreen> {
               return Padding(
                   padding: EdgeInsets.symmetric(vertical: 10.v),
                   child: _buildQuestionTile(
-                    index,
-                    dropdownItemList[index][0],
-                    dropdownItemList[index][1],
+                    index, //index, lo utilizo para saber si se muestra la lista expandida
+                    dropdownItemList[index][0], //pregunta
+                    dropdownItemList[index][1], //respuesta
                   ));
             }),
           ),

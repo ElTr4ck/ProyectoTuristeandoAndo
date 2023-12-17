@@ -179,11 +179,8 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
             padding: EdgeInsets.only(top: 7.v, bottom: 16.v),
             child: GestureDetector(
                 onTap: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (BuildContext context) {
-                    //String aux = '${prediction.lat}, ${prediction.lng}';
-                    return FrminicioPage();
-                  }));
+                  Navigator.pop(
+                      context); //pop para no volver a cargar la pantalla
                 },
                 child: Icon(
                   Icons.arrow_back_outlined,
@@ -455,7 +452,10 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (BuildContext context) {
                         //String aux = '${prediction.lat}, ${prediction.lng}';
-                        return FrmreseATabContainerScreen2(id: widget.id);
+                        return FrmreseATabContainerScreen2(
+                          id: widget.id,
+                          index: 0,
+                        );
                       }));
                     },
                     alignment: Alignment.bottomRight),

@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:turisteando_ando/models/users/user.dart' as model;
 import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
 
 import '../resenas/widgets/srcoll_item_widget.dart';
 import 'package:flutter/material.dart';
@@ -48,8 +49,10 @@ class CustomCircularProgressIndicator extends StatelessWidget {
 }
 
 class _FrmtusreseAsScreenState extends State<FrmtusreseAsScreen> {
-  List<Map<String, dynamic>> listaDatos = [];
-  List<Map<String, dynamic>> places = [];
+  List<Map<String, dynamic>> listaDatos =
+      []; //guarda las reviews que ha hecho el usuario
+  List<Map<String, dynamic>> places =
+      []; //guarda la informacion del lugar de cada review
   model.User? user;
   @override
   void initState() {
@@ -59,7 +62,16 @@ class _FrmtusreseAsScreenState extends State<FrmtusreseAsScreen> {
     fetchUser();
   }
 
+  void update(index) {
+    //borrar un widget sin reiniciar la pantalla
+    setState(() {
+      listaDatos.removeAt(index);
+      places.removeAt(index);
+    });
+  }
+
   Future<void> fetchUser() async {
+    //obtengo los datos del usuario
     try {
       model.User data = await AuthMethods().getUserDetails();
       print('user: $user');
@@ -73,6 +85,7 @@ class _FrmtusreseAsScreenState extends State<FrmtusreseAsScreen> {
   }
 
   Future<List<Map<String, dynamic>>> fetchReviews() async {
+    //obtengo todas sus reviews
     try {
       listaDatos.clear();
 
@@ -88,6 +101,8 @@ class _FrmtusreseAsScreenState extends State<FrmtusreseAsScreen> {
       for (QueryDocumentSnapshot<Map<String, dynamic>> reviewDocumento
           in reviewsDocumentos) {
         Map<String, dynamic> review = reviewDocumento.data();
+        review['id'] =
+            reviewDocumento.id; //necesito saber su id para eliminar la review
         listaDatos.add(review);
       }
       print(listaDatos);
@@ -100,6 +115,7 @@ class _FrmtusreseAsScreenState extends State<FrmtusreseAsScreen> {
   }
 
   Future<Map<String, dynamic>> fetchPlaceDetailsFromApi(String placeId) async {
+    //obtengo los datos del lugar de la review
     var url = Uri.parse(
         'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM');
     var response = await http.get(url);
@@ -134,7 +150,8 @@ class _FrmtusreseAsScreenState extends State<FrmtusreseAsScreen> {
   fetchPlace() async {
     List<Map<String, dynamic>> aux = [];
     for (Map<String, dynamic> dato in listaDatos) {
-      aux.add(await fetchPlaceDetailsFromApi(dato['idplace']));
+      aux.add(await fetchPlaceDetailsFromApi(
+          dato['idplace'])); //obtengo los datos del lugar
     }
     setState(() {
       places.addAll(aux);
@@ -182,7 +199,7 @@ class _FrmtusreseAsScreenState extends State<FrmtusreseAsScreen> {
   }
 
   /// Section Widget
-  PreferredSizeWidget _buildAppBar(BuildContext context) {
+  /*PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       height: 70.v,
       leadingWidth: 23.h,
@@ -200,6 +217,28 @@ class _FrmtusreseAsScreenState extends State<FrmtusreseAsScreen> {
         text: "Tus reseñas",
       ),
     );
+  }*/
+  PreferredSizeWidget _buildAppBar(BuildContext context) {
+    return CustomAppBar(
+        height: 60.v,
+        leadingWidth: 24.h,
+        leading: Padding(
+            padding: EdgeInsets.only(top: 7.v, bottom: 16.v),
+            child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(context);
+                },
+                child: Icon(
+                  Icons.arrow_back_outlined,
+                  size: 30.h,
+                  color: Colors.grey,
+                ))),
+        centerTitle: true,
+        title: Text(
+          "Información del lugar",
+          textAlign: TextAlign.center,
+          style: TextStyle(fontFamily: 'Nunito'),
+        ));
   }
 
   /// Section Widget
@@ -222,7 +261,12 @@ class _FrmtusreseAsScreenState extends State<FrmtusreseAsScreen> {
           //number controller
           itemBuilder: (context, index) {
             return SrcollItemWidget(
-                place: places[index], user: user, review: listaDatos[index]);
+                //genero todos los widgets
+                place: places[index], //informacion del lugar
+                user: user, //informacion del usuario
+                review: listaDatos[index], //informacion de la review
+                update: update, //fucion para actualizar la lista
+                index: index); //index para eleminar el item
           },
         ),
       ),

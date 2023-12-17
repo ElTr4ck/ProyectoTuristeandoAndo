@@ -115,20 +115,34 @@ class StoreMethods {
   }
 
   Future<List<Map<String, dynamic>>> getFAQS() async {
-    List<Map<String, dynamic>> listaDatos = [];
-    //try {
-    QuerySnapshot<Map<String, dynamic>> preguntasCollection =
-        await _firestore.collection('preguntasFrecuentes').get();
-    List<QueryDocumentSnapshot<Map<String, dynamic>>> preguntas =
-        preguntasCollection.docs;
-    for (QueryDocumentSnapshot<Map<String, dynamic>> preguntaDocumento
-        in preguntas) {
-      listaDatos.add(preguntaDocumento.data());
+    try {
+      List<Map<String, dynamic>> listaDatos = [];
+      QuerySnapshot<Map<String, dynamic>> preguntasCollection =
+          await _firestore.collection('preguntasFrecuentes').get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> preguntas =
+          preguntasCollection.docs;
+      for (QueryDocumentSnapshot<Map<String, dynamic>> preguntaDocumento
+          in preguntas) {
+        listaDatos.add(preguntaDocumento.data());
+      }
+      return listaDatos;
+    } catch (e) {
+      print('Error al obtener faqs: $e');
+      rethrow;
     }
-    return listaDatos;
-    //} catch (e) {
-    //print('Error al obtener faqs: $e');
-    //return [];
-    //}
+  }
+
+  Future<void> deleteReview(String id) async {
+    try {
+      _firestore
+          .collection('usuarios')
+          .doc(_auth.currentUser!.uid)
+          .collection('reviews')
+          .doc(id)
+          .delete();
+    } catch (e) {
+      print('Error al obtener faqs: $e');
+      rethrow;
+    }
   }
 }

@@ -5,7 +5,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmnewrese_a_screen/frmnewrese_a_screen.dart';
 
-
 class FrmreseAPage extends StatefulWidget {
   final String id;
 
@@ -15,7 +14,8 @@ class FrmreseAPage extends StatefulWidget {
   FrmreseAPageState createState() => FrmreseAPageState();
 }
 
-class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClientMixin<FrmreseAPage> {
+class FrmreseAPageState extends State<FrmreseAPage>
+    with AutomaticKeepAliveClientMixin<FrmreseAPage> {
   List<Map<String, dynamic>> listaDatos = [];
   late String usuario;
   void onTapTxtAceptar(BuildContext context) {
@@ -27,28 +27,35 @@ class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClien
       listaDatos.clear();
       // Tu lógica para obtener datos asíncronamente
       QuerySnapshot<Map<String, dynamic>> usuariosSnapshot =
-      await FirebaseFirestore.instance.collection('usuarios').get();
+          await FirebaseFirestore.instance.collection('usuarios').get();
 
-      List<QueryDocumentSnapshot<Map<String, dynamic>>> usuariosDocumentos = usuariosSnapshot.docs;
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> usuariosDocumentos =
+          usuariosSnapshot.docs;
 
-      for (QueryDocumentSnapshot<Map<String, dynamic>> usuarioDocumento in usuariosDocumentos) {
+      for (QueryDocumentSnapshot<Map<String, dynamic>> usuarioDocumento
+          in usuariosDocumentos) {
         Map<String, dynamic> usuarioDatos = usuarioDocumento.data();
         String uid = usuarioDatos['uid'];
 
-        Query<Map<String, dynamic>> preferenciasQuery = FirebaseFirestore.instance
+        Query<Map<String, dynamic>> preferenciasQuery = FirebaseFirestore
+            .instance
             .collection('usuarios')
             .doc(uid)
             .collection('reviews')
             .where('idplace', isEqualTo: widget.id);
 
-        QuerySnapshot<Map<String, dynamic>> preferenciasSnapshot = await preferenciasQuery.get();
-        List<QueryDocumentSnapshot<Map<String, dynamic>>> documentosReviews = preferenciasSnapshot.docs;
+        QuerySnapshot<Map<String, dynamic>> preferenciasSnapshot =
+            await preferenciasQuery.get();
+        List<QueryDocumentSnapshot<Map<String, dynamic>>> documentosReviews =
+            preferenciasSnapshot.docs;
 
         if (documentosReviews.isNotEmpty) {
           // Crea un mapa que contendrá la información del usuario junto con sus revisiones
           Map<String, dynamic> usuarioConRevisiones = {
             'usuarioDatos': usuarioDatos,
-            'revisiones': documentosReviews.map((documentoReview) => documentoReview.data()).toList(),
+            'revisiones': documentosReviews
+                .map((documentoReview) => documentoReview.data())
+                .toList(),
           };
 
           // Agrega el mapa a la listaDatos
@@ -64,7 +71,6 @@ class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClien
       print('Error al obtener preferencias: $e');
       return [];
     }
-
   }
 
   @override
@@ -77,9 +83,10 @@ class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClien
           return CustomCircularProgressIndicator(size: 1.0);
         } else if (snapshot.hasError) {
           return Text('Error: ${snapshot.error}');
-        }else if (!snapshot.hasData || snapshot.data!.isEmpty) {
+        } else if (!snapshot.hasData || snapshot.data!.isEmpty) {
           return Padding(
-            padding: EdgeInsets.only(top: 5.0), // Ajusta el valor según sea necesario
+            padding: EdgeInsets.only(
+                top: 5.0), // Ajusta el valor según sea necesario
             child: Column(
               mainAxisAlignment: MainAxisAlignment.start,
               children: <Widget>[
@@ -126,7 +133,8 @@ class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClien
                               await Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => FrmnewreseAScreen(id: widget.id),
+                                  builder: (context) =>
+                                      FrmnewreseAScreen(id: widget.id),
                                 ),
                               );
 
@@ -152,7 +160,6 @@ class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClien
                               await fetchData(); // Asegúrate de que fetchData sea async
 
                               // Cierra el AlertDialog después de la actualización
-
 
                               // Actualiza la interfaz de usuario
                               setState(() {});
@@ -183,7 +190,8 @@ class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClien
                     Padding(
                       padding: EdgeInsets.only(left: 4.0),
                       child: Align(
-                        alignment: Alignment.center, // Alineación cambiada a centro
+                        alignment:
+                            Alignment.center, // Alineación cambiada a centro
                         child: Container(
                           decoration: AppDecoration.outlineBlack,
                           child: Text(
@@ -213,7 +221,8 @@ class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClien
                               await Navigator.pushReplacement(
                                 context,
                                 MaterialPageRoute(
-                                  builder: (context) => FrmnewreseAScreen(id: widget.id),
+                                  builder: (context) =>
+                                      FrmnewreseAScreen(id: widget.id),
                                 ),
                               );
 
@@ -255,7 +264,6 @@ class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClien
                               style: CustomTextStyles.labelLargeNunitoGray5002,
                             ),
                           ),
-
                         ),
                       ),
                     ),
@@ -263,11 +271,10 @@ class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClien
                       child: ListView.builder(
                         physics: ScrollPhysics(),
                         itemCount: generateResenasWidgets().length,
-                        itemBuilder: (context, index) =>
-                            Padding(
-                              padding: EdgeInsets.symmetric(vertical: 5.v),
-                              child: generateResenasWidgets()[index],
-                            ),
+                        itemBuilder: (context, index) => Padding(
+                          padding: EdgeInsets.symmetric(vertical: 5.v),
+                          child: generateResenasWidgets()[index],
+                        ),
                       ),
                     ),
                   ],
@@ -288,21 +295,23 @@ class FrmreseAPageState extends State<FrmreseAPage> with AutomaticKeepAliveClien
         reviewWidgets.add(
           FrmreseAItemWidget(
             onTapView: (jsonData) => print('Revisada: $jsonData'),
-            userData: userReviewData['usuarioDatos'],  // <-- aquí pasamos los datos del usuario
-            reviewData: review,                        // <-- aquí pasamos la revisión individual
+            userData: userReviewData[
+                'usuarioDatos'], // <-- aquí pasamos los datos del usuario
+            reviewData: review, // <-- aquí pasamos la revisión individual
           ),
         );
       }
     }
     return reviewWidgets;
   }
+
   @override
   bool get wantKeepAlive => true;
 
-  void onTapView(BuildContext context, {required Map<String, dynamic> jsonData}) {
+  void onTapView(BuildContext context,
+      {required Map<String, dynamic> jsonData}) {
     print('Revision presionada: $jsonData');
   }
-
 }
 
 class CustomCircularProgressIndicator extends StatelessWidget {
@@ -312,7 +321,6 @@ class CustomCircularProgressIndicator extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return SingleChildScrollView(
       child: Container(
         padding: EdgeInsets.all(12.h),

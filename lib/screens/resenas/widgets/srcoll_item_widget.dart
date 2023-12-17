@@ -1,15 +1,24 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/models/users/user.dart' as model;
+import 'package:turisteando_ando/repositories/auth/firestore_methods.dart';
 import 'package:turisteando_ando/widgets/custom_rating_bar.dart';
+import 'package:turisteando_ando/widgets/foto.dart';
 
 // ignore: must_be_immutable
 class SrcollItemWidget extends StatelessWidget {
   final Map<String, dynamic> place;
   final model.User? user;
   final Map<String, dynamic> review;
-  const SrcollItemWidget(
-      {required this.place, required this.user, required this.review, Key? key})
+  final ValueChanged<int> update;
+  final int index;
+  SrcollItemWidget(
+      {required this.place, //info del lugar
+      required this.user, //info del usuario
+      required this.review, //info de la review
+      required this.update, //funcion para actualizar widget al borrar elemento
+      required this.index, //index para borrar elemento
+      Key? key})
       : super(
           key: key,
         );
@@ -88,11 +97,20 @@ class SrcollItemWidget extends StatelessWidget {
                     ),
                   ),
                   Spacer(),
-                  CustomImageView(
-                    imagePath: ImageConstant.imgTrashBlack900,
-                    height: 16.v,
-                    width: 16.h,
-                    margin: EdgeInsets.symmetric(vertical: 15.v),
+                  GestureDetector(
+                    //eliminar review
+                    onTap: () {
+                      StoreMethods().deleteReview(review['id']);
+                      print('eliminado');
+                      print(review['id']);
+                      update(index);
+                    },
+                    child: CustomImageView(
+                      imagePath: ImageConstant.imgTrashBlack900,
+                      height: 16.v,
+                      width: 16.h,
+                      margin: EdgeInsets.symmetric(vertical: 15.v),
+                    ),
                   ),
                 ],
               ),
@@ -102,7 +120,7 @@ class SrcollItemWidget extends StatelessWidget {
           Text(
             place['title'], //NAME PLACE
             textAlign: TextAlign.center,
-            style: theme.textTheme.bodyMedium,
+            style: theme.textTheme.titleSmall,
           ),
           SizedBox(height: 1.v),
           SizedBox(
@@ -136,7 +154,7 @@ class SrcollItemWidget extends StatelessWidget {
               ],
             ),
           ),*/
-          review['fotos'].isNotEmpty
+          review['fotos'].isNotEmpty //determinar si hay fotos
               ? Container(
                   height: 100,
                   child: ListView.builder(
@@ -144,24 +162,38 @@ class SrcollItemWidget extends StatelessWidget {
                     itemCount: review['fotos'].length,
                     itemBuilder: (context, index) {
                       return Padding(
-                        padding: const EdgeInsets.all(8.0),
-                        child: Image.network(review['fotos'][index],
-                            loadingBuilder: (BuildContext context, Widget child,
-                                ImageChunkEvent? loadingProgress) {
-                          if (loadingProgress == null) {
-                            return child;
-                          }
-                          return Center(
-                            widthFactor: 2.5.h,
-                            child: CircularProgressIndicator(
-                              value: loadingProgress.expectedTotalBytes != null
-                                  ? loadingProgress.cumulativeBytesLoaded /
-                                      loadingProgress.expectedTotalBytes!
-                                  : null,
-                            ),
-                          );
-                        }),
-                      );
+                          padding: const EdgeInsets.all(8.0),
+                          child: GestureDetector(
+                            //determinar click en una foto
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (BuildContext context) {
+                                //String aux = '${prediction.lat}, ${prediction.lng}';
+                                return Foto(
+                                    url: review['fotos'][
+                                        index]); //mostrar la foto en fullscreen
+                              }));
+                            },
+                            child: Image.network(review['fotos'][index],
+                                loadingBuilder: (BuildContext
+                                        context, //determinar si la foto no ha cargado
+                                    Widget child,
+                                    ImageChunkEvent? loadingProgress) {
+                              if (loadingProgress == null) {
+                                return child;
+                              }
+                              return Center(
+                                widthFactor: 2.5.h,
+                                child: CircularProgressIndicator(
+                                  value: loadingProgress.expectedTotalBytes !=
+                                          null
+                                      ? loadingProgress.cumulativeBytesLoaded /
+                                          loadingProgress.expectedTotalBytes!
+                                      : null,
+                                ),
+                              );
+                            }),
+                          ));
                     },
                   ),
                 )

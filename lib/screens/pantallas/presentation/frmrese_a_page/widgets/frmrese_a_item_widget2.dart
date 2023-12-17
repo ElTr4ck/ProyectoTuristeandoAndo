@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/widgets/custom_rating_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:turisteando_ando/widgets/foto.dart';
 
 // ignore: must_be_immutable
 typedef OnTapView = void Function(Map<String, dynamic> jsonData);
@@ -137,7 +138,7 @@ class FrmreseAItemWidget extends StatelessWidget {
                           Align(
                             alignment: Alignment.center,
                             child: Text(
-                              "!",
+                              "",
                               style:
                                   CustomTextStyles.bodyMediumPollerOnePrimary,
                             ),
@@ -161,7 +162,7 @@ class FrmreseAItemWidget extends StatelessWidget {
                 ),
               ),
             ),
-            review['fotos'].isNotEmpty
+            review['fotos'].isNotEmpty //determinar si hay fotos
                 ? Container(
                     height: 100,
                     child: ListView.builder(
@@ -170,24 +171,39 @@ class FrmreseAItemWidget extends StatelessWidget {
                       itemBuilder: (context, index) {
                         return Padding(
                             padding: const EdgeInsets.all(8.0),
-                            child: Image.network(review['fotos'][index],
-                                loadingBuilder: (BuildContext context,
-                                    Widget child,
-                                    ImageChunkEvent? loadingProgress) {
-                              if (loadingProgress == null) {
-                                return child;
-                              }
-                              return Center(
-                                widthFactor: 2.5.h,
-                                child: CircularProgressIndicator(
-                                  value: loadingProgress.expectedTotalBytes !=
-                                          null
-                                      ? loadingProgress.cumulativeBytesLoaded /
-                                          loadingProgress.expectedTotalBytes!
-                                      : null,
-                                ),
-                              );
-                            }));
+                            child: GestureDetector(
+                                //detectar si se le da click a una foto
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                    //String aux = '${prediction.lat}, ${prediction.lng}';
+                                    return Foto(
+                                        url: review['fotos'][
+                                            index]); //mostrar la foto en fullscreen
+                                  }));
+                                },
+                                child: Image.network(review['fotos'][index],
+                                    loadingBuilder: (BuildContext
+                                            context, //determinar si la imagen ya se ha cargado
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  }
+                                  return Center(
+                                    widthFactor: 2.5.h,
+                                    child: CircularProgressIndicator(
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                    ),
+                                  );
+                                })));
                       },
                     ),
                   )
