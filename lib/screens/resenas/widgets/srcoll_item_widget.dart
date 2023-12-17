@@ -1,16 +1,25 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
+import 'package:turisteando_ando/models/users/user.dart' as model;
+import 'package:turisteando_ando/widgets/custom_rating_bar.dart';
 
 // ignore: must_be_immutable
 class SrcollItemWidget extends StatelessWidget {
-  const SrcollItemWidget({Key? key})
+  final Map<String, dynamic> place;
+  final model.User? user;
+  final Map<String, dynamic> review;
+  const SrcollItemWidget(
+      {required this.place, required this.user, required this.review, Key? key})
       : super(
           key: key,
         );
 
   @override
   Widget build(BuildContext context) {
-    return Container( //DECORATION CONTAINER
+    String formattedDate = "${(review['fecha']).toDate()}";
+    String dateWithoutNanos = formattedDate.split('.')[0];
+    return Container(
+      //DECORATION CONTAINER
       padding: EdgeInsets.all(12.h),
       decoration: AppDecoration.fillGray.copyWith(
         borderRadius: BorderRadiusStyle.roundedBorder33,
@@ -24,14 +33,19 @@ class SrcollItemWidget extends StatelessWidget {
               padding: EdgeInsets.only(right: 17.h),
               child: Row(
                 children: [
-                  CustomImageView(
-                    imagePath: ImageConstant.imgAvatar32x32, //PHOTOS OF THE BD ACORDING TO THE REVIEW´S USER
+                  /*CustomImageView(
+                    imagePath: ImageConstant
+                        .imgAvatar32x32, //PHOTOS OF THE BD ACORDING TO THE REVIEW´S USER
                     height: 32.adaptSize,
                     width: 32.adaptSize,
                     radius: BorderRadius.circular(
                       16.h,
                     ),
                     margin: EdgeInsets.symmetric(vertical: 10.v),
+                  ),*/
+                  CircleAvatar(
+                    radius: 17,
+                    backgroundImage: NetworkImage(user!.photo),
                   ),
                   Padding(
                     padding: EdgeInsets.only(left: 3.h),
@@ -40,7 +54,7 @@ class SrcollItemWidget extends StatelessWidget {
                       children: [
                         Text(
                           //AutofillHints.name,  //NAME USER
-                          "NameUserXx",
+                          user!.name,
                           style: theme.textTheme.titleMedium,
                         ),
                         SizedBox(
@@ -48,14 +62,23 @@ class SrcollItemWidget extends StatelessWidget {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              CustomImageView(
+                              /*CustomImageView(
                                 imagePath: ImageConstant.imgClose,
                                 height: 12.v,
                                 width: 60.h,
                                 margin: EdgeInsets.symmetric(vertical: 1.v),
+                              ),*/
+                              CustomRatingBar(
+                                initialRating:
+                                    review['calificacion'].toDouble(),
+                                itemSize: 13,
+                                color: appTheme.yellow700,
+                              ),
+                              SizedBox(
+                                width: 20.h,
                               ),
                               Text(
-                                "10/25/2023",//DATE
+                                "${dateWithoutNanos}", //DATE
                                 style: theme.textTheme.labelLarge,
                               ),
                             ],
@@ -77,7 +100,7 @@ class SrcollItemWidget extends StatelessWidget {
           ),
           SizedBox(height: 14.v),
           Text(
-            "Museo Jumex", //NAME PLACE
+            place['title'], //NAME PLACE
             textAlign: TextAlign.center,
             style: theme.textTheme.bodyMedium,
           ),
@@ -85,7 +108,7 @@ class SrcollItemWidget extends StatelessWidget {
           SizedBox(
             width: 293.h,
             child: Text(
-              "Éste lugar es una porquería. El personal es tan inútil que me pregunto cómo consiguen trabajar aquí. No pierdan su tiempo ni su dinero",
+              review['comentario'],
               maxLines: null,
               //check this section because don´t show the complete review
               overflow: TextOverflow.ellipsis,
@@ -93,14 +116,14 @@ class SrcollItemWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: 14.v),
-          Padding(
+          /*Padding(
             padding: EdgeInsets.only(right: 3.h),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Expanded(
                   child: CustomImageView(
-                    imagePath: ImageConstant.imgRectangle993,//img BD
+                    imagePath: ImageConstant.imgRectangle993, //img BD
                     height: 100.v,
                     width: 100.h,
                     radius: BorderRadius.circular(
@@ -109,31 +132,40 @@ class SrcollItemWidget extends StatelessWidget {
                     margin: EdgeInsets.only(right: 5.h),
                   ),
                 ),
-                Expanded(
-                  child: CustomImageView(
-                    imagePath: ImageConstant.imgRectangle996, //img BD
-                    height: 100.v,
-                    width: 100.h,
-                    radius: BorderRadius.circular(
-                      24.h,
-                    ),
-                    margin: EdgeInsets.symmetric(horizontal: 5.h),
-                  ),
-                ),
-                Expanded(
-                  child: CustomImageView(
-                    imagePath: ImageConstant.imgRectangle995, //img BD
-                    height: 100.v,
-                    width: 100.h,
-                    radius: BorderRadius.circular(
-                      24.h,
-                    ),
-                    margin: EdgeInsets.only(left: 5.h),
-                  ),
-                ),
+                
               ],
             ),
-          ),
+          ),*/
+          review['fotos'].isNotEmpty
+              ? Container(
+                  height: 100,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    itemCount: review['fotos'].length,
+                    itemBuilder: (context, index) {
+                      return Padding(
+                        padding: const EdgeInsets.all(8.0),
+                        child: Image.network(review['fotos'][index],
+                            loadingBuilder: (BuildContext context, Widget child,
+                                ImageChunkEvent? loadingProgress) {
+                          if (loadingProgress == null) {
+                            return child;
+                          }
+                          return Center(
+                            widthFactor: 2.5.h,
+                            child: CircularProgressIndicator(
+                              value: loadingProgress.expectedTotalBytes != null
+                                  ? loadingProgress.cumulativeBytesLoaded /
+                                      loadingProgress.expectedTotalBytes!
+                                  : null,
+                            ),
+                          );
+                        }),
+                      );
+                    },
+                  ),
+                )
+              : const SizedBox(height: 0),
         ],
       ),
     );

@@ -1,103 +1,115 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
-import 'package:turisteando_ando/widgets/app_bar/appbar_subtitle.dart';
+import 'package:turisteando_ando/repositories/auth/firestore_methods.dart';
 import 'package:turisteando_ando/widgets/app_bar/appbar_title_image.dart';
 import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
-import 'package:turisteando_ando/widgets/custom_drop_down.dart';
 
-// ignore: must_be_immutable
-class FrmfaqsScreen extends StatelessWidget {
-  FrmfaqsScreen({Key? key})
-      : super(
-          key: key,
-        );
+class FrmfaqsScreen extends StatefulWidget {
+  FrmfaqsScreen({Key? key}) : super(key: key);
+
+  @override
+  _MyFrmfaqsScreenState createState() => _MyFrmfaqsScreenState();
+}
+
+class _MyFrmfaqsScreenState extends State<FrmfaqsScreen> {
+  @override
+  void initState() {
+    super.initState();
+    fetchData();
+  }
+
+//QUESTIONS AND ANSWERS CREATED BY DOCUMENTATION TEAM
+  List<List<String>> dropdownItemList = [];
+  List<bool> _isExpandedList = [];
+  fetchData() async {
+    List<Map<String, dynamic>> datos = await StoreMethods().getFAQS();
+    List<List<String>> aux = [];
+
+    for (int i = 0; i < datos.length; i++) {
+      List<String> faq = [];
+      faq.add(datos[i]["pregunta"]);
+      faq.add(datos[i]["respuesta"]);
+      _isExpandedList.add(false);
+      aux.add(faq);
+    }
+
+    setState(() {
+      dropdownItemList.addAll(aux);
+      print(dropdownItemList);
+    });
+  }
+
 //QUESTIONS AND ANSWERS CREATED BY DOCUMENTATION TEAM
   //Check the "options", if is better only with the answer
-  List<String> dropdownItemList = [
-    "Question1", //QUESTION1
-    "Lorem ipsum dolor sit amet consectetur adipiscing elit erat est, lacus nullam cum donec diam sem mollis urna. Mus nascetur nam tortor in molestie enim ad laoreet, hac ante himenaeos quis blandit dapibus facilisis erat, cursus magna risus sem morbi vivamus tincidunt", //ANSWER
-  ];
-
-  List<String> dropdownItemList1 = [
-    "Question2",//QUESTION2
-    "Item Two",//ANSWER
-  ];
-
-  List<String> dropdownItemList2 = [
-    "Question3",//QUESTION3
-    "Item Two",//ANSWER
-  ];
-
-  List<String> dropdownItemList3 = [
-    "Question4",//QUESTION4
-    "Item Two",//ANSWER
-  ];
-
-  List<String> dropdownItemList4 = [
-    "Question5",//QUESTION5
-    "Item Two",//ANSWER
-  ];
-
-  List<String> dropdownItemList5 = [
-    "Question6",//QUESTION6
-    "Item Two",//ANSWER
-  ];
 
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
-
     return SafeArea(
       child: Scaffold(
-        appBar: _buildAppBar(context),
-        body: SizedBox(
-          width: double.maxFinite,
-          child: Column(
-            children: [
-              SizedBox(height: 13.v),
-              Container(
-                decoration: AppDecoration.outlineBlack,
-                child: Text(
-                  "Estamos aquí para ayudarte",
-                  style: theme.textTheme.titleLarge,
-                ),
-              ),
-              SizedBox(height: 19.v),
-              Container(
-                width: 313.h,
-                margin: EdgeInsets.symmetric(horizontal: 23.h),
-                child: Text(
-                  "La planificación de un viaje puede generar preguntas. No te preocupes, estamos aquí para ayudarte en cada etapa. Consulta nuestras preguntas frecuentes para respuestas rápidas y útiles.",
-                  maxLines: 5,
-                  overflow: TextOverflow.ellipsis,
-                  textAlign: TextAlign.center,
-                  style: CustomTextStyles.bodyMediumMontserrat,
-                ),
-              ),
-              SizedBox(height: 38.v),
-              SizedBox(
-                height: 526.v,
-                width: double.maxFinite,
-                child: Stack(
-                  alignment: Alignment.center,
-                  children: [
-                    CustomImageView(
-                      imagePath: ImageConstant.imgImage22,
-                      height: 526.v,
-                      width: 360.h,
-                      radius: BorderRadius.vertical(
-                        top: Radius.circular(33.h),
+          extendBodyBehindAppBar: true,
+          appBar: _buildAppBar(context),
+          body: SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Container(
+              width: mediaQueryData.size.width,
+              height: mediaQueryData.size.height,
+              margin: const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomImageView(
+                    imagePath: ImageConstant.imgLogo,
+                    height: 150,
+                    width: 150,
+                    alignment: Alignment.topCenter,
+                  ),
+                  SizedBox(height: 13.v),
+                  Container(
+                    decoration: AppDecoration.outlineBlack,
+                    child: Text("Estamos aquí para ayudarte",
+                        overflow: TextOverflow.ellipsis,
+                        textAlign: TextAlign.center,
+                        style: TextStyle(
+                          fontSize: 25.0,
+                          fontWeight: FontWeight.bold,
+                          color: const Color.fromARGB(255, 20, 76, 95),
+                          fontFamily: 'Nunito',
+                        )),
+                  ),
+                  SizedBox(height: 19.v),
+                  Container(
+                    width: 313.h,
+                    margin: EdgeInsets.symmetric(horizontal: 23.h),
+                    child: Text(
+                      "La planificación de un viaje puede generar preguntas. No te preocupes, estamos aquí para ayudarte en cada etapa. Consulta nuestras preguntas frecuentes para respuestas rápidas y útiles.",
+                      maxLines: 6,
+                      overflow: TextOverflow.ellipsis,
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                        fontSize: 15.0,
+                        color: Colors.black,
+                        fontFamily: 'Nunito',
                       ),
-                      alignment: Alignment.center,
                     ),
-                    _buildQuestions(context),
-                  ],
-                ),
+                  ),
+                  //SizedBox(height: 1.h),
+                  SizedBox(
+                    //size: Size(double.infinity, double.infinity),
+                    height: 510.v,
+                    width: double.maxFinite,
+                    child: Stack(
+                      alignment: Alignment.center,
+                      children: [
+                        _buildQuestions(context),
+                      ],
+                    ),
+                  ),
+                ],
               ),
-            ],
-          ),
-        ),
-      ),
+            ),
+          )),
     );
   }
 
@@ -106,14 +118,9 @@ class FrmfaqsScreen extends StatelessWidget {
     return CustomAppBar(
       centerTitle: true,
       title: SizedBox(
-        height: 30.v,
-        width: 328.h,
         child: Stack(
           alignment: Alignment.topLeft,
           children: [
-            AppbarSubtitle(
-              text: "Turisteando Ando",
-            ),
             AppbarTitleImage(
               imagePath: ImageConstant.imgRegresar,
               margin: EdgeInsets.fromLTRB(5.h, 5.v, 318.h, 15.v),
@@ -130,95 +137,67 @@ class FrmfaqsScreen extends StatelessWidget {
       alignment: Alignment.center,
       child: Padding(
         padding: EdgeInsets.symmetric(horizontal: 9.h),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            CustomDropDown(
-              icon: Container(
-                margin: EdgeInsets.fromLTRB(30.h, 17.v, 11.h, 17.v),
-                child: CustomImageView(
-                  imagePath: ImageConstant.imgArrowdown,
-                  height: 11.v,
-                  width: 20.h,
-                ),
-              ),
-              hintText: "Pregunta1 ",//add the question
-              items: dropdownItemList,
-              onChanged: (value) {},
-            ),
-            SizedBox(height: 24.v),
-            CustomDropDown(
-              icon: Container(
-                margin: EdgeInsets.fromLTRB(30.h, 17.v, 11.h, 17.v),
-                child: CustomImageView(
-                  imagePath: ImageConstant.imgShowinfo,
-                  height: 10.v,
-                  width: 20.h,
-                ),
-              ),
-              hintText: "Pregunta2",//add the question
-              items: dropdownItemList1,
-              onChanged: (value) {},
-            ),
-            SizedBox(height: 24.v),
-            CustomDropDown(
-              icon: Container(
-                margin: EdgeInsets.fromLTRB(30.h, 17.v, 11.h, 17.v),
-                child: CustomImageView(
-                  imagePath: ImageConstant.imgShowinfo,
-                  height: 10.v,
-                  width: 20.h,
-                ),
-              ),
-              hintText: "Pregunta3",//add the question
-              items: dropdownItemList2,
-              onChanged: (value) {},
-            ),
-            SizedBox(height: 24.v),
-            CustomDropDown(
-              icon: Container(
-                margin: EdgeInsets.fromLTRB(30.h, 17.v, 11.h, 17.v),
-                child: CustomImageView(
-                  imagePath: ImageConstant.imgShowinfo,
-                  height: 10.v,
-                  width: 20.h,
-                ),
-              ),
-              hintText: "Pregunta4",//add the question
-              items: dropdownItemList3,
-              onChanged: (value) {},
-            ),
-            SizedBox(height: 24.v),
-            CustomDropDown(
-              icon: Container(
-                margin: EdgeInsets.fromLTRB(30.h, 17.v, 11.h, 17.v),
-                child: CustomImageView(
-                  imagePath: ImageConstant.imgShowinfo,
-                  height: 10.v,
-                  width: 20.h,
-                ),
-              ),
-              hintText: "Pregunta5",//add the question
-              items: dropdownItemList4,
-              onChanged: (value) {},
-            ),
-            SizedBox(height: 24.v),
-            CustomDropDown(
-              icon: Container(
-                margin: EdgeInsets.fromLTRB(30.h, 17.v, 11.h, 17.v),
-                child: CustomImageView(
-                  imagePath: ImageConstant.imgShowinfo,
-                  height: 10.v,
-                  width: 20.h,
-                ),
-              ),
-              hintText: "Pregunta6",//add the question
-              items: dropdownItemList5,
-              onChanged: (value) {},
-            ),
-          ],
+        child: SingleChildScrollView(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: List.generate(dropdownItemList.length, (index) {
+              return Padding(
+                  padding: EdgeInsets.symmetric(vertical: 10.v),
+                  child: _buildQuestionTile(
+                    index,
+                    dropdownItemList[index][0],
+                    dropdownItemList[index][1],
+                  ));
+            }),
+          ),
         ),
       ),
+    );
+  }
+
+  Widget _buildQuestionTile(int index, String question, String answer) {
+    return Column(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            color: Colors.grey.withOpacity(0.2), // Color gris con opacidad
+            borderRadius: BorderRadius.circular(10.0), // Bordes redondeados
+          ),
+          margin: EdgeInsets.symmetric(vertical: 8.0), // Margen vertical
+          child: ListTile(
+            title: Text(
+              question,
+              style: TextStyle(
+                fontFamily: 'Nunito',
+                fontSize: 16,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+            trailing: Icon(
+              _isExpandedList[index] ? Icons.expand_less : Icons.expand_more,
+            ),
+            onTap: () {
+              setState(() {
+                _isExpandedList[index] = !_isExpandedList[index];
+              });
+            },
+          ),
+        ),
+        if (_isExpandedList[index])
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.all(16.0),
+              child: Text(
+                answer,
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.black,
+                  fontFamily: 'Nunito',
+                ),
+              ),
+            ),
+          )
+      ],
     );
   }
 }
