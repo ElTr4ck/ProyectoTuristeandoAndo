@@ -1,4 +1,3 @@
-
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -17,6 +16,7 @@ import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 import 'package:turisteando_ando/widgets/custom_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:typed_data';
+import '../frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
 
 class FrmnewreseAScreen extends StatefulWidget {
   final String id;
@@ -43,7 +43,7 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
     print("ID del lugar: " + widget.id);
     // Llama a fetchPlaceName y guarda el Future
     placeNameFuture = fetchPlaceName(widget.id);
-    userFuture= getUser();
+    userFuture = getUser();
     // Resto de tu código...
   }
 
@@ -62,7 +62,8 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
   }
 
   Future<Map<String, dynamic>> fetchPlaceDetailsFromApi(String placeId) async {
-    var url = Uri.parse('https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM');
+    var url = Uri.parse(
+        'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM');
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
@@ -71,7 +72,8 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
 
       // Obteniendo el nombre y la calificación del lugar
       String title = result['name']; // Nombre del lugar
-      double rating = result['rating'] ?? 0.0; // Calificación del lugar, 0.0 si no está disponible
+      double rating = result['rating'] ??
+          0.0; // Calificación del lugar, 0.0 si no está disponible
 
       // Construyendo la descripción con la calificación
       String description = '${rating.toStringAsFixed(1)}';
@@ -81,11 +83,7 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
           ? 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${result['photos'][0]['photo_reference']}&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM'
           : 'URL_imagen_por_defecto';
 
-      return {
-        'title': title,
-        'description': description,
-        'image': imageUrl
-      };
+      return {'title': title, 'description': description, 'image': imageUrl};
     } else {
       return {
         'title': 'Información no disponible',
@@ -104,6 +102,7 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
       return 'Error al buscar el nombre del lugar';
     }
   }
+
   List<Uint8List> _images = [];
 
   Future<void> uploadImages(String reviewId) async {
@@ -132,7 +131,7 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
                           margin: EdgeInsets.only(left: 18.h, right: 19.h),
                           child: Text(
                               "¡Nos encantaría conocer tu opinión acerca de este lugar! Comparte tu experiencia y ayuda a otros a descubrir lo que hace especial a este destino.",
-                              maxLines: 3,
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
                               style: theme.textTheme.bodyMedium)),
@@ -145,7 +144,8 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
                         buttonStyle: CustomButtonStyles.fillTealTL12,
                         buttonTextStyle: theme.textTheme.labelMedium!,
                         onPressed: () async {
-                          Uint8List file = await StorageMethods().pickImage(ImageSource.gallery);
+                          Uint8List file = await StorageMethods()
+                              .pickImage(ImageSource.gallery);
                           _images.add(file);
                           setState(() {});
                           print("Subido");
@@ -174,8 +174,8 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
                               horizontal: 8.h, vertical: 10.v),
                           decoration: AppDecoration.fillErrorContainer1
                               .copyWith(
-                              borderRadius:
-                              BorderRadiusStyle.roundedBorder27),
+                                  borderRadius:
+                                      BorderRadiusStyle.roundedBorder27),
                           child: CustomRatingBar(
                             initialRating: 5,
                             onRatingUpdate: (rating) {
@@ -188,21 +188,20 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
                       SizedBox(height: 25.v),
                       CustomElevatedButton(
                           onPressed: () async {
-                            DocumentReference reviewDocRef = await StoreMethods().review(
-                                idplace: widget.id,
-                                comentario: comentarioController.text,
-                                calificacion: calificacion,
-                                fecha: Timestamp.fromDate(DateTime.now()),
-                                nombre: name,
-                                files: _images
-                            );
+                            DocumentReference reviewDocRef =
+                                await StoreMethods().review(
+                                    idplace: widget.id,
+                                    comentario: comentarioController.text,
+                                    calificacion: calificacion,
+                                    fecha: Timestamp.fromDate(DateTime.now()),
+                                    nombre: name,
+                                    files: _images);
                             String reviewId = reviewDocRef.id;
                             await uploadImages(reviewId);
 
                             // ignore: use_build_context_synchronously
                             print("entro");
                             Navigator.pop(context);
-
                           },
                           text: "Aceptar",
                           margin: EdgeInsets.only(left: 44.h, right: 45.h),
@@ -215,7 +214,6 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
                           text: "Cancelar",
                           margin: EdgeInsets.only(left: 44.h, right: 45.h),
                           buttonStyle: CustomButtonStyles.fillTealTL16),
-
                       SizedBox(height: 2.v)
                     ]))));
   }
@@ -224,18 +222,37 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       leadingWidth: 23.h,
-      leading: AppbarLeadingImage(
-          imagePath: ImageConstant.imgArrowDown2,
-          margin: EdgeInsets.only(left: 18.h, top: 5.v, bottom: 41.v),
-          onTap: () {
-
-          }),
+      // leading: AppbarLeadingImage(
+      //     imagePath: ImageConstant.imgArrowDown2,
+      //     margin: EdgeInsets.only(left: 18.h, top: 5.v, bottom: 41.v),
+      //     onTap: () {
+      //       Navigator.of(context)
+      //           .push(MaterialPageRoute(builder: (BuildContext context) {
+      //         //String aux = '${prediction.lat}, ${prediction.lng}';
+      //         return FrmreseATabContainerScreen2(id: widget.id);
+      //       }));
+      //     }),
+      leading: Padding(
+          padding: EdgeInsets.only(top: 7.v, bottom: 16.v),
+          child: GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (BuildContext context) {
+                  //String aux = '${prediction.lat}, ${prediction.lng}';
+                  return FrmreseATabContainerScreen2(id: widget.id);
+                }));
+              },
+              child: Icon(
+                Icons.arrow_back_outlined,
+                size: 30.h,
+                color: Colors.grey,
+              ))),
       centerTitle: true,
       title: FutureBuilder<String>(
         future: placeNameFuture,
         builder: (context, snapshot) {
           if (snapshot.connectionState == ConnectionState.waiting) {
-            return CircularProgressIndicator();  // mostrar un indicador de carga
+            return CircularProgressIndicator(); // mostrar un indicador de carga
           } else if (snapshot.hasError) {
             return Text('Error');
           } else {
@@ -249,14 +266,14 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
   /// Section Widget
   /// Section Widget
   Widget _buildReview(BuildContext context) {
-
     return FutureBuilder<model.User?>(
       future: userFuture,
       builder: (BuildContext context, snapshot) {
         if (snapshot.connectionState == ConnectionState.waiting) {
           return CircularProgressIndicator();
         } else if (snapshot.hasError || snapshot.data == null) {
-          return Text('Error al obtener información del usuario: ${snapshot.error}');
+          return Text(
+              'Error al obtener información del usuario: ${snapshot.error}');
         } else {
           return Container(
               width: 317.h,
@@ -268,26 +285,28 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
                   mainAxisSize: MainAxisSize.min,
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Row(crossAxisAlignment: CrossAxisAlignment.start, children: [
-                      CircleAvatar(
-                        radius: 17,
-                        backgroundImage: NetworkImage(avatar),
-                      ),
-                      Padding(
-                          padding: EdgeInsets.only(left: 6.h, top: 5.v, bottom: 7.v),
-                          child: Text(name + " " + lastname,
-                              style: theme.textTheme.titleMedium))
-                    ]),
+                    Row(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          CircleAvatar(
+                            radius: 17,
+                            backgroundImage: NetworkImage(avatar),
+                          ),
+                          Padding(
+                              padding: EdgeInsets.only(
+                                  left: 6.h, top: 5.v, bottom: 7.v),
+                              child: Text(name + " " + lastname,
+                                  style: theme.textTheme.titleMedium))
+                        ]),
                     SizedBox(height: 8.v),
                     Container(
                         width: 277.h,
                         margin: EdgeInsets.only(right: 15.h),
-
                         child: TextFormField(
                           decoration: InputDecoration.collapsed(
                               hintText: "Comparte tu experiencia"),
                           minLines:
-                          3, // any number you need (It works as the rows for the textarea)
+                              3, // any number you need (It works as the rows for the textarea)
                           keyboardType: TextInputType.multiline,
                           maxLines: null,
                           controller: comentarioController,

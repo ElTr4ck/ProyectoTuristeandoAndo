@@ -1,9 +1,12 @@
+import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
+
 import '../resenas/widgets/srcoll_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/widgets/app_bar/appbar_leading_image.dart';
 import 'package:turisteando_ando/widgets/app_bar/appbar_title.dart';
 import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
 
 class FrmtusreseAsScreen extends StatelessWidget {
   const FrmtusreseAsScreen({Key? key})
@@ -52,15 +55,21 @@ class FrmtusreseAsScreen extends StatelessWidget {
     return CustomAppBar(
       height: 70.v,
       leadingWidth: 23.h,
-      leading: AppbarLeadingImage(
-        imagePath: ImageConstant.imgRegresar,
-        //onTap: , ACTIONS
-        margin: EdgeInsets.only(
-          left: 18.h,
-          top: 22.v,
-          bottom: 23.v,
-        ),
-      ),
+      leading: Padding(
+          padding: EdgeInsets.only(top: 7.v, bottom: 16.v),
+          child: GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (BuildContext context) {
+                  //String aux = '${prediction.lat}, ${prediction.lng}';
+                  return FrminicioPage();
+                }));
+              },
+              child: Icon(
+                Icons.arrow_back_outlined,
+                size: 30.h,
+                color: Colors.grey,
+              ))),
       centerTitle: true,
       title: AppbarTitle(
         text: "Tus reseñas",
@@ -84,7 +93,7 @@ class FrmtusreseAsScreen extends StatelessWidget {
               height: 20.v,
             );
           },
-          itemCount: 7,//check the dinamic scroll
+          itemCount: 7, //check the dinamic scroll
           //number controller
           itemBuilder: (context, index) {
             return SrcollItemWidget();
