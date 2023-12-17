@@ -81,7 +81,7 @@ class _MyFrmfaqsScreenState extends State<FrmfaqsScreen> {
                   //SizedBox(height: 1.h),
                   SizedBox(
                     //size: Size(double.infinity, double.infinity),
-                    height: 510.v,
+                    height: 497.v,
                     width: double.maxFinite,
                     child: Stack(
                       alignment: Alignment.center,

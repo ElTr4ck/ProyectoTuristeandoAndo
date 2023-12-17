@@ -193,8 +193,7 @@ class ImageConstant {
   static String imgIconlyLightOutlineHeart =
       '$imagePath/img_iconly_light_outline_heart.svg';
 
-  static String imgIconlyLightProfile =
-      '$imagePath/img_iconly_light_profile.svg';
+  static String imgIconlyLightProfile = '$imagePath/img_icon_profile_nav.png';
 
   static String imgFlechita = '$imagePath/img_flechita.svg';
 
@@ -214,7 +213,8 @@ class ImageConstant {
 
   static String imgHeart = '$imagePath/img_heart.svg';
 
-  static String imgArrowRightBlack90010x6 = '$imagePath/img_arrow_right_black_900_10x6.svg';
+  static String imgArrowRightBlack90010x6 =
+      '$imagePath/img_arrow_right_black_900_10x6.svg';
 
   static String imgClock = '$imagePath/img_clock.svg';
 
@@ -225,10 +225,11 @@ class ImageConstant {
   static String imgTranslate = '$imagePath/img_translate.svg';
 
   static String imgMoon = '$imagePath/img_moon.svg';
-  
+
   static String imgClosesession = '$imagePath/img_closesession.svg';
 
-  static String imgArrowRightBlack900 = '$imagePath/img_arrow_right_black_900.svg';
+  static String imgArrowRightBlack900 =
+      '$imagePath/img_arrow_right_black_900.svg';
 
   static String imgLogo = '$imagePath/img_ideaLogo.png';
 
@@ -253,4 +254,6 @@ class ImageConstant {
   static String imgTrashBlack900 = '$imagePath/img_trash_black_900.svg';
 
   static String imgClose = '$imagePath/img_close.svg';
+
+  static String imgHeartNav = '$imagePath/img_icon_heart_nav.png';
 }
