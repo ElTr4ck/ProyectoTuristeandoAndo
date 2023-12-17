@@ -37,16 +37,26 @@ class FrmmarcadoresScreen extends StatelessWidget {
               Column(children: [
                 Container(
                     decoration: AppDecoration.outlineBlack,
-                    child: Text("Estos son tus marcadores",
-                        style: theme.textTheme.headlineMedium)),
+                    child: Text("Marcadores",
+                        style: TextStyle(
+                          fontSize: 40.0,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Nunito',
+                        ))),
+                Container(
+                    decoration: AppDecoration.outlineBlack,
+                    child: Text("Estos son tu marcadores",
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontFamily: 'Nunito',
+                        ))),
                 SizedBox(height: 11.v),
                 CustomElevatedButton(
                     height: 24.v,
                     width: 125.h,
                     text: "Ver en mapa",
-                    buttonStyle: CustomButtonStyles.outlineBlack,
-                    buttonTextStyle:
-                        CustomTextStyles.labelLargeMontserratTeal400,
+                    buttonStyle: CustomButtonStyles.fillPrimary,
+                    buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
                     onPressed: () {
                       Navigator.push(
                         context,
@@ -56,11 +66,11 @@ class FrmmarcadoresScreen extends StatelessWidget {
                                 )),
                       );
                     }),
-                SizedBox(height: 5.v),
+                SizedBox(height: 20.v),
                 _buildComponentDest(context),
-                SizedBox(height: 15.v),
+                SizedBox(height: 30.v),
                 _buildComponentNuev(context),
-                SizedBox(height: 5.v)
+                SizedBox(height: 10.v)
               ]),
             ],
           )),
