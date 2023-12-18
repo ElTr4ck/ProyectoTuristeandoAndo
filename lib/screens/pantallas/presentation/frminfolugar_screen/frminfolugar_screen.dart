@@ -203,26 +203,23 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
   /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-      height: 60.v,
-      leadingWidth: 24.h,
-      leading: Padding(
-          padding: EdgeInsets.only(top: 7.v, bottom: 16.v),
-          child: GestureDetector(
-              onTap: () {
-                Navigator.of(context)
-                    .push(MaterialPageRoute(builder: (BuildContext context) {
-                  //String aux = '${prediction.lat}, ${prediction.lng}';
-                  return FrminicioPage();
-                }));
-              },
-              child: Icon(
-                Icons.arrow_back_outlined,
-                size: 30.h,
-                color: Colors.grey,
-              ))),
-      centerTitle: true,
-      /* title: Text(
-          "Información",
+        height: 60.v,
+        leadingWidth: 24.h,
+        leading: Padding(
+            padding: EdgeInsets.only(top: 7.v, bottom: 16.v),
+            child: GestureDetector(
+                onTap: () {
+                  Navigator.pop(
+                      context); //pop para no volver a cargar la pantalla
+                },
+                child: Icon(
+                  Icons.arrow_back_outlined,
+                  size: 30.h,
+                  color: Colors.grey,
+                ))),
+        centerTitle: true,
+        title: Text(
+          "Información del lugar",
           textAlign: TextAlign.center,
           style: TextStyle(
             fontSize: 40.0,
@@ -512,6 +509,26 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
               height: 320.v,
               width: 315.h,
               child: Stack(alignment: Alignment.topCenter, children: [
+                CustomElevatedButton(
+                    height: 16.v,
+                    width: 53.h,
+                    text: "Reseñas",
+                    margin: EdgeInsets.only(
+                        right: 13.h), //ChIJeTrFnori0YURXup_x_Ws2t8
+                    buttonStyle: CustomButtonStyles.fillTeal,
+                    buttonTextStyle: theme.textTheme.labelSmall!,
+                    onPressed: () {
+                      print('Elemento del carrusel presionado: ${widget.id}');
+                      Navigator.of(context).push(
+                          MaterialPageRoute(builder: (BuildContext context) {
+                        //String aux = '${prediction.lat}, ${prediction.lng}';
+                        return FrmreseATabContainerScreen2(
+                          id: widget.id,
+                          index: 0,
+                        );
+                      }));
+                    },
+                    alignment: Alignment.bottomRight),
                 Align(
                     alignment: Alignment.topCenter,
                     child: SizedBox(

@@ -2,28 +2,28 @@ import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/widgets/custom_rating_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:turisteando_ando/widgets/foto.dart';
 
 // ignore: must_be_immutable
-typedef OnTapView = void Function (Map<String, dynamic> jsonData);
+typedef OnTapView = void Function(Map<String, dynamic> jsonData);
 
 class FrmreseAItemWidget extends StatelessWidget {
   final Map<String, dynamic>? reviewData;
   final OnTapView onTapView;
   final Map<String, dynamic>? userData;
 
-  FrmreseAItemWidget({
-    required this.userData,
-    required this.reviewData,
-    required this.onTapView,
-    Key? key
-  }) : super(key: key);
-
+  FrmreseAItemWidget(
+      {required this.userData,
+      required this.reviewData,
+      required this.onTapView,
+      Key? key})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     print('Reseña: ${reviewData}');
     print('Usuario: ${userData}');
-    if (userData != null && reviewData != null)  {
+    if (userData != null && reviewData != null) {
       var review = reviewData;
       print('después de acceder a review, review: $review');
       var photo = userData?['photo'];
@@ -34,7 +34,8 @@ class FrmreseAItemWidget extends StatelessWidget {
       print('después de acceder a last, last: $lastname');
       if (photo == null || name == null || lastname == null || review == null) {
         print('Algo null');
-        return SizedBox.shrink(); // Retorna un contenedor vacío, puedes ajustar esto de acuerdo a tus requerimientos.
+        return SizedBox
+            .shrink(); // Retorna un contenedor vacío, puedes ajustar esto de acuerdo a tus requerimientos.
       }
       String formattedDate = "${(review?['fecha']).toDate()}";
       String dateWithoutNanos = formattedDate.split('.')[0];
@@ -82,8 +83,8 @@ class FrmreseAItemWidget extends StatelessWidget {
                             Padding(
                               padding: EdgeInsets.only(bottom: 1.v),
                               child: CustomRatingBar(
-                                initialRating: review?['calificacion']
-                                    .toDouble(),
+                                initialRating:
+                                    review?['calificacion'].toDouble(),
                                 itemSize: 13,
                                 color: appTheme.yellow700,
                               ),
@@ -137,9 +138,9 @@ class FrmreseAItemWidget extends StatelessWidget {
                           Align(
                             alignment: Alignment.center,
                             child: Text(
-                              "!",
-                              style: CustomTextStyles
-                                  .bodyMediumPollerOnePrimary,
+                              "",
+                              style:
+                                  CustomTextStyles.bodyMediumPollerOnePrimary,
                             ),
                           ),
                         ],
@@ -161,13 +162,60 @@ class FrmreseAItemWidget extends StatelessWidget {
                 ),
               ),
             ),
+            review['fotos'].isNotEmpty //determinar si hay fotos
+                ? Container(
+                    height: 100,
+                    child: ListView.builder(
+                      scrollDirection: Axis.horizontal,
+                      itemCount: review['fotos'].length,
+                      itemBuilder: (context, index) {
+                        return Padding(
+                            padding: const EdgeInsets.all(8.0),
+                            child: GestureDetector(
+                                //detectar si se le da click a una foto
+                                onTap: () {
+                                  Navigator.of(context).push(MaterialPageRoute(
+                                      builder: (BuildContext context) {
+                                    //String aux = '${prediction.lat}, ${prediction.lng}';
+                                    return Foto(
+                                        url: review['fotos'][
+                                            index]); //mostrar la foto en fullscreen
+                                  }));
+                                },
+                                child: Image.network(review['fotos'][index],
+                                    loadingBuilder: (BuildContext
+                                            context, //determinar si la imagen ya se ha cargado
+                                        Widget child,
+                                        ImageChunkEvent? loadingProgress) {
+                                  if (loadingProgress == null) {
+                                    return child;
+                                  }
+                                  return Center(
+                                    widthFactor: 2.5.h,
+                                    child: CircularProgressIndicator(
+                                      value:
+                                          loadingProgress.expectedTotalBytes !=
+                                                  null
+                                              ? loadingProgress
+                                                      .cumulativeBytesLoaded /
+                                                  loadingProgress
+                                                      .expectedTotalBytes!
+                                              : null,
+                                    ),
+                                  );
+                                })));
+                      },
+                    ),
+                  )
+                : const SizedBox(height: 0),
           ],
         ),
       );
     } else {
       print('Reseña: ${reviewData}');
       print('Usuario: ${userData}');
-      return SizedBox.shrink(); // Retorna un contenedor vacío, puedes ajustar esto de acuerdo a tus requerimientos. Retorna un contenedor vacío, puedes ajustar esto de acuerdo a tus requerimientos.
+      return SizedBox
+          .shrink(); // Retorna un contenedor vacío, puedes ajustar esto de acuerdo a tus requerimientos. Retorna un contenedor vacío, puedes ajustar esto de acuerdo a tus requerimientos.
     }
   }
 }
