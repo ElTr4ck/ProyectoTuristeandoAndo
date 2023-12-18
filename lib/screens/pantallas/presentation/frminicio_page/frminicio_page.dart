@@ -609,10 +609,9 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment:
+                    MainAxisAlignment.end, // Alinea los widgets al final
                 children: [
-                  Spacer(),
-                  SizedBox(height: 270.0),
                   Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -628,7 +627,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
                           color: Colors.white),
                     ),
                   ),
-                  SizedBox(height: 5.0),
+                  SizedBox(height: 5.0), // Espacio entre los widgets
                   Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(

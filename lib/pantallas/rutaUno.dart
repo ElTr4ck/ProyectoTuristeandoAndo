@@ -1000,18 +1000,19 @@ class _RutaUnoState extends State<RutaUno> {
                                             color: const Color(0xFF114C5F),
                                             size: 18.0,
                                           ), // Tu condición aquí
-                                          Text(
+                                          Expanded(
+                                              child: Text(
                                             //Tiempo de transporte publico
                                             '${((((sqrt(pow((_secondLocation.latitude - _currentLocation.latitude), 2) + pow((_secondLocation.longitude - _currentLocation.longitude), 2))) * 100)) * 5).toStringAsFixed(0)} min',
                                             //travelTimeButton,
                                             style: TextStyle(
-                                              fontSize: 10,
+                                              fontSize: 9,
                                               fontWeight: FontWeight.bold,
                                               color:
                                                   Color.fromARGB(255, 0, 0, 0),
                                               fontFamily: 'Nunito',
                                             ),
-                                          )
+                                          ))
                                         ])),
                                   ),
                                 )),
@@ -1050,17 +1051,18 @@ class _RutaUnoState extends State<RutaUno> {
                                             color: const Color(0xFF114C5F),
                                             size: 18.0,
                                           ),
-                                          Text(
+                                          Expanded(
+                                              child: Text(
                                             //Tiempo de transporte publico
                                             '${((((sqrt(pow((_secondLocation.latitude - _currentLocation.latitude), 2) + pow((_secondLocation.longitude - _currentLocation.longitude), 2))) * 100)) * 6).toStringAsFixed(0)} min',
                                             style: TextStyle(
-                                              fontSize: 10,
+                                              fontSize: 9,
                                               fontWeight: FontWeight.bold,
                                               color:
                                                   Color.fromARGB(255, 0, 0, 0),
                                               fontFamily: 'Nunito',
                                             ),
-                                          )
+                                          ))
                                         ])),
                                   ),
                                 )),
@@ -1099,17 +1101,18 @@ class _RutaUnoState extends State<RutaUno> {
                                             color: const Color(0xFF114C5F),
                                             size: 18.0,
                                           ),
-                                          Text(
+                                          Expanded(
+                                              child: Text(
                                             //Tiempo de transporte publico
                                             '${((((sqrt(pow((_secondLocation.latitude - _currentLocation.latitude), 2) + pow((_secondLocation.longitude - _currentLocation.longitude), 2))) * 100)) * 16).toStringAsFixed(0)} min',
                                             style: TextStyle(
-                                              fontSize: 10,
+                                              fontSize: 9,
                                               fontWeight: FontWeight.bold,
                                               color:
                                                   Color.fromARGB(255, 0, 0, 0),
                                               fontFamily: 'Nunito',
                                             ),
-                                          )
+                                          ))
                                         ])),
                                   ),
                                 ))
