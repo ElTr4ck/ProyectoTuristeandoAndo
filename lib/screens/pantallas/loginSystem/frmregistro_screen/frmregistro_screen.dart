@@ -31,28 +31,37 @@ class FrmregistroScreen extends StatelessWidget {
             resizeToAvoidBottomInset: false,
             extendBodyBehindAppBar: true,
             appBar: _buildAppBar(context),
-            body: Container(
-                width: mediaQueryData.size.width,
-                height: mediaQueryData.size.height,
-                padding: EdgeInsets.symmetric(horizontal: 15.h, vertical: 38.v),
-                margin:
-                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
-                child: Form(
-                    key: formkey,
-                    child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      SizedBox(height: 32.v),
-                      _buildTextFieldOutline(context),
-                      SizedBox(height: 15.v),
-                      _buildTextFieldOutline1(context),
-                      SizedBox(height: 15.v),
-                      _buildTextFieldOutline2(context),
-                      SizedBox(height: 15.v),
-                      _buildTextFieldOutline3(context),
-                      Spacer(),
-                      _buildRegistrarme(context),
-                      SizedBox(height: 8.v),
-                      _buildCancelarQuieroSeguirComo(context)
-                    ])))));
+            body: Form(
+                key: formkey,
+                child: Container(
+                  width: double.maxFinite,
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.h, vertical: 20.v),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomImageView(
+                          imagePath: ImageConstant.imgLogo,
+                          height: 150,
+                          width: 150,
+                          alignment: Alignment.topCenter,
+                        ),
+                        SizedBox(height: 20.v),
+                        _buildSeventeen(context),
+                        SizedBox(height: 32.v),
+                        _buildTextFieldOutline(context),
+                        SizedBox(height: 15.v),
+                        _buildTextFieldOutline1(context),
+                        SizedBox(height: 15.v),
+                        _buildTextFieldOutline2(context),
+                        SizedBox(height: 15.v),
+                        _buildTextFieldOutline3(context),
+                        Spacer(),
+                        _buildRegistrarme(context),
+                        SizedBox(height: 8.v),
+                        _buildCancelarQuieroSeguirComo(context)
+                      ]),
+                ))));
   }
 
   /// Section Widget
@@ -70,6 +79,34 @@ class FrmregistroScreen extends StatelessWidget {
           ],
         ),
       ),
+    );
+  }
+
+  Widget _buildSeventeen(BuildContext context) {
+    return SizedBox(
+      height: 100.v,
+      width: 328.h,
+      child: Stack(alignment: Alignment.bottomCenter, children: [
+        // Ensure CustomImageView is placed before the text widgets
+        Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+            width: 328.h,
+            decoration: AppDecoration.outlineBlack,
+            child: Text(
+              "¡Estás a unos pasos de una experiencia turística más personal!",
+              textAlign: TextAlign.center,
+              maxLines: 5,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: 'Nunito',
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ]),
     );
   }
 
