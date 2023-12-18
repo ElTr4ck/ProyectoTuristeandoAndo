@@ -380,9 +380,44 @@ class _RutaUnoState extends State<RutaUno> {
   }
 
   Future<void> _selectLocationDefault() async {
-    Position position = await _determinePosition();
-    double latitude = position.latitude;
-    double longitude = position.longitude;
+    FirebaseAuth auth = FirebaseAuth.instance;
+    List ubicacionActual = [];
+
+    try {
+      // Verificamos si hay un usuario autenticado
+      User? user = auth.currentUser;
+      if (user != null) {
+        // Obtenemos el ID del usuario autenticado
+        String uid = user.uid;
+        // Referencia a la colección "usuarios" y subcolección "ubicacion_actual"
+        CollectionReference ubicacionCollection = FirebaseFirestore.instance
+            .collection('usuarios')
+            .doc(uid)
+            .collection('Ubicacion');
+
+        // Realizamos la consulta para obtener la ubicación actual del usuario
+        QuerySnapshot ubicacionSnapshot = await ubicacionCollection.get();
+
+        // Lista para almacenar la ubicación actual
+
+        // Iteramos sobre los documentos y accedemos a los datos de ubicación actual
+        ubicacionSnapshot.docs.forEach((doc) {
+          // Asegúrate de ajustar según la estructura real de tu documento de ubicación_actual
+          double latitud = doc['latitud'] ?? 0.0;
+          double longitud = doc['longitud'] ?? 0.0;
+          ubicacionActual.add(latitud);
+          ubicacionActual.add(longitud);
+        });
+      } else {
+        print('No hay usuario autenticado');
+      }
+    } catch (e) {
+      print('Error al obtener preferencias: $e');
+    }
+    print(ubicacionActual);
+    //Position position = await _determinePosition();
+    double latitude = ubicacionActual[0];
+    double longitude = ubicacionActual[1];
     LatLng selectedLocation = LatLng(latitude,
         longitude); /*await Navigator.push(
       context,
@@ -882,7 +917,7 @@ class _RutaUnoState extends State<RutaUno> {
                             child: Text(
                               'Origen: $buttonText',
                               style: TextStyle(
-                                fontSize: 15,
+                                fontSize: 12,
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 0, 0, 0),
                                 fontFamily: 'Nunito',
@@ -911,7 +946,7 @@ class _RutaUnoState extends State<RutaUno> {
                             child: Text(
                               'Destino: $secondLocationName',
                               style: TextStyle(
-                                fontSize: 15,
+                                fontSize: 12,
                                 fontWeight: FontWeight.bold,
                                 color: Color.fromARGB(255, 0, 0, 0),
                                 fontFamily: 'Nunito',
