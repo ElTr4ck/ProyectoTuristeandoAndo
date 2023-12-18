@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
+import 'package:turisteando_ando/widgets/app_bar/appbar_subtitle.dart';
 import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
 import 'package:turisteando_ando/repositories/auth/controlers/signup_controller.dart';
 import 'package:turisteando_ando/repositories/auth/wrapper.dart';
@@ -8,6 +9,9 @@ import 'package:turisteando_ando/widgets/app_bar/appbar_title.dart';
 import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 import 'package:turisteando_ando/widgets/custom_text_form_field.dart';
+import 'package:turisteando_ando/widgets/app_bar/appbar_title_image.dart';
+import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
+import 'package:turisteando_ando/widgets/custom_drop_down.dart';
 
 // ignore_for_file: must_be_immutable
 class FrmregistroScreen extends StatelessWidget {
@@ -25,10 +29,14 @@ class FrmregistroScreen extends StatelessWidget {
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
+            extendBodyBehindAppBar: true,
             appBar: _buildAppBar(context),
             body: Container(
-                width: double.maxFinite,
+                width: mediaQueryData.size.width,
+                height: mediaQueryData.size.height,
                 padding: EdgeInsets.symmetric(horizontal: 15.h, vertical: 38.v),
+                margin:
+                    const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
                 child: Form(
                     key: formkey,
                     child: Column(mainAxisSize: MainAxisSize.min, children: [
@@ -50,17 +58,19 @@ class FrmregistroScreen extends StatelessWidget {
   /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-        leadingWidth: 21.h,
-        leading: AppbarLeadingImage(
-            imagePath: ImageConstant.imgStroke2Red500,
-            margin: EdgeInsets.only(left: 10.h, top: 6.v, bottom: 86.v),
-            onTap: () {
-              onTapStrokeTwo(context);
-            }),
-        centerTitle: true,
-        title: AppbarTitle(
-            text:
-                "Estás a unos pasos de una \n experiencia turística más \n personal!"));
+      centerTitle: true,
+      title: SizedBox(
+        child: Stack(
+          alignment: Alignment.topLeft,
+          children: [
+            AppbarTitleImage(
+              imagePath: ImageConstant.imgRegresar,
+              margin: EdgeInsets.fromLTRB(5.h, 5.v, 318.h, 15.v),
+            ),
+          ],
+        ),
+      ),
+    );
   }
 
   /// Section Widget NOMBRE
