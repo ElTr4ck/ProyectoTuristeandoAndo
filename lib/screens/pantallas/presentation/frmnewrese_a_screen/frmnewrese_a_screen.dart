@@ -16,6 +16,7 @@ import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 import 'package:turisteando_ando/widgets/custom_rating_bar.dart';
 import 'package:image_picker/image_picker.dart';
 import 'dart:typed_data';
+import '../frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
 
 class FrmnewreseAScreen extends StatefulWidget {
   final String id;
@@ -44,6 +45,7 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
     // Llama a fetchPlaceName y guarda el Future
     placeNameFuture = fetchPlaceName(widget.id);
     userFuture = getUser();
+    // Resto de tu código...
   }
 
   Future<model.User> getUser() async {
@@ -124,7 +126,7 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
                           margin: EdgeInsets.only(left: 18.h, right: 19.h),
                           child: Text(
                               "¡Nos encantaría conocer tu opinión acerca de este lugar! Comparte tu experiencia y ayuda a otros a descubrir lo que hace especial a este destino.",
-                              maxLines: 3,
+                              maxLines: 2,
                               overflow: TextOverflow.ellipsis,
                               textAlign: TextAlign.center,
                               style: theme.textTheme.bodyMedium)),
@@ -229,10 +231,31 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
       leadingWidth: 23.h,
-      leading: AppbarLeadingImage(
-          imagePath: ImageConstant.imgArrowDown2,
-          margin: EdgeInsets.only(left: 18.h, top: 5.v, bottom: 41.v),
-          onTap: () {}),
+      // leading: AppbarLeadingImage(
+      //     imagePath: ImageConstant.imgArrowDown2,
+      //     margin: EdgeInsets.only(left: 18.h, top: 5.v, bottom: 41.v),
+      //     onTap: () {
+      //       Navigator.of(context)
+      //           .push(MaterialPageRoute(builder: (BuildContext context) {
+      //         //String aux = '${prediction.lat}, ${prediction.lng}';
+      //         return FrmreseATabContainerScreen2(id: widget.id);
+      //       }));
+      //     }),
+      leading: Padding(
+          padding: EdgeInsets.only(top: 7.v, bottom: 16.v),
+          child: GestureDetector(
+              onTap: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (BuildContext context) {
+                  //String aux = '${prediction.lat}, ${prediction.lng}';
+                  return FrmreseATabContainerScreen2(id: widget.id, index: 0,);
+                }));
+              },
+              child: Icon(
+                Icons.arrow_back_outlined,
+                size: 30.h,
+                color: Colors.grey,
+              ))),
       centerTitle: true,
       title: FutureBuilder<String>(
         future: placeNameFuture,

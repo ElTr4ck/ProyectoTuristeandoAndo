@@ -7,6 +7,9 @@ import 'package:turisteando_ando/widgets/app_bar/appbar_leading_image.dart';
 import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
 import 'package:turisteando_ando/widgets/custom_rating_bar.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_GOOGLE_page/frmrese_GOOGLE_page.dart';
+
+import '../frminfolugar_screen/frminfolugar_screen.dart';
+
 import 'package:http/http.dart' as http;
 
 class FrmreseATabContainerScreen2 extends StatefulWidget {
