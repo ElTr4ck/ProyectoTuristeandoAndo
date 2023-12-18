@@ -2,12 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
-import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_a_page/frmrese_a_page2.dart';
 import 'package:turisteando_ando/widgets/app_bar/appbar_leading_image.dart';
-import 'package:turisteando_ando/widgets/app_bar/appbar_title_searchview.dart';
 import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
-import 'package:turisteando_ando/widgets/custom_bottom_bar.dart';
 import 'package:turisteando_ando/widgets/custom_rating_bar.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_GOOGLE_page/frmrese_GOOGLE_page.dart';
 import 'package:http/http.dart' as http;

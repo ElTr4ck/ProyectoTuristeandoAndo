@@ -1,43 +1,18 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
-
 import '../frminfolugar_screen/widgets/componentlugares_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
-import 'package:turisteando_ando/widgets/app_bar/appbar_leading_image.dart';
-import 'package:turisteando_ando/widgets/app_bar/appbar_title.dart';
 import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
-import 'package:turisteando_ando/widgets/custom_rating_bar.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:turisteando_ando/pantallas/rutaUno.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
-
-import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
-import 'package:turisteando_ando/screens/frmMapa.dart';
 import 'package:turisteando_ando/screens/frm_ruta_propia.dart';
-
-import '../frminfolugar_screen/widgets/componentlugares_item_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:turisteando_ando/core/app_export.dart';
-import 'package:turisteando_ando/widgets/app_bar/appbar_leading_image.dart';
-import 'package:turisteando_ando/widgets/app_bar/appbar_title.dart';
-import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
-import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
-import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
-import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
-import 'package:turisteando_ando/pantallas/rutaUno.dart';
-
-import '../frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
 
 // ignore_for_file: must_be_immutable
 class FrminfolugarScreen extends StatefulWidget {
@@ -536,7 +511,7 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
           await docRef.set({
             'id': lugarId,
             'fechaSeleccionado':
-                fechaActual.toIso8601String() // Guarda la fecha
+            DateTime(fechaActual.year, fechaActual.month, fechaActual.day).toIso8601String()
           });
           print('Lugar guardado con éxito en el itinerario');
         } else {
