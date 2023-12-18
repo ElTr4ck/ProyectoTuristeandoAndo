@@ -326,6 +326,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
   List preferencias = [];
   List<Widget> carouselItems = [];
   Map<String, dynamic> requestData = {};
+  List ubicacionActual = [];
   @override
   void initState() {
     super.initState();
@@ -359,13 +360,33 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
           preferencias.add(doc.id);
           //print('Preferencia - ID: ${doc.id}, Tipo: ${doc['tipo']}');
         });
+        // Referencia a la colección "usuarios" y subcolección "ubicacion_actual"
+        CollectionReference ubicacionCollection = FirebaseFirestore.instance
+            .collection('usuarios')
+            .doc(uid)
+            .collection('Ubicacion');
+
+        // Realizamos la consulta para obtener la ubicación actual del usuario
+        QuerySnapshot ubicacionSnapshot = await ubicacionCollection.get();
+
+        // Lista para almacenar la ubicación actual
+
+        // Iteramos sobre los documentos y accedemos a los datos de ubicación actual
+        ubicacionSnapshot.docs.forEach((doc) {
+          // Asegúrate de ajustar según la estructura real de tu documento de ubicación_actual
+          double latitud = doc['latitud'] ?? 0.0;
+          double longitud = doc['longitud'] ?? 0.0;
+          ubicacionActual.add(latitud);
+          ubicacionActual.add(longitud);
+        });
       } else {
         print('No hay usuario autenticado');
       }
     } catch (e) {
       print('Error al obtener preferencias: $e');
     }
-    //print(preferencias);
+    print(preferencias);
+    print(ubicacionActual);
     //print(preferencias.length);
     Position position = await _determinePosition2();
     double latitude = position.latitude;
@@ -382,8 +403,8 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
         "locationRestriction": {
           "circle": {
             "center": {
-              "latitude": latitude,
-              "longitude": longitude,
+              "latitude": ubicacionActual[0],
+              "longitude": ubicacionActual[1],
             },
             "radius": 2000.0
           }
@@ -398,8 +419,8 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
         "locationRestriction": {
           "circle": {
             "center": {
-              "latitude": latitude,
-              "longitude": longitude,
+              "latitude": ubicacionActual[0],
+              "longitude": ubicacionActual[1],
             },
             "radius": 2000.0
           }
@@ -414,8 +435,8 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
         "locationRestriction": {
           "circle": {
             "center": {
-              "latitude": latitude,
-              "longitude": longitude,
+              "latitude": ubicacionActual[0],
+              "longitude": ubicacionActual[1],
             },
             "radius": 2000.0
           }
@@ -430,8 +451,8 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
         "locationRestriction": {
           "circle": {
             "center": {
-              "latitude": latitude,
-              "longitude": longitude,
+              "latitude": ubicacionActual[0],
+              "longitude": ubicacionActual[1],
             },
             "radius": 2000.0
           }
@@ -721,6 +742,7 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
   List preferencias = [];
   List<Widget> carouselItems = [];
   Map<String, dynamic> requestData = {};
+  List ubicacionActual = [];
   @override
   void initState() {
     super.initState();

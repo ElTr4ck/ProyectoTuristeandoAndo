@@ -4,6 +4,7 @@ import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
 import 'package:turisteando_ando/repositories/auth/controlers/signout_controller.dart';
 import 'package:turisteando_ando/repositories/auth/wrapper.dart';
 import 'package:turisteando_ando/routes/app_routes.dart';
+import 'package:turisteando_ando/screens/frmSetLocationINSIDE.dart';
 
 class SideBar extends StatefulWidget {
   @override
@@ -126,7 +127,7 @@ class _SideBarState extends State<SideBar> {
           ),
           ListTile(
             leading: const Icon(
-              Icons.place,
+              Icons.route,
               color: Color.fromARGB(255, 128, 128, 128),
             ),
             title: const Text(
@@ -182,6 +183,25 @@ class _SideBarState extends State<SideBar> {
             ),
             onTap: () {
               Navigator.pushNamed(context, AppRoutes.frmCuestionario);
+            },
+          ),
+          ListTile(
+            leading: const Icon(
+              Icons.place,
+              color:  Color.fromARGB(255, 128, 128, 128),
+            ),
+            title: const Text(
+              'Modificar ubicación',
+              style: TextStyle(
+                fontFamily: 'Nunito',
+              ),
+            ),
+            onTap: () {
+              Navigator.of(context)
+                  .push(MaterialPageRoute(builder: (BuildContext context) {
+                //String aux = '${prediction.lat}, ${prediction.lng}';
+                return FrmSetLocation2();
+              }));
             },
           ),
           ListTile(
