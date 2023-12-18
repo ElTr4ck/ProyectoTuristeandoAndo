@@ -168,6 +168,12 @@ class _FrmSetLocationState extends State<FrmSetLocation2> {
                                 Position position = await _determinePosition();
                                 LatLng ubicacion = LatLng(position.latitude, position.longitude);
                                 _loadUbicacion(ubicacion);
+                                Navigator.of(context).push(
+                                  MaterialPageRoute(builder: (BuildContext context) {
+                                    // Tu lógica aquí
+                                    return FrminicioPage();
+                                  }),
+                                );
                               })
                         ],
                       ),

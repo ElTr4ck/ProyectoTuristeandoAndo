@@ -14,6 +14,8 @@ import 'package:http/http.dart' as http;
 import 'package:google_maps_routes/google_maps_routes.dart';
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminfolugar_screen/frminfolugar_screen.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 
 
 class PolylineScreen extends StatefulWidget {
@@ -71,7 +73,7 @@ class _PolylineScreenState extends State<PolylineScreen> {
 
   @override
   Widget build(BuildContext context) {
-    _determinePosition();
+    //_determinePosition();
     /*Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
       return const NearByPlacesScreen();
     }));*/
@@ -541,22 +543,57 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
   }
 
   Future<void> fetchData() async {
-    Position position = await _determinePosition2();
-    double latitude = position.latitude;
-    double longitude = position.longitude;
+    //Position position = await _determinePosition2();
+    //double latitude = position.latitude;
+    //double longitude = position.longitude;
+    FirebaseAuth auth = FirebaseAuth.instance;
+    List ubicacionActual = [];
+
+    try {
+      // Verificamos si hay un usuario autenticado
+      User? user = auth.currentUser;
+      if (user != null) {
+        // Obtenemos el ID del usuario autenticado
+        String uid = user.uid;
+        // Referencia a la colección "usuarios" y subcolección "ubicacion_actual"
+        CollectionReference ubicacionCollection = FirebaseFirestore.instance
+            .collection('usuarios')
+            .doc(uid)
+            .collection('Ubicacion');
+
+        // Realizamos la consulta para obtener la ubicación actual del usuario
+        QuerySnapshot ubicacionSnapshot = await ubicacionCollection.get();
+
+        // Lista para almacenar la ubicación actual
+
+        // Iteramos sobre los documentos y accedemos a los datos de ubicación actual
+        ubicacionSnapshot.docs.forEach((doc) {
+          // Asegúrate de ajustar según la estructura real de tu documento de ubicación_actual
+          double latitud = doc['latitud'] ?? 0.0;
+          double longitud = doc['longitud'] ?? 0.0;
+          ubicacionActual.add(latitud);
+          ubicacionActual.add(longitud);
+        });
+      } else {
+        print('No hay usuario autenticado');
+      }
+    } catch (e) {
+      print('Error al obtener preferencias: $e');
+    }
+    print(ubicacionActual);
     // Tu lógica para obtener datos desde la API
     String url = 'https://places.googleapis.com/v1/places:searchNearby';
     // Los datos que enviarás en el cuerpo de la solicitud POST
     Map<String, dynamic> requestData = {
       "includedTypes": ["tourist_attraction", "museum", "hotel", "restaurant"],
-      "maxResultCount": 10,
+      "maxResultCount": 5,
       //"rankPreference": "DISTANCE",
       "languageCode": "es",
       "locationRestriction": {
         "circle": {
           "center": {
-            "latitude": latitude,
-            "longitude": longitude,
+            "latitude": ubicacionActual[0],
+            "longitude": ubicacionActual[1],
           },
           "radius": 2000.0
         }
