@@ -5,6 +5,8 @@ import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
+import '../pantallas/rutaUno.dart';
+
 class FrmRutaPropia extends StatefulWidget {
   @override
   _FrmRutaPropiaState createState() => _FrmRutaPropiaState();
@@ -13,6 +15,7 @@ class FrmRutaPropia extends StatefulWidget {
 class _FrmRutaPropiaState extends State<FrmRutaPropia> {
   DateTime selectedDate = DateTime.now();
   List<Map<String, dynamic>> lugares = [];
+  bool generarRuta = false;
 
   @override
   void initState() {
@@ -153,7 +156,7 @@ class _FrmRutaPropiaState extends State<FrmRutaPropia> {
                   state: this,
               ),
             ),
-            BotonesInf(ancho: ancho),
+            BotonesInf(ancho: ancho, selectedDate: selectedDate),
           ],
         ),
       ),
@@ -171,6 +174,7 @@ class Fecha extends StatefulWidget {
   _FechaState createState() => _FechaState();
 }
 class _FechaState extends State<Fecha> {
+
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -206,6 +210,7 @@ class _FechaState extends State<Fecha> {
     );
   }
 }
+
 class Visor extends StatelessWidget {
   final List<Map<String, dynamic>> lugares;
 
@@ -499,11 +504,9 @@ class _Hecho extends State<Hecho> {
 }
 
 class BotonesInf extends StatelessWidget {
-
   final double ancho;
-
-  const BotonesInf({super.key, required this.ancho});
-
+  final DateTime selectedDate;
+  const BotonesInf({Key? key, required this.ancho, required this.selectedDate,}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     return Wrap(
@@ -515,7 +518,11 @@ class BotonesInf extends StatelessWidget {
           child: Material(
             color: const Color.fromRGBO(17, 76, 95, 1),
             child: InkWell(
-              onTap: (){},
+              onTap: (){
+                Navigator.push(
+                  context, MaterialPageRoute(builder: (context)=>RutaUno(predictionDescription: 'Cambio de pantalla',selectedDate: selectedDate,generarRuta: true,)),
+                );
+              },
               child: Padding(
                 padding: EdgeInsets.symmetric(horizontal: ancho*0.33, vertical: 10),
                 child: const Text('Generar Ruta', style: TextStyle(
