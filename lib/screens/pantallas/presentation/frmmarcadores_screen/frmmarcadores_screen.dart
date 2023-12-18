@@ -28,8 +28,18 @@ class FrmmarcadoresScreen extends StatelessWidget {
         child: Scaffold(
       drawer: SideBar(),
       appBar: AppBar(
-        title: null,
-      ),
+              title: null,
+              backgroundColor: Colors.white,
+              elevation: 0,
+              leading: Builder(builder: (BuildContext context) {
+                return IconButton(
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                    icon: const Icon(Icons.menu,
+                        color: Color.fromARGB(255, 17, 76, 95)));
+              }),
+            ),
       body: SizedBox(
           width: double.maxFinite,
           child: ListView(
