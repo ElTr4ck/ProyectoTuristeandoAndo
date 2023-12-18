@@ -27,6 +27,7 @@ class FrmnewreseAScreen extends StatefulWidget {
 
 class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
   late Future<String> placeNameFuture;
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late Future<model.User?> userFuture;
   String name = "";
   int calificacion = 5;
@@ -180,21 +181,23 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
                       SizedBox(height: 25.v),
                       CustomElevatedButton(
                           onPressed: () async {
-                            setState(() {
-                              _isLoading = true;
-                            });
-                            DocumentReference reviewDocRef =
-                                await StoreMethods().review(
-                                    idplace: widget.id,
-                                    comentario: comentarioController.text,
-                                    calificacion: calificacion,
-                                    fecha: Timestamp.fromDate(DateTime.now()),
-                                    nombre: name,
-                                    files: _images);
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              DocumentReference reviewDocRef =
+                                  await StoreMethods().review(
+                                      idplace: widget.id,
+                                      comentario: comentarioController.text,
+                                      calificacion: calificacion,
+                                      fecha: Timestamp.fromDate(DateTime.now()),
+                                      nombre: name,
+                                      files: _images);
 
-                            // ignore: use_build_context_synchronously
-                            print("entro");
-                            Navigator.pop(context);
+                              // ignore: use_build_context_synchronously
+                              print("entro");
+                              Navigator.pop(context);
+                            }
                           },
                           text: _isLoading
                               ? '     Cargando'
@@ -264,38 +267,49 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
               padding: EdgeInsets.all(12.h),
               decoration: AppDecoration.fillGray
                   .copyWith(borderRadius: BorderRadiusStyle.roundedBorder33),
-              child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 17,
-                            backgroundImage: NetworkImage(avatar),
-                          ),
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  left: 6.h, top: 5.v, bottom: 7.v),
-                              child: Text(name + " " + lastname,
-                                  style: theme.textTheme.titleMedium))
-                        ]),
-                    SizedBox(height: 8.v),
-                    Container(
-                        width: 277.h,
-                        margin: EdgeInsets.only(right: 15.h),
-                        child: TextFormField(
-                          decoration: InputDecoration.collapsed(
-                              hintText: "Comparte tu experiencia"),
-                          minLines:
-                              3, // any number you need (It works as the rows for the textarea)
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          controller: comentarioController,
-                        )),
-                    SizedBox(height: 15.v)
-                  ]));
+              child: Form(
+                key: _formKey,
+                child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CircleAvatar(
+                              radius: 17,
+                              backgroundImage: NetworkImage(avatar),
+                            ),
+                            Padding(
+                                padding: EdgeInsets.only(
+                                    left: 6.h, top: 5.v, bottom: 7.v),
+                                child: Text(name + " " + lastname,
+                                    style: theme.textTheme.titleMedium))
+                          ]),
+                      SizedBox(height: 8.v),
+                      Container(
+                          width: 277.h,
+                          margin: EdgeInsets.only(right: 15.h),
+                          child: TextFormField(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            decoration: InputDecoration.collapsed(
+                                hintText: "Comparte tu experiencia"),
+                            minLines:
+                                3, // any number you need (It works as the rows for the textarea)
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            controller: comentarioController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Campo obligatorio";
+                              }
+                              return null;
+                            },
+                          )),
+                      SizedBox(height: 15.v)
+                    ]),
+              ));
         }
       },
     );
