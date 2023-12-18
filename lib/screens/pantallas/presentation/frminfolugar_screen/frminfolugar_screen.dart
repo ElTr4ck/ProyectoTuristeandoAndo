@@ -226,7 +226,7 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
             fontWeight: FontWeight.bold,
             fontFamily: 'Nunito',
           ),
-        ) */
+        ) 
     );
   }
 
@@ -378,7 +378,7 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (BuildContext context) {
                   //String aux = '${prediction.lat}, ${prediction.lng}';
-                  return FrmreseATabContainerScreen2(id: widget.id);
+                  return FrmreseATabContainerScreen2(id: widget.id, index: 0,);
                 }));
               },
               alignment: Alignment.bottomRight),
@@ -509,7 +509,7 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
               height: 320.v,
               width: 315.h,
               child: Stack(alignment: Alignment.topCenter, children: [
-                CustomElevatedButton(
+                /*CustomElevatedButton(
                     height: 16.v,
                     width: 53.h,
                     text: "Reseñas",
@@ -528,7 +528,7 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                         );
                       }));
                     },
-                    alignment: Alignment.bottomRight),
+                    alignment: Alignment.bottomRight),*/
                 Align(
                     alignment: Alignment.topCenter,
                     child: SizedBox(
