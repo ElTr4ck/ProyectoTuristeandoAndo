@@ -56,6 +56,7 @@ class FrminicioPage extends StatelessWidget {
     mediaQueryData = MediaQuery.of(context);
     return SafeArea(
         child: Scaffold(
+            extendBodyBehindAppBar: true,
             appBar: AppBar(
               title: null,
               backgroundColor: Colors.white,
