@@ -2,6 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:turisteando_ando/models/users/user.dart' as model;
 import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
+import 'package:turisteando_ando/repositories/auth/utils.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
 
 import '../resenas/widgets/srcoll_item_widget.dart';
@@ -68,6 +69,10 @@ class _FrmtusreseAsScreenState extends State<FrmtusreseAsScreen> {
       listaDatos.removeAt(index);
       places.removeAt(index);
     });
+    if (listaDatos.isEmpty) {
+      Navigator.of(context).pop();
+      showSnackBar("Sin reseñas", context);
+    }
   }
 
   Future<void> fetchUser() async {
@@ -156,6 +161,10 @@ class _FrmtusreseAsScreenState extends State<FrmtusreseAsScreen> {
     setState(() {
       places.addAll(aux);
     });
+    if (places.isEmpty) {
+      Navigator.of(context).pop();
+      showSnackBar("Sin reseñas", context);
+    }
     print('places: $places');
   }
 
