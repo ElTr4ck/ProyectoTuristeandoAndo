@@ -73,6 +73,7 @@ class FrmmarcadoresScreen extends StatelessWidget {
                         MaterialPageRoute(
                             builder: (context) => RutaUno(
                                   predictionDescription: 'Mover',
+                                  selectedDate: DateTime.now(),
                                 )),
                       );
                     }),
