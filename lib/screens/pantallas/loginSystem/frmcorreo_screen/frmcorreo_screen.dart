@@ -7,6 +7,7 @@ import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
 import 'package:turisteando_ando/repositories/auth/controlers/signout_controller.dart';
 import 'package:turisteando_ando/screens/frmSetLocation.dart';
 import 'package:turisteando_ando/screens/pantallas/loginSystem/frminvitado_screen/frminvitado_screen.dart';
+import 'package:turisteando_ando/repositories/auth/wrapper.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 
 class FrmcorreoScreen extends StatefulWidget {
@@ -50,49 +51,73 @@ class _FrmcorreoScreenState extends State<FrmcorreoScreen> {
       ? FrmSetLocation()
       : isAnonymous
           ? FrminvitadoScreen()
-
-          //  mediaQueryData = MediaQuery.of(context);
           : SafeArea(
               child: Scaffold(
-                  body: Container(
-                      width: double.maxFinite,
-                      padding: EdgeInsets.symmetric(vertical: 17.v),
-                      child: Column(children: [
+                body: Center(
+                  child: Container(
+                    width: double.maxFinite,
+                    padding: EdgeInsets.symmetric(vertical: 17.v),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomImageView(
+                          imagePath: ImageConstant.imgLogo,
+                          height: 150,
+                          width: 150,
+                          alignment: Alignment.topCenter,
+                        ),
                         Container(
-                            width: double.maxFinite,
-                            decoration: AppDecoration.outlineBlack,
-                            child: Text("¡Revisa tu correo electrónico!\n",
-                                maxLines: null,
-                                textAlign: TextAlign.center,
-                                overflow: TextOverflow.ellipsis,
-                                style: theme.textTheme.headlineSmall!
-                                    .copyWith(height: 1.41))),
+                          width: double.maxFinite,
+                          decoration: AppDecoration.outlineBlack,
+                          child: Text(
+                            "¡Revisa tu correo electrónico!\n",
+                            maxLines: 4,
+                            textAlign: TextAlign.center,
+                            overflow: TextOverflow.ellipsis,
+                            style: TextStyle(
+                              fontSize: 30.0,
+                              fontWeight: FontWeight.bold,
+                              fontFamily: 'Nunito',
+                            ),
+                          ),
+                        ),
                         SizedBox(height: 5.v),
                         Container(
-                            margin: EdgeInsets.symmetric(horizontal: 42.h),
-                            padding: EdgeInsets.symmetric(
-                                horizontal: 15.h, vertical: 9.v),
-                            decoration: AppDecoration.fillGray.copyWith(
-                                borderRadius:
-                                    BorderRadiusStyle.roundedBorder12),
-                            child: Column(
-                                mainAxisSize: MainAxisSize.min,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  SizedBox(height: 2.v),
-                                  SizedBox(
-                                      width: 244.h,
-                                      child: Text(
-                                          "Hemos enviado un enlace para confirmar tu correo electrónico. \n Ingresa y sigue las instrucciones para completar el proceso.",
-                                          maxLines: 6,
-                                          overflow: TextOverflow.ellipsis,
-                                          textAlign: TextAlign.center,
-                                          style: CustomTextStyles
-                                              .titleLargeOnPrimaryContainer
-                                              .copyWith(height: 1.41)))
-                                ]))
-                      ])),
-                  bottomNavigationBar: _buildRegresarAInicio(context)));
+                          margin: EdgeInsets.symmetric(horizontal: 42.h),
+                          padding: EdgeInsets.symmetric(
+                            horizontal: 15.h,
+                            vertical: 9.v,
+                          ),
+                          decoration: AppDecoration.fillGray.copyWith(
+                            borderRadius: BorderRadiusStyle.roundedBorder12,
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SizedBox(height: 2.v),
+                              SizedBox(
+                                width: 244.h,
+                                child: Text(
+                                  "Hemos enviado un enlace para confirmar tu correo electrónico. Ingresa y sigue las instrucciones para completar el proceso.",
+                                  maxLines: 6,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.center,
+                                  style: CustomTextStyles
+                                      .titleLargeOnPrimaryContainer
+                                      .copyWith(height: 1.41),
+                                ),
+                              ),
+                            ],
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+                bottomNavigationBar: _buildRegresarAInicio(context),
+              ),
+            );
 
   /// Section Widget
   Widget _buildRegresarAInicio(BuildContext context) {
@@ -105,8 +130,8 @@ class _FrmcorreoScreenState extends State<FrmcorreoScreen> {
     return CustomElevatedButton(
         height: 40.v,
         text: "Regresar al Inicio",
-        margin: EdgeInsets.only(left: 30.h, right: 30.h, bottom: 41.v),
-        buttonStyle: CustomButtonStyles.fillPrimaryTL22,
+        margin: EdgeInsets.only(left: 30.h, right: 20.h),
+        buttonStyle: CustomButtonStyles.fillPrimary,
         buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
         onPressed: () {
           signOut();

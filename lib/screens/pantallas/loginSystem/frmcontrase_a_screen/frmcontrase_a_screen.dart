@@ -27,51 +27,57 @@ class FrmcontraseAScreen extends StatelessWidget {
 
     mediaQueryData = MediaQuery.of(context);
     return SafeArea(
-        child: Scaffold(
-            body: Form(
-                key: _formKey,
-                child: Container(
-                    width: double.maxFinite,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.h, vertical: 20.v),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CustomImageView(
-                            imagePath: ImageConstant.imgLogo,
-                            height: 150,
-                            width: 150,
-                            alignment: Alignment.topCenter,
-                          ),
-                          _buildSeventeen(context),
-                          SizedBox(height: 20.v),
-                          _buildTextFieldOutline(context),
-                          SizedBox(height: 20.v),
-                          CustomElevatedButton(
-                              text: "Enviar",
-                              margin: EdgeInsets.only(
-                                  left: 30.h, right: 20.h, bottom: 10.h),
-                              buttonStyle: CustomButtonStyles.fillPrimary,
-                              buttonTextStyle:
-                                  CustomTextStyles.titleMediumOnPrimary17,
-                              onPressed: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  bool res = await sendResetEmail();
-                                  if (res) onTapEnviar(context);
-                                }
-                              }),
-                          SizedBox(height: 5.v),
-                          CustomElevatedButton(
-                              text: "Cancelar",
-                              margin: EdgeInsets.only(
-                                  left: 30.h, right: 20.h, bottom: 10.h),
-                              buttonStyle: CustomButtonStyles.fillTeal,
-                              buttonTextStyle:
-                                  CustomTextStyles.titleMediumOnPrimary17,
-                              onPressed: () {
-                                onTapCancelar(context);
-                              })
-                        ])))));
+      child: Scaffold(
+        body: Center(
+          child: Form(
+            key: _formKey,
+            child: Container(
+              width: double.maxFinite,
+              padding: EdgeInsets.symmetric(horizontal: 16.h, vertical: 20.v),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomImageView(
+                    imagePath: ImageConstant.imgLogo,
+                    height: 150,
+                    width: 150,
+                    alignment: Alignment.topCenter,
+                  ),
+                  _buildSeventeen(context),
+                  SizedBox(height: 20.v),
+                  _buildTextFieldOutline(context),
+                  SizedBox(height: 20.v),
+                  CustomElevatedButton(
+                    text: "Enviar",
+                    margin:
+                        EdgeInsets.only(left: 30.h, right: 20.h, bottom: 10.h),
+                    buttonStyle: CustomButtonStyles.fillPrimary,
+                    buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        bool res = await sendResetEmail();
+                        if (res) onTapEnviar(context);
+                      }
+                    },
+                  ),
+                  SizedBox(height: 5.v),
+                  CustomElevatedButton(
+                    text: "Cancelar",
+                    margin:
+                        EdgeInsets.only(left: 30.h, right: 20.h, bottom: 10.h),
+                    buttonStyle: CustomButtonStyles.fillTeal,
+                    buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
+                    onPressed: () {
+                      onTapCancelar(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   /// Section Widget
