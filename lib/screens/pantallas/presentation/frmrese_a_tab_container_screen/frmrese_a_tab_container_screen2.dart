@@ -321,7 +321,7 @@ class FrmreseATabContainerScreenState extends State<FrmreseATabContainerScreen2>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CustomRatingBar(
-                      initialRating: jsonData?['rating'],
+                      initialRating: jsonData?['rating'].toDouble(), //error
                       itemSize: 13,
                       color: appTheme.yellow700,
                     ),

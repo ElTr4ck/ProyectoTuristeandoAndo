@@ -103,14 +103,6 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
 
   List<Uint8List> _images = [];
 
-  Future<void> uploadImages(String reviewId) async {
-    for (int i = 0; i < _images.length; i++) {
-      String path = 'reviews/$reviewId/image_$i.jpg';
-      String imageUrl = await StoreMethods().uploadImage(_images[i], path);
-      print('Image uploaded: $imageUrl');
-    }
-  }
-
   bool _isLoading = false; //variable para mostrar CircularProgressIndicator
 
   @override
@@ -199,8 +191,6 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
                                     fecha: Timestamp.fromDate(DateTime.now()),
                                     nombre: name,
                                     files: _images);
-                            String reviewId = reviewDocRef.id;
-                            await uploadImages(reviewId);
 
                             // ignore: use_build_context_synchronously
                             print("entro");

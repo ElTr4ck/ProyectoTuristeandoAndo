@@ -131,7 +131,7 @@ class _FrmtusreseAsScreenState extends State<FrmtusreseAsScreen> {
 
       // Obteniendo el nombre y la calificación del lugar
       String title = result['name']; // Nombre del lugar
-      double rating = result['rating'] ??
+      double rating = result['rating'].toDouble() ??
           0.0; // Calificación del lugar, 0.0 si no está disponible
 
       // Construyendo la descripción con la calificación
