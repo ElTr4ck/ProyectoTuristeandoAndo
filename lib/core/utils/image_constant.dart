@@ -116,11 +116,13 @@ class ImageConstant {
 
   static String imgRectangle993 = '$imagePath/img_rectangle_993.png';
 
-  static String imgFrameAgregarruta = '$imagePath/img_frame_agregarruta.svg';
+  static String imgFrameAgregarruta = '$imagePath/img_agregaItinerario.png';
 
-  static String imgVectorvisitado = '$imagePath/img_vectorvisitado.svg';
+  static String imgVectorvisitado = '$imagePath/img_visitado.png';
 
   static String imgVectorfavoritos = '$imagePath/img_vectorfavoritos.svg';
+
+  static String imgFavoritos = '$imagePath/img_heart_fav.png';
 
   // frmReseña images
   static String imgUserphoto1 = '$imagePath/img_userphoto1.png';
