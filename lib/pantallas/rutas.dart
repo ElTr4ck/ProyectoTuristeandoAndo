@@ -28,6 +28,7 @@ class PolylineScreen extends StatefulWidget {
 const kGoogleApiKey = 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
 final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
+
 class _PolylineScreenState extends State<PolylineScreen> {
   List ubicacionActual = [];
   late CameraPosition initialPosition;
@@ -488,6 +489,7 @@ class CarouselWithInfo extends StatefulWidget {
   _CarouselWithInfoState createState() => _CarouselWithInfoState();
 }
 
+
 class _CarouselWithInfoState extends State<CarouselWithInfo> {
   List<Widget> carouselItems = [];
 
@@ -496,7 +498,6 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
     super.initState();
     fetchData();
   }
-
   Future<void> fetchData() async {
     //Position position = await _determinePosition2();
     //double latitude = position.latitude;
@@ -575,8 +576,12 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
         // La solicitud fue exitosa, puedes manejar la respuesta aquí
         //print('Respuesta exitosa: ${response.body}');
         Map<String, dynamic> jsonData = json.decode(response.body);
-        //print('${jsonData["places"][0]["displayName"]["text"]}');
+        print('${jsonData["places"][0]["location"]["latitude"]}');
         //print('${jsonData["places"][0]["formattedAddress"]}');
+        double latitud = jsonData["places"][0]["location"]["latitude"];
+        double longitud = jsonData["places"][0]["location"]["longitude"];
+
+        // Llama a la función para crear el marcador en el mapa
       } else {
         // Hubo un error en la solicitud, puedes manejarlo aquí
         print('Error en la solicitud: ${response.statusCode}');

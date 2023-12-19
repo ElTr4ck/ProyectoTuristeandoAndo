@@ -15,7 +15,7 @@ import 'package:turisteando_ando/widgets/custom_rating_bar.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:turisteando_ando/pantallas/rutaUno.dart';
+import 'package:turisteando_ando/pantallas/rutaDos.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
 
 import 'dart:convert';
@@ -35,7 +35,7 @@ import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
-import 'package:turisteando_ando/pantallas/rutaUno.dart';
+
 
 import '../frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
 
