@@ -139,7 +139,7 @@ class FrmperfilScreen extends StatelessWidget {
           "Ruta destacada",
           Icons.star,
           onTap: () {
-            Navigator.pushNamed(context, '/frmRutaDestacada.dart');
+            Navigator.pushNamed(context, AppRoutes.frmRutaDestacada);
           },
         ),
       ],
