@@ -1,4 +1,6 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/models/users/user.dart' as model;
 import 'package:turisteando_ando/repositories/auth/firestore_methods.dart';
@@ -23,10 +25,26 @@ class SrcollItemWidget extends StatelessWidget {
           key: key,
         );
 
+  String timeAgoCustom(DateTime d) {
+    // <-- Custom method Time Show  (Display Example  ==> 'Today 7:00 PM')     // WhatsApp Time Show Status Shimila
+    Duration diff = DateTime.now().difference(d);
+    if (diff.inDays > 365)
+      return "Hace ${(diff.inDays / 365).floor()} ${(diff.inDays / 365).floor() == 1 ? "año" : "años"}";
+    if (diff.inDays > 30)
+      return "Hace ${(diff.inDays / 30).floor()} ${(diff.inDays / 30).floor() == 1 ? "mes" : "meses"}";
+    if (diff.inDays > 7)
+      return "Hace ${(diff.inDays / 7).floor()} ${(diff.inDays / 7).floor() == 1 ? "semana" : "semanas"}";
+    if (diff.inDays > 0) return "${DateFormat.E('es').add_jm().format(d)}";
+    if (diff.inHours > 0) return "Hoy ${DateFormat('jm').format(d)}";
+    if (diff.inMinutes > 0)
+      return "Hace ${diff.inMinutes} ${diff.inMinutes == 1 ? "minuto" : "minutos"}";
+    return "Justo ahora";
+  }
+
   @override
   Widget build(BuildContext context) {
-    String formattedDate = "${(review['fecha']).toDate()}";
-    String dateWithoutNanos = formattedDate.split('.')[0];
+    Timestamp formattedDate = review['fecha'];
+    String dateWithoutNanos = timeAgoCustom(formattedDate.toDate());
     return Container(
       //DECORATION CONTAINER
       padding: EdgeInsets.all(12.h),
@@ -87,7 +105,7 @@ class SrcollItemWidget extends StatelessWidget {
                                 width: 20.h,
                               ),
                               Text(
-                                "${dateWithoutNanos}", //DATE
+                                "     $dateWithoutNanos", //DATE
                                 style: theme.textTheme.labelLarge,
                               ),
                             ],
@@ -127,7 +145,7 @@ class SrcollItemWidget extends StatelessWidget {
             width: 293.h,
             child: Text(
               review['comentario'],
-              maxLines: null,
+              maxLines: 3,
               //check this section because don´t show the complete review
               overflow: TextOverflow.ellipsis,
               style: theme.textTheme.bodyMedium,
