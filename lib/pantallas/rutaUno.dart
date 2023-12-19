@@ -392,17 +392,11 @@ class _RutaUnoState extends State<RutaUno> {
     Position position = await _determinePosition();
     double latitude = position.latitude;
     double longitude = position.longitude;
-    LatLng selectedLocation = LatLng(latitude,
-        longitude); /*await Navigator.push(
-      context,
-      MaterialPageRoute(builder: (context) => SelectLocationScreen()),
-    );*/
-    print(
-        "Ubicación seleccionada: $selectedLocation"); // Agregar esta línea para depuración
+    LatLng selectedLocation = LatLng(latitude, longitude);
+    print("Ubicación seleccionada: $selectedLocation"); // Agregar esta línea para depuración
     if (selectedLocation != null) {
       String placeName =
           await getPlaceName(selectedLocation); // Obtén el nombre del lugar
-
       //Eliminar
       setState(() {
         _markers.removeWhere(
@@ -423,8 +417,7 @@ class _RutaUnoState extends State<RutaUno> {
         //_markers.clear();
         _markers.add(updatedMarker);
       });
-      _updateCameraPosition(
-          selectedLocation); // Centra el mapa en la nueva ubicación
+      _updateCameraPosition(selectedLocation); // Centra el mapa en la nueva ubicación
     }
   }
 
@@ -504,13 +497,17 @@ class _RutaUnoState extends State<RutaUno> {
       );
 
       setState(() {
-        _secondLocation = newLocation;
-        print(newLocation.latitude);
-        print(newLocation.longitude);
-        secondLocationName = placeName; // Actualiza el texto del segundo botón
-        _polylines.clear();
-        //_markers.clear();
-        _markers.add(searchedLocationMarker);
+        if(widget.generarRuta){
+          _secondLocation = LatLng(0.0, 0.0);
+          secondLocationName = 'RUTA';
+        }else{
+          _secondLocation = newLocation;
+          print(newLocation.latitude);
+          print(newLocation.longitude);
+          secondLocationName = placeName; // Actualiza el texto del segundo botón
+          _polylines.clear();
+          _markers.add(searchedLocationMarker);
+        }
       });
     }
   }
@@ -1001,9 +998,9 @@ class _RutaUnoState extends State<RutaUno> {
         fetchPlacesItinerario(widget.selectedDate);
         resetDestination();
       }
+      _selectLocationDefault();
+      _searchAndSelectSecondLocationDefault();
     });
-    _selectLocationDefault();
-    _searchAndSelectSecondLocationDefault();
   }
 
   void resetDestination() {
