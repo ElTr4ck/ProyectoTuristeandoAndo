@@ -12,6 +12,8 @@ import 'package:http/http.dart' as http;
 import 'package:google_maps_widget/google_maps_widget.dart';
 
 final GoogleMapsPlaces places = GoogleMapsPlaces(apiKey: "AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM");
+final Set<Marker> _markers = {};
+final Set<Marker> _markersItinerario = {};
 
 class MyApp extends StatelessWidget {
   final String predictionDescription;
@@ -267,9 +269,6 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
   }
 }
 
-final Set<Marker> _markers = {};
-final Set<Marker> _markersItinerario = {};
-
 class RutaUno extends StatefulWidget {
   final String predictionDescription;
   final DateTime selectedDate;
@@ -285,8 +284,7 @@ class _RutaUnoState extends State<RutaUno> {
   GoogleMapController? _mapController;
   LatLng _currentLocation = LatLng(0, 0);
   LatLng _secondLocation = LatLng(0, 0); // Para la segunda ubicación
-  String secondLocationName =
-      'Buscar ubicación'; // Texto inicial del segundo botón
+  String secondLocationName = 'Buscar ubicación'; // Texto inicial del segundo botón
   String buttonText = 'Tu ubicacion';
   String travelTimeButton = "0"; // Valor inicial
   double km = 0.0;
@@ -295,6 +293,8 @@ class _RutaUnoState extends State<RutaUno> {
   String totalTravelTime= "0 min";
   String totalTravelTimecam= "0 min";
   String totalTravelTimetrans= "0 min";
+  List<LatLng> routePoints = [];
+  final Set<Polyline> _polylines = {};
 
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
@@ -607,8 +607,6 @@ class _RutaUnoState extends State<RutaUno> {
     showRouteOnMap(encodedPolyline);
   }
 
-  final Set<Polyline> _polylines = {};
-
   void showRouteOnMap(String encodedPolyline) {
     Polyline polyline = Polyline(
       polylineId: PolylineId("route"),
@@ -670,7 +668,6 @@ class _RutaUnoState extends State<RutaUno> {
     showRouteOnMap(encodedPolyline);
   }
 
-
   void fetchPlaces() async {
     FirebaseAuth auth = FirebaseAuth.instance;
     User? user = auth.currentUser;
@@ -688,6 +685,7 @@ class _RutaUnoState extends State<RutaUno> {
       }
     }
   }
+
   void _addMarker(Map<String, dynamic> placeDetails, String placeId) {
     final marker = Marker(
       markerId:
@@ -704,7 +702,6 @@ class _RutaUnoState extends State<RutaUno> {
     });
   }
 
-  List<LatLng> routePoints = [];
   void fetchPlacesItinerario(DateTime selectedDate) async {
     FirebaseAuth auth = FirebaseAuth.instance;
     print("El día es: $selectedDate");
@@ -730,6 +727,7 @@ class _RutaUnoState extends State<RutaUno> {
       drawOptimalRoute();
     }
   }
+
   void _addMarkerItinerario(Map<String, dynamic> placeDetails, String placeId) {
     final marker = Marker(
       markerId: MarkerId(placeId), // Usar placeId como identificador del marcador
@@ -742,6 +740,7 @@ class _RutaUnoState extends State<RutaUno> {
       _markersItinerario.add(marker);
     });
   }
+
   Future<void> drawOptimalRoute() async {
     List<LatLng> points = List.from(routePoints); // Copia para no modificar la lista original
     List<LatLng> optimalRoute = findOptimalRoute(points, _currentLocation);
@@ -762,6 +761,7 @@ class _RutaUnoState extends State<RutaUno> {
       totalTravelTimetrans= totalTravelTimetrans;
     });
   }
+
   void addPolylineToMap(String encodedPolyline) {
     Polyline polyline = Polyline(
       polylineId: PolylineId("route_${_polylines.length}"),
@@ -774,6 +774,7 @@ class _RutaUnoState extends State<RutaUno> {
       _polylines.add(polyline);
     });
   }
+
   void _addPolylineToMap() async {
     _polylines.clear();
 
@@ -788,6 +789,7 @@ class _RutaUnoState extends State<RutaUno> {
       }
     }
   }
+
   void _addPolylineToMapPie() async {
     _polylines.clear();
 
@@ -802,6 +804,7 @@ class _RutaUnoState extends State<RutaUno> {
       }
     }
   }
+
   void _addPolylineToMapTrans() async {
     _polylines.clear();
 
@@ -829,6 +832,7 @@ class _RutaUnoState extends State<RutaUno> {
     }
     return route;
   }
+
   LatLng findClosestPoint(LatLng currentLocation, List<LatLng> points) {
     if (points.isEmpty) {
       throw Exception('La lista de puntos está vacía');
@@ -847,6 +851,7 @@ class _RutaUnoState extends State<RutaUno> {
     }
     return closestPoint;
   }
+
   double _calculateDistance(LatLng point1, LatLng point2) {
     var earthRadiusKm = 6371.0;
     var dLat = _degreesToRadians(point2.latitude - point1.latitude);
@@ -858,6 +863,7 @@ class _RutaUnoState extends State<RutaUno> {
     var c = 2 * atan2(sqrt(a), sqrt(1 - a));
     return earthRadiusKm * c;
   }
+
   double _degreesToRadians(double degrees) {
     return degrees * pi / 180.0;
   }
@@ -873,6 +879,7 @@ class _RutaUnoState extends State<RutaUno> {
 
     return "$totalMinutes min";
   }
+
   int extractMinutesFromTravelTime(String travelTime) {
     var parts = travelTime.split(' ');
     if (parts.length >= 2) {
@@ -880,6 +887,7 @@ class _RutaUnoState extends State<RutaUno> {
     }
     return 0;
   }
+
   Future<String> calculateTravelTime(LatLng start, LatLng end, String mode) async {
     try {
       var directions = await getDirections(start, end, mode); // Asegúrate de que 'mode' se pasa correctamente aquí
@@ -993,8 +1001,8 @@ class _RutaUnoState extends State<RutaUno> {
         fetchPlacesItinerario(widget.selectedDate);
         resetDestination();
       }
-      _selectLocationDefault();
     });
+    _selectLocationDefault();
     _searchAndSelectSecondLocationDefault();
   }
 
