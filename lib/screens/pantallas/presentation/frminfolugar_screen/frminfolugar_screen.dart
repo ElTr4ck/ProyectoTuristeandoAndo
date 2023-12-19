@@ -178,30 +178,20 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
   /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-        height: 60.v,
-        leadingWidth: 24.h,
-        leading: Padding(
-            padding: EdgeInsets.only(top: 7.v, bottom: 16.v),
-            child: GestureDetector(
-                onTap: () {
-                  Navigator.pop(
-                      context); //pop para no volver a cargar la pantalla
-                },
-                child: Icon(
-                  Icons.arrow_back_outlined,
-                  size: 30.h,
-                  color: Colors.grey,
-                ))),
-        centerTitle: true,
-        title: Text(
-          "Información del lugar",
-          textAlign: TextAlign.center,
-          style: TextStyle(
-            fontSize: 40.0,
-            fontWeight: FontWeight.bold,
-            fontFamily: 'Nunito',
-          ),
-        ) 
+      height: 60.v,
+      leadingWidth: 24.h,
+      leading: Padding(
+          padding: EdgeInsets.only(top: 7.v, bottom: 16.v),
+          child: GestureDetector(
+              onTap: () {
+                Navigator.pop(
+                    context); //pop para no volver a cargar la pantalla
+              },
+              child: Icon(
+                Icons.arrow_back_outlined,
+                size: 30.h,
+                color: Colors.grey,
+              ))),
     );
   }
 
@@ -353,7 +343,10 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (BuildContext context) {
                   //String aux = '${prediction.lat}, ${prediction.lng}';
-                  return FrmreseATabContainerScreen2(id: widget.id, index: 0,);
+                  return FrmreseATabContainerScreen2(
+                    id: widget.id,
+                    index: 0,
+                  );
                 }));
               },
               alignment: Alignment.bottomRight),
@@ -585,7 +578,8 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
           await docRef.set({
             'id': lugarId,
             'fechaSeleccionado':
-            DateTime(fechaActual.year, fechaActual.month, fechaActual.day).toIso8601String()
+                DateTime(fechaActual.year, fechaActual.month, fechaActual.day)
+                    .toIso8601String()
           });
           print('Lugar guardado con éxito en el itinerario');
         } else {

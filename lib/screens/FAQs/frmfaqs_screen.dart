@@ -99,7 +99,7 @@ class _MyFrmfaqsScreenState extends State<FrmfaqsScreen> {
                   //SizedBox(height: 1.h),
                   SizedBox(
                     //size: Size(double.infinity, double.infinity),
-                    height: 510.v,
+                    height: 499.v,
                     width: double.maxFinite,
                     child: Stack(
                       alignment: Alignment.center,
@@ -138,7 +138,7 @@ class _MyFrmfaqsScreenState extends State<FrmfaqsScreen> {
     return Align(
       alignment: Alignment.center,
       child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 9.h),
+        padding: EdgeInsets.symmetric(horizontal: 7.h),
         child: SingleChildScrollView(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -165,7 +165,7 @@ class _MyFrmfaqsScreenState extends State<FrmfaqsScreen> {
             color: Colors.grey.withOpacity(0.2), // Color gris con opacidad
             borderRadius: BorderRadius.circular(10.0), // Bordes redondeados
           ),
-          margin: EdgeInsets.symmetric(vertical: 8.0), // Margen vertical
+          //margin: EdgeInsets.symmetric(vertical: 0.5), // Margen vertical
           child: ListTile(
             title: Text(
               question,
