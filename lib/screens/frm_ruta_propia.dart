@@ -4,15 +4,25 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_container_screen/frminicio_container_screen.dart';
+import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
 
 class FrmRutaPropia extends StatefulWidget {
+  DateTime? inicial;
+  FrmRutaPropia(DateTime? inicial2, {super.key}){
+    inicial = inicial2;
+  }
   @override
-  _FrmRutaPropiaState createState() => _FrmRutaPropiaState();
+  _FrmRutaPropiaState createState() => _FrmRutaPropiaState(inicial);
 }
 
 class _FrmRutaPropiaState extends State<FrmRutaPropia> {
   DateTime selectedDate = DateTime.now();
-  List<Map<String, dynamic>> lugares = [];
+  _FrmRutaPropiaState(DateTime? inicial){
+    if(inicial != null){
+      selectedDate = inicial;
+    }
+  }List<Map<String, dynamic>> lugares = [];
 
   @override
   void initState() {
@@ -71,6 +81,7 @@ class _FrmRutaPropiaState extends State<FrmRutaPropia> {
           'fecha': fecha, // Aquí usas la fecha de Firestore
           'imagen': placeDetails['image'] ?? 'URL_imagen_por_defecto',
           'id': id,
+          'ubicacion': placeDetails['ubicacion'] ?? 'Ubicación no disponible',
         });
       } catch (e) {
         print('Error al obtener detalles del lugar: $e');
@@ -89,6 +100,8 @@ class _FrmRutaPropiaState extends State<FrmRutaPropia> {
       var data = json.decode(response.body);
       var result = data['result'];
 
+      String? ubicacion = result['formatted_address'];
+
       // Obteniendo el nombre y la calificación del lugar
       String title = result['name']; // Nombre del lugar
       // Construyendo la descripción con la calificación
@@ -99,12 +112,14 @@ class _FrmRutaPropiaState extends State<FrmRutaPropia> {
           : 'URL_imagen_por_defecto';
       return {
         'title': title,
-        'image': imageUrl
+        'image': imageUrl,
+        'ubicacion': ubicacion
       };
     } else {
       return {
         'title': 'Información no disponible',
-        'image': 'url_de_imagen_por_defecto'
+        'image': 'url_de_imagen_por_defecto',
+        'ubicacion': 'Información no disponible'
       };
     }
   }
@@ -222,7 +237,7 @@ class Visor extends StatelessWidget {
           return Tarjeta(
             url: lugar['imagen'],
             nombre: lugar['nombre'],
-            fecha: lugar['fecha'],
+            fecha: lugar['ubicacion'],
             id: lugar['id'],
             state: state, // Pasar el estado a Tarjeta
           );
@@ -247,11 +262,12 @@ class Tarjeta extends StatelessWidget {
     required this.nombre,
     required this.fecha,
     required this.id,
-    required this.state, // Nuevo parámetro
+    required this.state,
   }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
+    final ancho = MediaQuery.of(context).size.width;
     return Card(
       elevation: 1,
       child: Padding(
@@ -262,8 +278,8 @@ class Tarjeta extends StatelessWidget {
             Image.network(url, width: 80),
             Column(
               children: [
-                Text(nombre),
-                Text('Añadido el $fecha'),
+                SizedBox(width: ancho*0.4, child: Text(nombre, overflow: TextOverflow.ellipsis,)),
+                SizedBox(width: ancho*0.4, child: Text(fecha, overflow: TextOverflow.ellipsis,)),
               ],
             ),
             Column(
@@ -532,27 +548,13 @@ class BotonesInf extends StatelessWidget {
           child: Material(
             color: const Color.fromRGBO(242, 230, 207, 1),
             child: InkWell(
-              onTap: () async{
-                //await Share.share('Hola', subject: 'Prueba');
+              onTap: (){
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: ((context) => FrminicioPage()))
+                );
               },
               child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: ancho*0.101, vertical: 10),
-                child: const Text('Compartir', style: TextStyle(
-                  fontFamily: 'Nunito',
-                  fontSize: 12,
-                )),
-              ),
-            ),
-          ),
-        ),
-        ClipRRect(
-          borderRadius: BorderRadius.circular(10),
-          child: Material(
-            color: const Color.fromRGBO(242, 230, 207, 1),
-            child: InkWell(
-              onTap: (){},
-              child: Padding(
-                padding: EdgeInsets.symmetric(horizontal: ancho*0.101, vertical: 10),
+                padding: EdgeInsets.symmetric(horizontal: ancho*0.32, vertical: 10),
                 child: const Text('Buscar sugerencias', style: TextStyle(
                   fontFamily: 'Nunito',
                   fontSize: 12,

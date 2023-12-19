@@ -366,10 +366,30 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                     width: 12.adaptSize)),
             buttonStyle: CustomButtonStyles.fillPrimary,
             buttonTextStyle: CustomTextStyles.bodySmallRegular,
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => FrmRutaPropia()));
-              guardarEnItinerario(widget.id);
+            onPressed: () async{
+              DateTime hoy = DateTime.now();
+              DateTime? it = await showDatePicker(
+                builder: (context, child) {
+                  return Theme(
+                    data: Theme.of(context).copyWith(
+                      colorScheme: const ColorScheme.light(
+                        primary: Color.fromRGBO(17, 76, 95, 1)
+                      )
+                    ), 
+                    child: child!
+                  );
+                },
+                context: context,
+                initialDate: hoy,
+                firstDate: DateTime(hoy.year-10),
+                lastDate: DateTime(hoy.year+10),
+              );
+              if(it != null){
+                Navigator.of(context).push(
+                  MaterialPageRoute(builder: (context) => FrmRutaPropia(it)));
+                guardarEnItinerario(widget.id, it);
+              }
+              
             },
           ),
 
@@ -378,16 +398,14 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
               height: 20.v,
               width: 19.h,
               margin: EdgeInsets.only(left: 23.h)),*/
-          CustomImageView(
-              imagePath: ImageConstant.imgVectorvisitado,
-              height: 16.v,
-              width: 15.h,
-              margin: EdgeInsets.only(left: 10.h)),
-          CustomImageView(
-              imagePath: ImageConstant.imgVectorfavoritos,
-              height: 16.v,
-              width: 19.h,
-              margin: EdgeInsets.only(left: 10.h))
+          IconButton(
+            onPressed: (){},
+            icon: Icon(Icons.favorite, color: Colors.grey,),
+          ),
+          IconButton(
+            onPressed: (){},
+            icon: Icon(Icons.check_box_outlined, color: Colors.grey,),
+          ),
         ]));
   }
 
@@ -521,10 +539,10 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
   }
 
   /// Section Widget
-  Future<void> guardarEnItinerario(String lugarId) async {
+  Future<void> guardarEnItinerario(String lugarId, DateTime sel) async {
     var user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      var fechaActual = DateTime.now(); // Obtiene la fecha y hora actual
+      var fechaActual = sel; // Obtiene la fecha y hora actual
       var docRef = FirebaseFirestore.instance
           .collection('usuarios')
           .doc(user.uid)
