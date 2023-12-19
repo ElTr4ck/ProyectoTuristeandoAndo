@@ -25,7 +25,7 @@ import 'package:turisteando_ando/screens/pantallas/loginSystem/frminvitado_scree
 import 'package:turisteando_ando/screens/pantallas/loginSystem/app_navigation_screen/app_navigation_screen.dart';
 import 'package:turisteando_ando/screens/resenas/frmtusrese_as_screen.dart';
 import 'package:turisteando_ando/screens/rutaDestacada/frmRutaDestacada.dart';
-
+import 'package:turisteando_ando/widgets/foto.dart';
 import '../screens/pantallas/presentation/frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
 
 class AppRoutes {
@@ -88,16 +88,24 @@ class AppRoutes {
   static const String frmfaqsScreen = '/frmfaqs_screen';
 
   static const String frmtusreseAsScreen = '/frmtusrese_as_screen';
-
+  static const String foto = '/foto';
   static Map<String, WidgetBuilder> routes = {
     frminicioContainerScreen: (context) => FrminicioContainerScreen(),
     frmporvisitarScreen: (context) => FrmporvisitarScreen(),
     frmmarcadoresScreen: (context) => FrmmarcadoresScreen(),
     frmmarcmapaScreen: (context) => FrmmarcmapaScreen(),
-    frminfolugarScreen: (context) => FrminfolugarScreen(id: '',),
-    frmreseATabContainerScreen2: (context) => FrmreseATabContainerScreen2(id: '',),
-    frmreseATabContainerScreen: (context) => FrmreseATabContainerScreen(jsonData: null),
-    frmnewreseAScreen: (context) => FrmnewreseAScreen(id: '',),
+    frminfolugarScreen: (context) => FrminfolugarScreen(
+          id: '',
+        ),
+    frmreseATabContainerScreen2: (context) => FrmreseATabContainerScreen2(
+          id: '',
+          index: 0,
+        ),
+    frmreseATabContainerScreen: (context) =>
+        FrmreseATabContainerScreen(jsonData: null),
+    frmnewreseAScreen: (context) => FrmnewreseAScreen(
+          id: '',
+        ),
     frmreportarreseAScreen: (context) => FrmreportarreseAScreen(),
     appNavigationScreen: (context) => AppNavigationScreen(),
     frmwelcomeScreen: (context) => FrmwelcomeScreen(),
@@ -124,6 +132,7 @@ class AppRoutes {
     frmfaqsScreen: (context) => FrmfaqsScreen(),
 
     frmtusreseAsScreen: (context) => FrmtusreseAsScreen(),
+    foto: (context) => Foto(url: ''),
 
     //rutasUno: (context) => RutaUno(predictionDescription: predictionDescription) //TODO: Aqui que onda jaja
   };

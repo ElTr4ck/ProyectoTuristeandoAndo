@@ -11,6 +11,8 @@ import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 import 'package:turisteando_ando/widgets/custom_text_form_field.dart';
 
+import 'package:turisteando_ando/screens/perfilUsuario/frmperfil_screen/frmperfil_screen.dart';
+
 // ignore_for_file: must_be_immutable
 class FrmeditaperfilScreen extends StatefulWidget {
   FrmeditaperfilScreen({Key? key}) : super(key: key);
@@ -141,8 +143,11 @@ class _FrmeditaperfilScreenState extends State<FrmeditaperfilScreen> {
                           padding: EdgeInsets.only(top: 7.v, bottom: 16.v),
                           child: GestureDetector(
                               onTap: () {
-                                Navigator.pushNamed(
-                                    context, '/frmperfil_screen.dart');
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (BuildContext context) {
+                                  //String aux = '${prediction.lat}, ${prediction.lng}';
+                                  return FrmperfilScreen();
+                                }));
                               },
                               child: Icon(
                                 Icons.arrow_back_outlined,
@@ -258,8 +263,23 @@ class _FrmeditaperfilScreenState extends State<FrmeditaperfilScreen> {
   }
 
   Widget _buildPersonalDataButton(BuildContext context) {
-    return CustomElevatedButton(
-        text: "Datos personales", buttonStyle: CustomButtonStyles.fillPrimary);
+    return Container(
+      padding: EdgeInsets.symmetric(vertical: 10, horizontal: 20),
+      decoration: BoxDecoration(
+        color: Color(0xFF114C5F), // Cambia esto al color que prefieras
+        borderRadius: BorderRadius.circular(8),
+      ),
+      width: double.infinity,
+      child: Text(
+        "Datos personales",
+        style: TextStyle(
+            color: Colors.white,
+            fontFamily: 'Nunito',
+            fontWeight: FontWeight.bold),
+        textAlign:
+            TextAlign.center, // Ajusta el color del texto según tu diseño
+      ),
+    );
   }
 
   Widget _buildFullName(BuildContext context) {
@@ -416,7 +436,8 @@ class _FrmeditaperfilScreenState extends State<FrmeditaperfilScreen> {
             User? user = FirebaseAuth.instance.currentUser;
 
             // Actualizar nombre y apellido sin confirmación
-            if (fullNameController.text.isNotEmpty || usernameController.text.isNotEmpty) {
+            if (fullNameController.text.isNotEmpty ||
+                usernameController.text.isNotEmpty) {
               await FirebaseFirestore.instance
                   .collection('usuarios')
                   .doc(user?.uid)
@@ -444,17 +465,22 @@ class _FrmeditaperfilScreenState extends State<FrmeditaperfilScreen> {
                 if (e.code == 'user-not-found') {
                   // Si el usuario no se encuentra, mostrar un mensaje de error
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('No se encontró un usuario con este correo electrónico: ${e.message}')),
+                    SnackBar(
+                        content: Text(
+                            'No se encontró un usuario con este correo electrónico: ${e.message}')),
                   );
                 } else if (e.code == 'wrong-password') {
                   // Si la contraseña es incorrecta, mostrar un mensaje de error
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('La contraseña proporcionada es incorrecta: ${e.message}')),
+                    SnackBar(
+                        content: Text(
+                            'La contraseña proporcionada es incorrecta: ${e.message}')),
                   );
                 } else {
                   // Si ocurre otro error, mostrar un mensaje de error
                   ScaffoldMessenger.of(context).showSnackBar(
-                    SnackBar(content: Text('Error al autenticar: ${e.message}')),
+                    SnackBar(
+                        content: Text('Error al autenticar: ${e.message}')),
                   );
                 }
                 return;
@@ -474,7 +500,8 @@ class _FrmeditaperfilScreenState extends State<FrmeditaperfilScreen> {
               } catch (e) {
                 // Si la actualización falla, mostrar un mensaje de error
                 ScaffoldMessenger.of(context).showSnackBar(
-                  SnackBar(content: Text('Error al actualizar la información: $e')),
+                  SnackBar(
+                      content: Text('Error al actualizar la información: $e')),
                 );
                 return;
               }

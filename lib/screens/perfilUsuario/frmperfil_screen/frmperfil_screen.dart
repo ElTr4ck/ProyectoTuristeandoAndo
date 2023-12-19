@@ -20,56 +20,174 @@ class FrmperfilScreen extends StatelessWidget {
         child: Scaffold(
             body: SingleChildScrollView(
                 child: Column(children: [
-              _buildTen(context),
-              Container(
-                  padding: EdgeInsets.symmetric(vertical: 26.v),
-                  child: Column(children: [
-                    _buildTuContenidoPersonalizado(context),
-                    SizedBox(height: 19.v),
-                    Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 13.h),
-                        child: _buildBestCalif(context,
-                            mejorCalificados: "Lugares para ti")),
-                    SizedBox(height: 8.v),
-                    Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 13.h),
-                        child: _buildBestCalif(context,
-                            mejorCalificados: "Mejor calificados")),
-                    SizedBox(height: 6.v),
-                    Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 13.h),
-                        child: _buildBestCalif(context,
-                            mejorCalificados: "En tendencia")),
-                    SizedBox(height: 47.v),
-                    _buildContenido(context),
-                    SizedBox(height: 14.v),
-                    _buildMarcadores(context),
-                    SizedBox(height: 6.v),
-                    _buildHistorial(context),
-                    SizedBox(height: 5.v),
-                    _buildRutaMensual(context),
-                    SizedBox(height: 50.v),
-                    _buildPreferencias(context),
-                    SizedBox(height: 16.v),
-                    _buildLenguaje(context),
-                    SizedBox(height: 5.v),
-                    _buildModoOscuro(context),
-                    SizedBox(height: 5.v),
-                    _buildCerrarSesion(context),
-                    SizedBox(height: 5.v)
-                  ]))
-            ]))));
+      _buildTen(context),
+      Container(
+          padding: EdgeInsets.symmetric(vertical: 26.v),
+          child: Column(children: [
+            _buildTuContenidoPersonalizado(context),
+            SizedBox(height: 14.v),
+            _buildContenido(context),
+            SizedBox(height: 14.v),
+            _buildPreferencias(context),
+            SizedBox(height: 16.v),
+          ]))
+    ]))));
+  }
+
+  Widget _buildWhiteBox(String text, IconData iconData, {VoidCallback? onTap}) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Container(
+        height: 35.0,
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(8.0),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            children: [
+              Icon(
+                iconData,
+                color: Colors.black,
+              ),
+              SizedBox(width: 8.0),
+              Text(
+                text,
+                style: TextStyle(
+                  color: Colors.black,
+                  fontSize: 16.0,
+                  fontFamily: 'Nunito',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildBlueBox(String text) {
+    return GestureDetector(
+      child: Container(
+        height: 35.0,
+        decoration: BoxDecoration(
+          color: const Color.fromARGB(255, 20, 76, 95),
+        ),
+        child: Padding(
+          padding: const EdgeInsets.all(8.0),
+          child: Row(
+            mainAxisAlignment:
+                MainAxisAlignment.center, // Alinea al centro horizontalmente
+            children: [
+              Text(
+                text,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16.0,
+                  fontWeight: FontWeight.bold,
+                  fontFamily: 'Nunito',
+                ),
+              ),
+            ],
+          ),
+        ),
+      ),
+    );
+  }
+
+  Widget _buildTuContenidoPersonalizado(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _buildBlueBox("Contenido Personalizado"),
+        SizedBox(height: 10.0),
+        _buildWhiteBox(
+          "Para ti",
+          Icons.interests,
+        ),
+        _buildWhiteBox(
+          "Mejores calificados",
+          Icons.emoji_events,
+        ),
+        _buildWhiteBox(
+          "En tendencia",
+          Icons.trending_up,
+        ),
+      ],
+    );
+  }
+
+  Widget _buildContenido(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _buildBlueBox("Tu contenido"),
+        SizedBox(height: 10.0),
+        _buildWhiteBox(
+          "Marcadores",
+          Icons.favorite,
+          onTap: () {
+            Navigator.pushNamed(context, '/frmmarcadores_screen');
+          },
+        ),
+        _buildWhiteBox(
+          "Historial",
+          Icons.update,
+        ),
+        _buildWhiteBox(
+          "Ruta destacada",
+          Icons.star,
+          onTap: () {
+            Navigator.pushNamed(context, AppRoutes.frmRutaDestacada);
+          },
+        ),
+      ],
+    );
+  }
+
+  Widget _buildPreferencias(BuildContext context) {
+    final controllerSignOut = SignoutController(context: context);
+    Future<void> signOut() async {
+      await controllerSignOut.signout();
+    }
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.stretch,
+      children: [
+        _buildBlueBox("Tu contenido"),
+        SizedBox(height: 10.0),
+        _buildWhiteBox(
+          "Idioma",
+          Icons.language,
+        ),
+        _buildWhiteBox(
+          "Modo oscuro",
+          Icons.dark_mode,
+        ),
+        _buildWhiteBox(
+          "Cerrar sesión",
+          Icons.exit_to_app,
+          onTap: () async {
+            await signOut();
+            // ignore: use_build_context_synchronously
+            Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
+                MaterialPageRoute(builder: (context) => Wrapper()),
+                (route) => false);
+          },
+        ),
+      ],
+    );
   }
 
   /// Section Widget
   Widget _buildEditarPerfil(BuildContext context) {
     return CustomElevatedButton(
         height: 20.v,
-        width: 97.h,
+        width: 100.h,
         text: "Editar perfil",
-        buttonStyle: CustomButtonStyles.fillPrimary,
-        buttonTextStyle:
-            theme.textTheme.labelLarge!.copyWith(color: Colors.white),
+        buttonStyle: CustomButtonStyles.fillTeal,
+        buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
         onPressed: () {
           onTapEditarPerfil(context);
         },
@@ -84,7 +202,7 @@ class FrmperfilScreen extends StatelessWidget {
         child: Stack(alignment: Alignment.bottomCenter, children: [
           CustomImageView(
               imagePath: ImageConstant.imgFondo,
-              height: 193.v,
+              height: 200.v,
               width: 360.h,
               radius: BorderRadius.vertical(bottom: Radius.circular(33.h)),
               alignment: Alignment.topCenter),
@@ -93,16 +211,18 @@ class FrmperfilScreen extends StatelessWidget {
               child: Padding(
                   padding: EdgeInsets.only(left: 31.h, right: 21.h),
                   child: SingleChildScrollView(
+                      physics: NeverScrollableScrollPhysics(),
                       child: ConstrainedBox(
-                        constraints: BoxConstraints(minHeight: 500.v),
-                        child: Column(
-                            mainAxisSize: MainAxisSize.min,
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
+                    constraints: BoxConstraints(minHeight: 500.v),
+                    child: Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
                           CustomAppBar(
                             leadingWidth: 30.h,
                             leading: Padding(
-                                padding: EdgeInsets.only(top: 7.v, bottom: 16.v),
+                                padding:
+                                    EdgeInsets.only(top: 7.v, bottom: 16.v),
                                 child: GestureDetector(
                                     onTap: () {
                                       Navigator.pushNamed(
@@ -129,7 +249,8 @@ class FrmperfilScreen extends StatelessWidget {
                                         height: 105.adaptSize,
                                         width: 105.adaptSize,
                                         padding: EdgeInsets.all(5.h),
-                                        decoration: AppDecoration.outlineBlack900
+                                        decoration: AppDecoration
+                                            .outlineBlack900
                                             .copyWith(
                                                 borderRadius: BorderRadiusStyle
                                                     .roundedBorder52),
@@ -146,7 +267,8 @@ class FrmperfilScreen extends StatelessWidget {
                                             } else {
                                               return CustomImageView(
                                                 imagePath: snapshot.data ??
-                                                    ImageConstant.imageNotFound, // Usa la foto del usuario, o una imagen por defecto si no hay foto
+                                                    ImageConstant
+                                                        .imageNotFound, // Usa la foto del usuario, o una imagen por defecto si no hay foto
                                                 height: 95.adaptSize,
                                                 width: 95.adaptSize,
                                                 radius:
@@ -165,17 +287,17 @@ class FrmperfilScreen extends StatelessWidget {
                                             children: [
                                               Container(
                                                   width: 200.h,
-                                                  decoration:
-                                                      AppDecoration.outlineBlack,
+                                                  decoration: AppDecoration
+                                                      .outlineBlack,
                                                   alignment: Alignment.center,
                                                   child: //Obtener el nombre de usuario de la BD
                                                       FutureBuilder<String>(
                                                     future:
                                                         obtenerNombreUsuarioActual(),
-                                                    builder:
-                                                        (BuildContext context,
-                                                            AsyncSnapshot<String>
-                                                                snapshot) {
+                                                    builder: (BuildContext
+                                                            context,
+                                                        AsyncSnapshot<String>
+                                                            snapshot) {
                                                       if (snapshot
                                                               .connectionState ==
                                                           ConnectionState
@@ -197,8 +319,8 @@ class FrmperfilScreen extends StatelessWidget {
                                                               const TextStyle(
                                                                   color: Colors
                                                                       .white),
-                                                            overflow: TextOverflow
-                                                                .ellipsis,
+                                                          overflow: TextOverflow
+                                                              .ellipsis,
                                                         );
                                                       }
                                                     },
@@ -212,242 +334,8 @@ class FrmperfilScreen extends StatelessWidget {
                                             ]))
                                   ]))
                         ]),
-                      ))))
+                  ))))
         ]));
-  }
-
-  /// Section Widget
-  Widget _buildTuContenidoPersonalizado(BuildContext context) {
-    return CustomElevatedButton(
-        height: 31.v,
-        text: "Tu contenido personalizado",
-        buttonStyle: CustomButtonStyles.fillPrimary);
-  }
-
-  /// Section Widget
-  Widget _buildContenido(BuildContext context) {
-    return CustomElevatedButton(
-        text: "Contenido", buttonStyle: CustomButtonStyles.fillPrimary);
-  }
-
-  /// Section Widget
-  Widget _buildMarcadores(BuildContext context) {
-    return InkWell(
-        onTap: () {
-          Navigator.pushNamed(context, '/frmmarcadores_screen');
-        },
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 13.h),
-          child: SingleChildScrollView(
-              child:
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            Container(
-                height: 18.adaptSize,
-                width: 18.adaptSize,
-                padding: EdgeInsets.symmetric(vertical: 1.v),
-                decoration: AppDecoration.fillPrimaryContainer,
-                child: CustomImageView(
-                    imagePath: ImageConstant.imgHeart,
-                    height: 16.v,
-                    width: 18.h,
-                    alignment: Alignment.center)),
-            Padding(
-                padding: EdgeInsets.only(left: 7.h),
-                child: Text("Marcadores", style: theme.textTheme.titleSmall)),
-            Spacer(),
-            Padding(
-                padding: EdgeInsets.symmetric(vertical: 5.v),
-                child: CustomIconButton(
-                    height: 10.v,
-                    width: 6.h,
-                    child: CustomImageView(
-                        imagePath: ImageConstant.imgArrowRightBlack90010x6)))
-          ])),
-        ));
-  }
-
-  /// Section Widget
-  Widget _buildHistorial(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 13.h),
-      child: SingleChildScrollView(
-          child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        CustomImageView(
-            imagePath: ImageConstant.imgClock,
-            height: 16.adaptSize,
-            width: 16.adaptSize,
-            margin: EdgeInsets.only(top: 2.v)),
-        Padding(
-            padding: EdgeInsets.only(left: 7.h),
-            child: Text("Historial", style: theme.textTheme.titleSmall)),
-        Spacer(),
-        Padding(
-            padding: EdgeInsets.only(top: 5.v, bottom: 4.v),
-            child: CustomIconButton(
-                height: 10.v,
-                width: 6.h,
-                child: CustomImageView(
-                    imagePath: ImageConstant.imgArrowRight10x6)))
-      ])),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildRutaMensual(BuildContext context) {
-    return InkWell(
-        onTap: () {
-          Navigator.pushNamed(context, '/frmRutaDestacada.dart');
-        },
-        child: Padding(
-          padding: EdgeInsets.symmetric(horizontal: 13.h),
-          child: SingleChildScrollView(
-              child:
-                  Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-            CustomImageView(
-                imagePath: ImageConstant.imgStar,
-                height: 17.adaptSize,
-                width: 17.adaptSize),
-            Padding(
-                padding: EdgeInsets.only(left: 6.h),
-                child: Text("Ruta destacada mensual",
-                    style: theme.textTheme.titleSmall)),
-            Spacer(),
-            Padding(
-                padding: EdgeInsets.only(top: 5.v, bottom: 4.v),
-                child: CustomIconButton(
-                    height: 10.v,
-                    width: 6.h,
-                    child: CustomImageView(
-                        imagePath: ImageConstant.imgArrowRight10x6)))
-          ])),
-        ));
-  }
-
-  /// Section Widget
-  Widget _buildPreferencias(BuildContext context) {
-    return CustomElevatedButton(
-        text: "Preferencias", buttonStyle: CustomButtonStyles.fillPrimary);
-  }
-
-  /// Section Widget
-  Widget _buildLenguaje(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 13.h),
-      child: SingleChildScrollView(
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-            CustomImageView(
-                imagePath: ImageConstant.imgTranslate,
-                height: 20.v,
-                width: 21.h,
-                margin: EdgeInsets.only(bottom: 2.v)),
-            Padding(
-                padding: EdgeInsets.only(left: 2.h),
-                child: Text("Lenguaje", style: theme.textTheme.titleSmall)),
-            Spacer(),
-            Padding(
-                padding: EdgeInsets.only(top: 5.v, bottom: 6.v),
-                child: CustomIconButton(
-                    height: 10.v,
-                    width: 6.h,
-                    child: CustomImageView(
-                        imagePath: ImageConstant.imgArrowRight10x6)))
-          ])),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildModoOscuro(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(horizontal: 13.h),
-      child: SingleChildScrollView(
-          child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-            CustomImageView(
-                imagePath: ImageConstant.imgMoon, height: 22.v, width: 23.h),
-            Padding(
-                padding: EdgeInsets.only(left: 1.h, bottom: 2.v),
-                child: Text("Modo Oscuro", style: theme.textTheme.titleSmall)),
-            Spacer(),
-            Padding(
-                padding: EdgeInsets.only(top: 5.v, bottom: 6.v),
-                child: CustomIconButton(
-                    height: 10.v,
-                    width: 6.h,
-                    child: CustomImageView(
-                        imagePath: ImageConstant.imgArrowRight10x6)))
-          ])),
-    );
-  }
-
-  /// Section Widget
-  Widget _buildCerrarSesion(BuildContext context) {
-    
-    final controllerSignOut = SignoutController(context: context);
-    Future<void> signOut() async {
-      await controllerSignOut.signout();
-    }
-
-    return InkWell(
-      onTap: () async {
-              await signOut();
-              // ignore: use_build_context_synchronously
-              Navigator.of(context, rootNavigator: true).pushAndRemoveUntil(
-                  MaterialPageRoute(builder: (context) => Wrapper()),
-                  (route) => false);
-            },
-      child: Padding(
-        padding: EdgeInsets.symmetric(horizontal: 13.h),
-        child: SingleChildScrollView(
-            child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-              CustomImageView(
-                  imagePath: ImageConstant.imgClosesession,
-                  height: 17.v,
-                  width: 19.h,
-                  margin: EdgeInsets.only(top: 4.v)),
-              Padding(
-                  padding: EdgeInsets.only(left: 4.h),
-                  child: Text("Cerrar Sesión",
-                      style: CustomTextStyles.titleSmallSemiBold)),
-              Spacer(),
-              Padding(
-                  padding: EdgeInsets.only(top: 7.v, bottom: 3.v),
-                  child: CustomIconButton(
-                      height: 10.v,
-                      width: 6.h,
-                      child: CustomImageView(
-                          imagePath: ImageConstant.imgArrowRight10x6)))
-            ])),
-      ),
-    );
-  }
-
-  /// Common widget
-  Widget _buildBestCalif(
-    BuildContext context, {
-    required String mejorCalificados,
-  }) {
-    return SingleChildScrollView(
-        child:
-            Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-      Text(mejorCalificados,
-          style:
-              theme.textTheme.titleSmall!.copyWith(color: appTheme.black900)),
-      Padding(
-          padding: EdgeInsets.only(top: 4.v, bottom: 5.v),
-          child: CustomIconButton(
-              height: 11.v,
-              width: 6.h,
-              child: CustomImageView(
-                  imagePath: ImageConstant.imgArrowRightBlack900)))
-    ]));
   }
 
   /// Navigates to the frmeditaperfilScreen when the action is triggered.

@@ -26,8 +26,8 @@ class CustomBottomBarState extends State<CustomBottomBar> {
       type: BottomBarEnum.Iconlylightticket,
     ),
     BottomMenuModel(
-      icon: ImageConstant.imgIconlyLightOutlineHeart,
-      activeIcon: ImageConstant.imgIconlyLightOutlineHeart,
+      icon: ImageConstant.imgHeartNav,
+      activeIcon: ImageConstant.imgHeartNav,
       type: BottomBarEnum.Iconlylightoutlineheart,
     ),
     BottomMenuModel(

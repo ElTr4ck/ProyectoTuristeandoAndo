@@ -1,6 +1,7 @@
 import 'dart:convert';
 
 import 'package:flutter_google_maps_webservices/places.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:turisteando_ando/repositories/auth/controlers/signout_controller.dart';
 import 'package:turisteando_ando/repositories/auth/wrapper.dart';
 import 'package:turisteando_ando/widgets/app_bar/appbar_side_bar.dart';
@@ -16,6 +17,9 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminfolugar_screen/frminfolugar_screen.dart';
+import 'package:google_places_flutter/google_places_flutter.dart';
+import 'package:google_places_flutter/model/prediction.dart' as GooglePlacesPrediction;
+
 
 final GoogleMapsPlaces places =
     GoogleMapsPlaces(apiKey: "AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM");
@@ -23,39 +27,156 @@ final GoogleMapsPlaces places =
 // ignore_for_file: must_be_immutable
 class FrminicioPage extends StatelessWidget {
   FrminicioPage({Key? key}) : super(key: key);
-
-  //List<String> dropdownItemList = ["Item One", "Item Two", "Item Three"];
-  //AUTOCOMPLETAR
-  Future<List<String>> fetchSuggestions(String query) async {
-    const String apiKey = 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
-    final String url =
-        'https://maps.googleapis.com/maps/api/place/autocomplete/json?input=$query&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
-
-    final response = await http.get(Uri.parse(url));
-
-    if (response.statusCode == 200) {
-      final predictions = json.decode(response.body)['predictions'];
-      return predictions
-          .map<String>((prediction) => prediction['description'])
-          .toList();
-    } else {
-      throw Exception('Failed to load suggestions');
-    }
-  }
-
   TextEditingController searchController = TextEditingController();
-
   @override
   Widget build(BuildContext context) {
+    TextEditingController controller = TextEditingController();
+    late GoogleMapController _mapController;
     final controllerSignOut = SignoutController(context: context);
+    Future<void> fetchData(data) async {
+      // Tu lógica para obtener datos desde la API
+      String dataloc = data;
+      String url = 'https://places.googleapis.com/v1/places:searchText';
+      // Los datos que enviarás en el cuerpo de la solicitud POST
+
+      print(dataloc);
+      // Las cabeceras de la solicitud
+      Map<String, dynamic> requestData = {
+        "textQuery" : "$data"
+      };
+      Map<String, String> headers = {
+        'Content-Type': 'application/json',
+        'X-Goog-Api-Key': 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM',
+        // Reemplaza 'API_KEY' con tu clave real
+        'X-Goog-FieldMask': 'places.id',
+      };
+
+      // Realiza la solicitud POST
+      try {
+        var response = await http.post(
+          Uri.parse(url),
+          body: jsonEncode(requestData),
+          headers: headers,
+        );
+        // Verifica el código de estado de la respuesta
+        if (response.statusCode == 200) {
+          // La solicitud fue exitosa, puedes manejar la respuesta aquí
+          print('Respuesta exitosa: ${response.body}');
+          Map<String, dynamic> jsonData = json.decode(response.body);
+          Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+            //String aux = '${prediction.lat}, ${prediction.lng}';
+            return FrminfolugarScreen(id : jsonData["places"][0]["id"]);
+          }));
+          //print('${jsonData["places"][0]["displayName"]["text"]}');
+          //print('${jsonData["places"][0]["formattedAddress"]}');
+        } else {
+          // Hubo un error en la solicitud, puedes manejarlo aquí
+          print('Error en la solicitud: ${response.statusCode}');
+        }
+      } catch (e) {
+        // Maneja las excepciones que puedan ocurrir durante la solicitud
+        print('Error: $e');
+      }
+    }
+    placesAutoCompleteTextField() {
+      return Container(
+        padding: EdgeInsets.symmetric(horizontal: 0),
+        color: Color(0xFF9CD2D3),
+        child: GooglePlaceAutoCompleteTextField(
+          textEditingController: controller,
+          googleAPIKey: "AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM",
+          inputDecoration: InputDecoration(
+            prefixIcon: Icon(Icons.search),
+            hintText: '¡Vamos a donde quieras!',
+            hintStyle: TextStyle(
+              color: Color(0xFF000000),
+              fontFamily: 'Nunito',
+              fontStyle: FontStyle.italic,
+            ),
+
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide(color: Colors.transparent),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide(color: Colors.transparent),
+            ),
+            border: OutlineInputBorder( // Agrega este bloque para el border general
+              borderRadius: BorderRadius.circular(20),
+              borderSide: BorderSide(color: Colors.transparent),
+            ),
+
+            fillColor: Color(0xFF9CD2D3),
+            // Ajusta el color del fondo según tus necesidades
+            filled: true,
+            contentPadding: EdgeInsets.symmetric(
+                vertical: 12, horizontal: 16),
+
+          ),
+
+          debounceTime: 400,
+          countries: ["mx"],
+          isLatLngRequired: false,
+          getPlaceDetailWithLatLng: (GooglePlacesPrediction.Prediction prediction) {
+            print("placeDetails" + prediction.lat.toString());
+          },
+
+          itemClick: (GooglePlacesPrediction.Prediction prediction) {
+            controller.text = prediction.description ?? "";
+            controller.selection = TextSelection.fromPosition(
+                TextPosition(offset: prediction.description?.length ?? 0));
+            fetchData(prediction.description as String);
+            /*Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
+            //String aux = '${prediction.lat}, ${prediction.lng}';
+            return MyApp(prediction.description as String);
+          }));*/
+          },
+          seperatedBuilder: Divider(color: Colors.transparent,),
+          // OPTIONAL// If you want to customize list view item builder
+          itemBuilder: (context, index, GooglePlacesPrediction.Prediction prediction) {
+            return Container(
+              color: Colors.transparent,
+              padding: EdgeInsets.all(10),
+              child: Row(
+                children: [
+                  Icon(Icons.location_on),
+                  Container(
+                    width: 7,
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.transparent,
+                      ),
+                    ),
+                  ),
+                  Expanded(child: Text("${prediction.description??""}"))
+
+                ],
+
+              ),
+
+            );
+
+          },
+
+          isCrossBtnShown: true,
+
+          // default 600 ms ,
+        ),
+
+      );
+
+    }
 
     Future<void> signOut() async {
       await controllerSignOut.signout();
     }
 
+
     mediaQueryData = MediaQuery.of(context);
     return SafeArea(
         child: Scaffold(
+            extendBodyBehindAppBar: true,
             appBar: AppBar(
               title: null,
               backgroundColor: Colors.white,
@@ -84,58 +205,28 @@ class FrminicioPage extends StatelessWidget {
                           SizedBox(height: 18.v),
                           Padding(
                             padding: EdgeInsets.only(left: 10.0, right: 16.0),
-                            //AUTOCOMPLETAR
-                            child: Autocomplete<String>(
-                              optionsBuilder:
-                                  (TextEditingValue textEditingValue) async {
-                                if (textEditingValue.text == '') {
-                                  return const Iterable<String>.empty();
-                                }
-                                return await fetchSuggestions(
-                                    textEditingValue.text);
-                              },
-                              onSelected: (String selection) {
-                                print('Has seleccionado: $selection');
-                              },
-                              fieldViewBuilder: (BuildContext context,
-                                  TextEditingController textEditingController,
-                                  FocusNode focusNode,
-                                  VoidCallback onFieldSubmitted) {
-                                return Container(
-                                  decoration: BoxDecoration(
-                                    color: const Color(
-                                        0xFF9CD2D3), // Puedes cambiar este color según tus preferencias
-                                    borderRadius: BorderRadius.circular(12.0),
+                            /*child: Container(
+                              decoration: BoxDecoration(
+                                color: Color(
+                                    0xFF9CD2D3), // Puedes cambiar este color según tus preferencias
+                                borderRadius: BorderRadius.circular(12.0),
+                              ),*/
+                              child: Row(
+                                children: [
+                                  /*Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal:
+                                        8.0), // Ajusta este valor según tus preferencias
+                                    child: Icon(Icons.search_sharp,
+                                        color: Colors.white,
+                                        size: 24.0), // Icono de lupa
+                                  ),*/
+                                  Expanded(
+                                    child: placesAutoCompleteTextField(),
                                   ),
-                                  child: Row(
-                                    children: [
-                                      const Padding(
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal:
-                                                8.0), // Ajusta este valor según tus preferencias
-                                        child: Icon(Icons.search_sharp,
-                                            color: Colors.white,
-                                            size: 24.0), // Icono de lupa
-                                      ),
-                                      Expanded(
-                                        child: TextField(
-                                          controller: textEditingController,
-                                          focusNode: focusNode,
-                                          decoration: const InputDecoration(
-                                            hintText:
-                                                "¿Buscas hacer algo en particular en ...",
-                                            border: InputBorder.none,
-                                            contentPadding:
-                                                EdgeInsets.all(16.0),
-                                          ),
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                );
-                              },
+                                ],
+                              ),
                             ),
-                          ),
                           SizedBox(height: 31.v),
                           _buildComponentNuevDest(context),
                           SizedBox(height: 40.v),
@@ -144,6 +235,7 @@ class FrminicioPage extends StatelessWidget {
                       ],
                     )))));
   }
+
 
   /// Section Widget
   Widget _buildEightyThree(BuildContext context) {
@@ -326,6 +418,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
   List preferencias = [];
   List<Widget> carouselItems = [];
   Map<String, dynamic> requestData = {};
+  List ubicacionActual = [];
   @override
   void initState() {
     super.initState();
@@ -359,17 +452,37 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
           preferencias.add(doc.id);
           //print('Preferencia - ID: ${doc.id}, Tipo: ${doc['tipo']}');
         });
+        // Referencia a la colección "usuarios" y subcolección "ubicacion_actual"
+        CollectionReference ubicacionCollection = FirebaseFirestore.instance
+            .collection('usuarios')
+            .doc(uid)
+            .collection('Ubicacion');
+
+        // Realizamos la consulta para obtener la ubicación actual del usuario
+        QuerySnapshot ubicacionSnapshot = await ubicacionCollection.get();
+
+        // Lista para almacenar la ubicación actual
+
+        // Iteramos sobre los documentos y accedemos a los datos de ubicación actual
+        ubicacionSnapshot.docs.forEach((doc) {
+          // Asegúrate de ajustar según la estructura real de tu documento de ubicación_actual
+          double latitud = doc['latitud'] ?? 0.0;
+          double longitud = doc['longitud'] ?? 0.0;
+          ubicacionActual.add(latitud);
+          ubicacionActual.add(longitud);
+        });
       } else {
         print('No hay usuario autenticado');
       }
     } catch (e) {
       print('Error al obtener preferencias: $e');
     }
-    //print(preferencias);
+    print(preferencias);
+    print(ubicacionActual);
     //print(preferencias.length);
-    Position position = await _determinePosition2();
-    double latitude = position.latitude;
-    double longitude = position.longitude;
+    //Position position = await _determinePosition2();
+    //double latitude = position.latitude;
+    //double longitude = position.longitude;
     // Tu lógica para obtener datos desde la API
     String url = 'https://places.googleapis.com/v1/places:searchNearby';
     // Los datos que enviarás en el cuerpo de la solicitud POST
@@ -382,8 +495,8 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
         "locationRestriction": {
           "circle": {
             "center": {
-              "latitude": latitude,
-              "longitude": longitude,
+              "latitude": ubicacionActual[0],
+              "longitude": ubicacionActual[1],
             },
             "radius": 2000.0
           }
@@ -398,8 +511,8 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
         "locationRestriction": {
           "circle": {
             "center": {
-              "latitude": latitude,
-              "longitude": longitude,
+              "latitude": ubicacionActual[0],
+              "longitude": ubicacionActual[1],
             },
             "radius": 2000.0
           }
@@ -414,8 +527,8 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
         "locationRestriction": {
           "circle": {
             "center": {
-              "latitude": latitude,
-              "longitude": longitude,
+              "latitude": ubicacionActual[0],
+              "longitude": ubicacionActual[1],
             },
             "radius": 2000.0
           }
@@ -430,8 +543,8 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
         "locationRestriction": {
           "circle": {
             "center": {
-              "latitude": latitude,
-              "longitude": longitude,
+              "latitude": ubicacionActual[0],
+              "longitude": ubicacionActual[1],
             },
             "radius": 2000.0
           }
@@ -609,10 +722,9 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
               padding: const EdgeInsets.all(8.0),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisAlignment:
+                    MainAxisAlignment.end, // Alinea los widgets al final
                 children: [
-                  Spacer(),
-                  SizedBox(height: 270.0),
                   Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -628,7 +740,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
                           color: Colors.white),
                     ),
                   ),
-                  SizedBox(height: 5.0),
+                  SizedBox(height: 5.0), // Espacio entre los widgets
                   Container(
                     padding: EdgeInsets.all(10),
                     decoration: BoxDecoration(
@@ -721,6 +833,7 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
   List preferencias = [];
   List<Widget> carouselItems = [];
   Map<String, dynamic> requestData = {};
+  List ubicacionActual = [];
   @override
   void initState() {
     super.initState();
@@ -754,17 +867,38 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
           preferencias.add(doc.id);
           //print('Preferencia - ID: ${doc.id}, Tipo: ${doc['tipo']}');
         });
+        // Referencia a la colección "usuarios" y subcolección "ubicacion_actual"
+        CollectionReference ubicacionCollection = FirebaseFirestore.instance
+            .collection('usuarios')
+            .doc(uid)
+            .collection('Ubicacion');
+
+        // Realizamos la consulta para obtener la ubicación actual del usuario
+        QuerySnapshot ubicacionSnapshot = await ubicacionCollection.get();
+
+        // Lista para almacenar la ubicación actual
+
+        // Iteramos sobre los documentos y accedemos a los datos de ubicación actual
+        ubicacionSnapshot.docs.forEach((doc) {
+          // Asegúrate de ajustar según la estructura real de tu documento de ubicación_actual
+          double latitud = doc['latitud'] ?? 0.0;
+          double longitud = doc['longitud'] ?? 0.0;
+          ubicacionActual.add(latitud);
+          ubicacionActual.add(longitud);
+        });
       } else {
         print('No hay usuario autenticado');
       }
     } catch (e) {
       print('Error al obtener preferencias: $e');
     }
+    print(preferencias);
+    print(ubicacionActual);
     //print(preferencias);
     //print(preferencias.length);
-    Position position = await _determinePosition2();
-    double latitude = position.latitude;
-    double longitude = position.longitude;
+    //Position position = await _determinePosition2();
+    //double latitude = position.latitude;
+    //double longitude = position.longitude;
     // Tu lógica para obtener datos desde la API
     String url = 'https://places.googleapis.com/v1/places:searchNearby';
     // Los datos que enviarás en el cuerpo de la solicitud POST
@@ -777,8 +911,8 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
         "locationRestriction": {
           "circle": {
             "center": {
-              "latitude": latitude,
-              "longitude": longitude,
+              "latitude": ubicacionActual[0],
+              "longitude": ubicacionActual[1],
             },
             "radius": 2000.0
           }
@@ -793,8 +927,8 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
         "locationRestriction": {
           "circle": {
             "center": {
-              "latitude": latitude,
-              "longitude": longitude,
+              "latitude": ubicacionActual[0],
+              "longitude": ubicacionActual[1],
             },
             "radius": 2000.0
           }
@@ -819,8 +953,8 @@ class _CarouselWithInfoState2 extends State<CarouselWithInfo2> {
         "locationRestriction": {
           "circle": {
             "center": {
-              "latitude": latitude,
-              "longitude": longitude,
+              "latitude": ubicacionActual[0],
+              "longitude": ubicacionActual[1],
             },
             "radius": 2000.0
           }

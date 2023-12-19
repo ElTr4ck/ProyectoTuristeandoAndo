@@ -20,45 +20,74 @@ class _FrmcambiocontScreenState extends State<FrmcambiocontScreen> {
   @override
   Widget build(BuildContext context) {
     return SafeArea(
-        child: Scaffold(
-            body: Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.symmetric(vertical: 17.v),
-                child: Column(children: [
-                  Container(
-                      width: double.maxFinite,
-                      decoration: AppDecoration.outlineBlack,
-                      child: Text("¡Revisa tu correo electrónico!\n",
-                          maxLines: null,
-                          textAlign: TextAlign.center,
+      child: Scaffold(
+        body: Center(
+          // Wrap everything with Center
+          child: Container(
+            width: double.maxFinite,
+            padding: EdgeInsets.symmetric(vertical: 17.v),
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center, // Center vertically
+              children: [
+                CustomImageView(
+                  imagePath: ImageConstant.imgLogo,
+                  height: 150,
+                  width: 150,
+                  alignment: Alignment.topCenter,
+                ),
+                Container(
+                  width: double.maxFinite,
+                  decoration: AppDecoration.outlineBlack,
+                  child: Text(
+                    "¡Revisa tu correo electrónico!\n",
+                    maxLines: 4,
+                    textAlign: TextAlign.center,
+                    overflow: TextOverflow.ellipsis,
+                    style: TextStyle(
+                      fontSize: 25.0,
+                      fontWeight: FontWeight.bold,
+                      fontFamily: 'Nunito',
+                    ),
+                  ),
+                ),
+                SizedBox(height: 5.v),
+                Container(
+                  margin: EdgeInsets.symmetric(horizontal: 42.h),
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 15.h, vertical: 9.v),
+                  decoration: AppDecoration.fillGray.copyWith(
+                    borderRadius: BorderRadiusStyle.roundedBorder12,
+                  ),
+                  child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      SizedBox(height: 2.v),
+                      SizedBox(
+                        width: 244.h,
+                        child: Text(
+                          "Hemos enviado un enlace a tu correo electrónico para cambiar tu contraseña. \n Ingresa y sigue las instrucciones para completar el proceso.",
+                          maxLines: 6,
                           overflow: TextOverflow.ellipsis,
-                          style: theme.textTheme.headlineSmall!
-                              .copyWith(height: 1.41))),
-                  SizedBox(height: 5.v),
-                  Container(
-                      margin: EdgeInsets.symmetric(horizontal: 42.h),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 15.h, vertical: 9.v),
-                      decoration: AppDecoration.fillGray.copyWith(
-                          borderRadius: BorderRadiusStyle.roundedBorder12),
-                      child: Column(
-                          mainAxisSize: MainAxisSize.min,
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            SizedBox(height: 2.v),
-                            SizedBox(
-                                width: 244.h,
-                                child: Text(
-                                    "Hemos enviado un enlace a tu correo electrónico para cambiar tu contraseña. \n Ingresa y sigue las instrucciones para completar el proceso.",
-                                    maxLines: 6,
-                                    overflow: TextOverflow.ellipsis,
-                                    textAlign: TextAlign.center,
-                                    style: CustomTextStyles
-                                        .titleLargeOnPrimaryContainer
-                                        .copyWith(height: 1.41)))
-                          ]))
-                ])),
-            bottomNavigationBar: _buildRegresarAInicio(context)));
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                            fontFamily: 'Nunito',
+                            fontSize: 14,
+                            fontWeight: FontWeight.bold,
+                          ),
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+                SizedBox(height: 40.v),
+                _buildRegresarAInicio(context),
+              ],
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   /// Section Widget
@@ -66,8 +95,9 @@ class _FrmcambiocontScreenState extends State<FrmcambiocontScreen> {
     return CustomElevatedButton(
         height: 40.v,
         text: "Regresar al inicio",
-        margin: EdgeInsets.only(left: 30.h, right: 30.h, bottom: 41.v),
-        buttonTextStyle: CustomTextStyles.titleMediumNunitoOnPrimary18,
+        margin: EdgeInsets.only(left: 30.h, right: 20.h),
+        buttonStyle: CustomButtonStyles.fillPrimary,
+        buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
         onPressed: () {
           onTapRegresarAInicio(context);
           //onTapRegresarAInicio(context);

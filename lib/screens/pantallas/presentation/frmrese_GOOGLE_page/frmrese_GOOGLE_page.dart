@@ -12,13 +12,13 @@ class FrmreseAPageG extends StatefulWidget {
 
 class FrmreseAPageState extends State<FrmreseAPageG>
     with AutomaticKeepAliveClientMixin<FrmreseAPageG> {
-  int ?finale = 0;
-  int ?five = 0;
-  int ?four = 0;
-  int ?three = 0;
-  int ?two = 0;
-  int ?one = 0;
-  double ?rating = 0.0;
+  int? finale = 0;
+  int? five = 0;
+  int? four = 0;
+  int? three = 0;
+  int? two = 0;
+  int? one = 0;
+  double? rating = 0.0;
   @override
   bool get wantKeepAlive => true;
 
@@ -30,16 +30,17 @@ class FrmreseAPageState extends State<FrmreseAPageG>
     int tres = 0;
     int dos = 0;
     int uno = 0;
-    while (widget.jsonData?["reviews"] != null && i < widget.jsonData?["reviews"].length){
-      if (widget.jsonData?["reviews"][i]["rating"] == 5){
+    while (widget.jsonData?["reviews"] != null &&
+        i < widget.jsonData?["reviews"].length) {
+      if (widget.jsonData?["reviews"][i]["rating"] == 5) {
         cinco++;
-      }else if(widget.jsonData?["reviews"][i]["rating"] == 4){
+      } else if (widget.jsonData?["reviews"][i]["rating"] == 4) {
         cuatro++;
-      }else if(widget.jsonData?["reviews"][i]["rating"] == 3){
+      } else if (widget.jsonData?["reviews"][i]["rating"] == 3) {
         tres++;
-      }else if(widget.jsonData?["reviews"][i]["rating"] == 2){
+      } else if (widget.jsonData?["reviews"][i]["rating"] == 2) {
         dos++;
-      }else if(widget.jsonData?["reviews"][i]["rating"] == 1){
+      } else if (widget.jsonData?["reviews"][i]["rating"] == 1) {
         uno++;
       }
       print(widget.jsonData?["reviews"][i]["rating"]);
@@ -51,7 +52,7 @@ class FrmreseAPageState extends State<FrmreseAPageG>
     three = tres;
     four = cuatro;
     five = cinco;
-    rating = 1/i;
+    rating = 1 / i;
     mediaQueryData = MediaQuery.of(context);
     return SafeArea(
         child: Scaffold(
@@ -67,14 +68,16 @@ class FrmreseAPageState extends State<FrmreseAPageG>
                             padding: EdgeInsets.only(left: 12.h),
                             child: Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Container(
                                       decoration: AppDecoration.outlineBlack,
                                       child: Text("Reseñas de Google",
-                                          style:
-                                          TextStyle(fontSize: 25.0, fontWeight: FontWeight.bold, fontFamily: 'Nunito'))),
+                                          style: TextStyle(
+                                              fontSize: 25.0,
+                                              fontWeight: FontWeight.bold,
+                                              fontFamily: 'Nunito'))),
                                 ])),
                         SizedBox(height: 5.v),
                         Container(
@@ -99,31 +102,32 @@ class FrmreseAPageState extends State<FrmreseAPageG>
                       ]))
                 ]))));
   }
+
   List<Widget> generateResenasWidgets() {
     int i = 0;
     List<Widget> widgets = [];
 
-    while (widget.jsonData?["reviews"] != null && i < widget.jsonData?["reviews"].length) {
+    while (widget.jsonData?["reviews"] != null &&
+        i < widget.jsonData?["reviews"].length) {
       Map<String, dynamic>? resena = widget.jsonData?["reviews"][i];
 
-    if (resena != null) {
-    widgets.add(
-    FrmreseAItemWidget2(
-    // ... otras propiedades únicas
-    onTapView: () {
-    onTapView(context, jsonData: resena);
-    },
-    jsonData: resena,
-    ),
-    );
-    }
+      if (resena != null) {
+        widgets.add(
+          FrmreseAItemWidget2(
+            // ... otras propiedades únicas
+            onTapView: () {
+              onTapView(context, jsonData: resena);
+            },
+            jsonData: resena,
+          ),
+        );
+      }
 
-    i++;
-  }
+      i++;
+    }
 
     return widgets;
   }
-
 
   /// Navigates to the frmreportarreseAScreen when the action is triggered.
   onTapView(BuildContext context, {required jsonData}) {

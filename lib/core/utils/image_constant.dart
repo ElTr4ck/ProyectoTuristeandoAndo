@@ -116,11 +116,13 @@ class ImageConstant {
 
   static String imgRectangle993 = '$imagePath/img_rectangle_993.png';
 
-  static String imgFrameAgregarruta = '$imagePath/img_frame_agregarruta.svg';
+  static String imgFrameAgregarruta = '$imagePath/img_agregaItinerario.png';
 
-  static String imgVectorvisitado = '$imagePath/img_vectorvisitado.svg';
+  static String imgVectorvisitado = '$imagePath/img_visitado.png';
 
   static String imgVectorfavoritos = '$imagePath/img_vectorfavoritos.svg';
+
+  static String imgFavoritos = '$imagePath/img_heart_fav.png';
 
   // frmReseña images
   static String imgUserphoto1 = '$imagePath/img_userphoto1.png';
@@ -193,8 +195,7 @@ class ImageConstant {
   static String imgIconlyLightOutlineHeart =
       '$imagePath/img_iconly_light_outline_heart.svg';
 
-  static String imgIconlyLightProfile =
-      '$imagePath/img_iconly_light_profile.svg';
+  static String imgIconlyLightProfile = '$imagePath/img_icon_profile_nav.png';
 
   static String imgFlechita = '$imagePath/img_flechita.svg';
 
@@ -214,7 +215,8 @@ class ImageConstant {
 
   static String imgHeart = '$imagePath/img_heart.svg';
 
-  static String imgArrowRightBlack90010x6 = '$imagePath/img_arrow_right_black_900_10x6.svg';
+  static String imgArrowRightBlack90010x6 =
+      '$imagePath/img_arrow_right_black_900_10x6.svg';
 
   static String imgClock = '$imagePath/img_clock.svg';
 
@@ -225,10 +227,11 @@ class ImageConstant {
   static String imgTranslate = '$imagePath/img_translate.svg';
 
   static String imgMoon = '$imagePath/img_moon.svg';
-  
+
   static String imgClosesession = '$imagePath/img_closesession.svg';
 
-  static String imgArrowRightBlack900 = '$imagePath/img_arrow_right_black_900.svg';
+  static String imgArrowRightBlack900 =
+      '$imagePath/img_arrow_right_black_900.svg';
 
   static String imgLogo = '$imagePath/img_ideaLogo.png';
 
@@ -253,4 +256,6 @@ class ImageConstant {
   static String imgTrashBlack900 = '$imagePath/img_trash_black_900.svg';
 
   static String imgClose = '$imagePath/img_close.svg';
+
+  static String imgHeartNav = '$imagePath/img_icon_heart_nav.png';
 }

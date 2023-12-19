@@ -1,10 +1,10 @@
 {
     "configurations": [
         {
-            "name": "Flutter (lib\\inicio_pantalla.dart)",
+            "name": "Flutter (lib\\main.dart)",
             "type": "dart",
             "request": "launch",
-            "program": "lib\\inicio_pantalla.dart"
+            "program": "lib\\main.dart"
         }
     ]
 }

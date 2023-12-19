@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
+import 'package:turisteando_ando/widgets/app_bar/appbar_subtitle.dart';
 import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
 import 'package:turisteando_ando/repositories/auth/controlers/signup_controller.dart';
 import 'package:turisteando_ando/repositories/auth/wrapper.dart';
@@ -8,6 +9,9 @@ import 'package:turisteando_ando/widgets/app_bar/appbar_title.dart';
 import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 import 'package:turisteando_ando/widgets/custom_text_form_field.dart';
+import 'package:turisteando_ando/widgets/app_bar/appbar_title_image.dart';
+import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
+import 'package:turisteando_ando/widgets/custom_drop_down.dart';
 
 // ignore_for_file: must_be_immutable
 class FrmregistroScreen extends StatelessWidget {
@@ -25,42 +29,85 @@ class FrmregistroScreen extends StatelessWidget {
     return SafeArea(
         child: Scaffold(
             resizeToAvoidBottomInset: false,
+            extendBodyBehindAppBar: true,
             appBar: _buildAppBar(context),
-            body: Container(
-                width: double.maxFinite,
-                padding: EdgeInsets.symmetric(horizontal: 15.h, vertical: 38.v),
-                child: Form(
-                    key: formkey,
-                    child: Column(mainAxisSize: MainAxisSize.min, children: [
-                      SizedBox(height: 32.v),
-                      _buildTextFieldOutline(context),
-                      SizedBox(height: 15.v),
-                      _buildTextFieldOutline1(context),
-                      SizedBox(height: 15.v),
-                      _buildTextFieldOutline2(context),
-                      SizedBox(height: 15.v),
-                      _buildTextFieldOutline3(context),
-                      Spacer(),
-                      _buildRegistrarme(context),
-                      SizedBox(height: 8.v),
-                      _buildCancelarQuieroSeguirComo(context)
-                    ])))));
+            body: Form(
+                key: formkey,
+                child: Container(
+                  width: double.maxFinite,
+                  padding:
+                      EdgeInsets.symmetric(horizontal: 16.h, vertical: 20.v),
+                  child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        CustomImageView(
+                          imagePath: ImageConstant.imgLogo,
+                          height: 150,
+                          width: 150,
+                          alignment: Alignment.topCenter,
+                        ),
+                        SizedBox(height: 20.v),
+                        _buildSeventeen(context),
+                        SizedBox(height: 32.v),
+                        _buildTextFieldOutline(context),
+                        SizedBox(height: 15.v),
+                        _buildTextFieldOutline1(context),
+                        SizedBox(height: 15.v),
+                        _buildTextFieldOutline2(context),
+                        SizedBox(height: 15.v),
+                        _buildTextFieldOutline3(context),
+                        Spacer(),
+                        _buildRegistrarme(context),
+                        SizedBox(height: 8.v),
+                        _buildCancelarQuieroSeguirComo(context)
+                      ]),
+                ))));
   }
 
   /// Section Widget
   PreferredSizeWidget _buildAppBar(BuildContext context) {
     return CustomAppBar(
-        leadingWidth: 21.h,
-        leading: AppbarLeadingImage(
-            imagePath: ImageConstant.imgStroke2Red500,
-            margin: EdgeInsets.only(left: 10.h, top: 6.v, bottom: 86.v),
-            onTap: () {
-              onTapStrokeTwo(context);
-            }),
-        centerTitle: true,
-        title: AppbarTitle(
-            text:
-                "Estás a unos pasos de una \n experiencia turística más \n personal!"));
+      centerTitle: true,
+      title: SizedBox(
+        child: Stack(
+          alignment: Alignment.topLeft,
+          children: [
+            AppbarTitleImage(
+              imagePath: ImageConstant.imgRegresar,
+              margin: EdgeInsets.fromLTRB(5.h, 5.v, 318.h, 15.v),
+            ),
+          ],
+        ),
+      ),
+    );
+  }
+
+  Widget _buildSeventeen(BuildContext context) {
+    return SizedBox(
+      height: 100.v,
+      width: 328.h,
+      child: Stack(alignment: Alignment.bottomCenter, children: [
+        // Ensure CustomImageView is placed before the text widgets
+        Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+            width: 328.h,
+            decoration: AppDecoration.outlineBlack,
+            child: Text(
+              "¡Estás a unos pasos de una experiencia turística más personal!",
+              textAlign: TextAlign.center,
+              maxLines: 5,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: 'Nunito',
+                fontSize: 25,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+      ]),
+    );
   }
 
   /// Section Widget NOMBRE

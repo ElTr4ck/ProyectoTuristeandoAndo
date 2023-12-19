@@ -34,9 +34,9 @@ class StoreMethods {
 
   Future<void> rudaDestacada(
       {required fechaInicio,
-        required nombre,
-        required id,
-        required recompensa}) async {
+      required nombre,
+      required id,
+      required recompensa}) async {
     RutaDestacada ruta = RutaDestacada(
         fechaInicio: fechaInicio,
         nombre: nombre,
@@ -52,14 +52,15 @@ class StoreMethods {
 
   Future<DocumentReference> review(
       {required idplace,
-        required comentario,
-        required calificacion,
-        required fecha,
-        required nombre,
-        required List<Uint8List> files}) async {
-    List<String> fotosUrls = [];   // lista para almacenar las URL de las imágenes
+      required comentario,
+      required calificacion,
+      required fecha,
+      required nombre,
+      required List<Uint8List> files}) async {
+    List<String> fotosUrls = []; // lista para almacenar las URL de las imágenes
     for (var file in files) {
-      String fotoUrl = await uploadImage(file, 'fotos/${_auth.currentUser!.uid}/$idplace/${DateTime.now().toIso8601String()}.jpg');
+      String fotoUrl = await uploadImage(file,
+          'fotos/${_auth.currentUser!.uid}/$idplace/${DateTime.now().toIso8601String()}.jpg');
       fotosUrls.add(fotoUrl);
     }
 
@@ -82,13 +83,12 @@ class StoreMethods {
   }
 
   Map<String, dynamic> toJson() => {
-    "uid": _auth.currentUser!.uid,
-  };
-
+        "uid": _auth.currentUser!.uid,
+      };
 
   Future<List<String>> getReviews({required idplace}) async {
     DocumentSnapshot snap =
-    await _firestore.collection('reviews').doc(idplace).get();
+        await _firestore.collection('reviews').doc(idplace).get();
     if (snap.exists) {
       var snapshot = snap.data() as Map<String, dynamic>;
       return List<String>.from(snapshot['usuarios']);
@@ -96,7 +96,8 @@ class StoreMethods {
     return List.empty();
   }
 
-  Future<List<model.Review>> getReviewsUsuarioPlace({required idu, required idplace}) async {
+  Future<List<model.Review>> getReviewsUsuarioPlace(
+      {required idu, required idplace}) async {
     QuerySnapshot snaps = await _firestore
         .collection('usuarios')
         .doc(idu)
@@ -109,8 +110,39 @@ class StoreMethods {
 
   Future<model.User> getUser({required idu}) async {
     DocumentSnapshot snap =
-    await _firestore.collection('usuarios').doc(idu).get();
+        await _firestore.collection('usuarios').doc(idu).get();
     return model.User.formSnap(snap);
   }
 
+  Future<List<Map<String, dynamic>>> getFAQS() async {
+    try {
+      List<Map<String, dynamic>> listaDatos = [];
+      QuerySnapshot<Map<String, dynamic>> preguntasCollection =
+          await _firestore.collection('preguntasFrecuentes').get();
+      List<QueryDocumentSnapshot<Map<String, dynamic>>> preguntas =
+          preguntasCollection.docs;
+      for (QueryDocumentSnapshot<Map<String, dynamic>> preguntaDocumento
+          in preguntas) {
+        listaDatos.add(preguntaDocumento.data());
+      }
+      return listaDatos;
+    } catch (e) {
+      print('Error al obtener faqs: $e');
+      rethrow;
+    }
+  }
+
+  Future<void> deleteReview(String id) async {
+    try {
+      _firestore
+          .collection('usuarios')
+          .doc(_auth.currentUser!.uid)
+          .collection('reviews')
+          .doc(id)
+          .delete();
+    } catch (e) {
+      print('Error al obtener faqs: $e');
+      rethrow;
+    }
+  }
 }
