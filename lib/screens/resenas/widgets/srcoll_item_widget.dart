@@ -26,7 +26,6 @@ class SrcollItemWidget extends StatelessWidget {
         );
 
   String timeAgoCustom(DateTime d) {
-    // <-- Custom method Time Show  (Display Example  ==> 'Today 7:00 PM')     // WhatsApp Time Show Status Shimila
     Duration diff = DateTime.now().difference(d);
     if (diff.inDays > 365)
       return "Hace ${(diff.inDays / 365).floor()} ${(diff.inDays / 365).floor() == 1 ? "año" : "años"}";
@@ -35,7 +34,8 @@ class SrcollItemWidget extends StatelessWidget {
     if (diff.inDays > 7)
       return "Hace ${(diff.inDays / 7).floor()} ${(diff.inDays / 7).floor() == 1 ? "semana" : "semanas"}";
     if (diff.inDays > 0) return "${DateFormat.E('es').add_jm().format(d)}";
-    if (diff.inHours > 0) return "Hoy ${DateFormat('jm').format(d)}";
+    if (diff.inHours > 0) //return "Hoy ${DateFormat('jm').format(d)}";
+      return "Hace ${diff.inHours} ${diff.inHours == 1 ? "hora" : "horas"}";
     if (diff.inMinutes > 0)
       return "Hace ${diff.inMinutes} ${diff.inMinutes == 1 ? "minuto" : "minutos"}";
     return "Justo ahora";
@@ -45,6 +45,7 @@ class SrcollItemWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     Timestamp formattedDate = review['fecha'];
     String dateWithoutNanos = timeAgoCustom(formattedDate.toDate());
+    print(dateWithoutNanos);
     return Container(
       //DECORATION CONTAINER
       padding: EdgeInsets.all(12.h),
@@ -100,9 +101,6 @@ class SrcollItemWidget extends StatelessWidget {
                                     review['calificacion'].toDouble(),
                                 itemSize: 13,
                                 color: appTheme.yellow700,
-                              ),
-                              SizedBox(
-                                width: 20.h,
                               ),
                               Text(
                                 "     $dateWithoutNanos", //DATE
