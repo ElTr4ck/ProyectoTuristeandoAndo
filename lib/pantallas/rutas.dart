@@ -18,6 +18,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
 
+
 class PolylineScreen extends StatefulWidget {
   const PolylineScreen({Key? key}) : super(key: key);
 
@@ -30,6 +31,10 @@ final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
 
 class _PolylineScreenState extends State<PolylineScreen> {
+  late GoogleMapController _mapController;
+
+  GoogleMapController get mapController => _mapController;
+
   List ubicacionActual = [];
   late CameraPosition initialPosition;
 
@@ -103,7 +108,6 @@ class _PolylineScreenState extends State<PolylineScreen> {
 
   final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
-  Set<Marker> markersList = {};
 
   late GoogleMapController googleMapController;
 
@@ -121,21 +125,40 @@ class _PolylineScreenState extends State<PolylineScreen> {
   String totalDistances = 'No route';
   Color _iconColor = Colors.grey;
   TextEditingController controller = TextEditingController();
+  GoogleMapController? globalMapController;
+  Set<Marker> markersList = {};
+  bool isLoading = true;
 
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
 
       body: Stack(
         children: [
-          GoogleMap(
-            polylines: route.routes,
-            zoomControlsEnabled: false,
-            initialCameraPosition: initialPosition,
-            markers: markersList,
-            mapType: MapType.normal,
-            onMapCreated: (GoogleMapController controller) {
-              googleMapController = controller;
+          FutureBuilder<List<Marker>>(
+            future: _loadMarkers(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: CircularProgressIndicator());
+              } else if (!snapshot.hasData || snapshot.data == null) {
+                return Center(child: Text('No hay datos disponibles.'));
+              } else {
+                markersList = Set<Marker>.from(snapshot.data as List<Marker>);
+                return GoogleMap(
+                  polylines: route.routes,
+                  zoomControlsEnabled: false,
+                  initialCameraPosition: initialPosition,
+                  markers: markersList,
+                  mapType: MapType.normal,
+                  onMapCreated: (controller) {
+                    _mapController = controller;
+                    globalMapController = controller;
+                  },
+                );
+              }
             },
           ),
 
@@ -216,60 +239,113 @@ class _PolylineScreenState extends State<PolylineScreen> {
 
     );
   }
+  Future<List<Marker>> _loadMarkers() async {
+    List<Marker> newMarkersList = [];
+    String url = 'https://places.googleapis.com/v1/places:searchNearby';
+    // Los datos que enviarás en el cuerpo de la solicitud POST
+    Map<String, dynamic> requestData = {
+      "includedTypes": ["tourist_attraction", "museum", "hotel", "restaurant"],
+      "maxResultCount": 5,
+      //"rankPreference": "DISTANCE",
+      "languageCode": "es",
+      "locationRestriction": {
+        "circle": {
+          "center": {
+            "latitude": ubicacionActual[0],
+            "longitude": ubicacionActual[1],
+          },
+          "radius": 2000.0
+        }
+      },
+    };
 
+    // Las cabeceras de la solicitud
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'X-Goog-Api-Key': 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM', // Reemplaza 'API_KEY' con tu clave real
+      'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.location,places.currentOpeningHours,places.photos,places.primaryTypeDisplayName,places.id',
+    };
 
-  void drawPolyline(double destinationlat, double destinationlon) async {
-    Position position = await _determinePosition();
-    double latitude = position.latitude;
-    double longitude = position.longitude;
-    //origin = LatLng(latitude, longitude);
-    //destination = LatLng(destinationlat, destinationlon);
-    List<LatLng> points = [
-      LatLng(latitude, longitude),
-      LatLng(destinationlat, destinationlon)
-      //LatLng(45.851254420031296, 14.624331708344428),
-      //LatLng(45.84794984187217, 14.605434384742317)
-    ];
-    await route.drawRoute(points, 'Test routes',
-        Color.fromRGBO(130, 78, 210, 1.0), googleApiKey,
-        travelMode: TravelModes.walking);
-    setState(() {
-      totalDistance =
-          distanceCalculator.calculateRouteDistance(points, decimals: 1);
+    // Realiza la solicitud POST
+    try {
+      var response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(requestData),
+        headers: headers,
+      );
 
+      // Verifica el código de estado de la respuesta
+      if (response.statusCode == 200) {
+        markersList.clear();
+        // La solicitud fue exitosa, puedes manejar la respuesta aquí
+        //print('Respuesta exitosa: ${response.body}');
+        Map<String, dynamic> jsonData = json.decode(response.body);
+        print('${jsonData["places"][0]["location"]["latitude"]}');
+        //print('${jsonData["places"][0]["formattedAddress"]}');
+        //GoogleMapController mapController = (context.findAncestorStateOfType<_PolylineScreenState>())!.mapController;
+        if (jsonData["places"] is List) {
+          List<dynamic> places = jsonData["places"];
+          if (places.isNotEmpty) {
+            for (var place in places) {
+              double latitud = place["location"]["latitude"];
+              double longitud = place["location"]["longitude"];
+              String nombremarcador = place["displayName"]["text"];
+              crearMarcadorEnMapa(latitud, longitud, nombremarcador);
+              newMarkersList.add(
+                Marker(
+                  markerId: MarkerId('mi_marcador_$nombremarcador'),
+                  position: LatLng(latitud, longitud),
+                  infoWindow: InfoWindow(title: nombremarcador),
+                  onTap: () {
+                    // Acción al tocar el marcador
+                    print("Tocaste el marcador: $nombremarcador");
+                  },
+                ),
+              );
+            }
+          } else {
+            print("La lista de lugares está vacía");
+          }
+        } else {
+          print("La propiedad 'places' no es una lista");
+        }
+        // Llama a la función para crear el marcador en el mapa
 
-      //totalTime =
-
-    });
-    /*var response = await http.post(Uri.parse("https://maps.googleapis.com/maps/api/directions/json?key=" +
-        apiKey +
-        "&units=metric&origin=" +
-        origin.latitude.toString() +
-        "," +
-        origin.longitude.toString() +
-        "&destination=" +
-        destination.latitude.toString() +
-        "," +
-        destination.longitude.toString() +
-        "&mode=driving"));
-
-    print(response.body);
-
-    polylineResponse = PolylineResponse.fromJson(jsonDecode(response.body));
-
-    totalDistance = polylineResponse.routes![0].legs![0].distance!.text!;
-    totalTime = polylineResponse.routes![0].legs![0].duration!.text!;
-
-    for (int i = 0; i < polylineResponse.routes![0].legs![0].steps!.length; i++) {
-      polylinePoints.add(Polyline(polylineId: PolylineId(polylineResponse.routes![0].legs![0].steps![i].polyline!.points!), points: [
-        LatLng(
-            polylineResponse.routes![0].legs![0].steps![i].startLocation!.lat!, polylineResponse.routes![0].legs![0].steps![i].startLocation!.lng!),
-        LatLng(polylineResponse.routes![0].legs![0].steps![i].endLocation!.lat!, polylineResponse.routes![0].legs![0].steps![i].endLocation!.lng!),
-      ],width: 3,color: Colors.red));
+      } else {
+        // Hubo un error en la solicitud, puedes manejarlo aquí
+        print('Error en la solicitud: ${response.statusCode}');
+      }
+      return newMarkersList;
+    } catch (e) {
+      print('Error cargando marcadores: $e');
+      throw e;
     }
-
-    setState(() {});*/
   }
+  void crearMarcadorEnMapa(double latitud, double longitud, String nombreMarcador) {
+    print("Hola");
+    if (globalMapController != null) {
+      globalMapController!.animateCamera(
+        CameraUpdate.newLatLng(LatLng(latitud, longitud)),
+      );
+
+      setState(() {
+        markersList.add(
+          Marker(
+            markerId: MarkerId('mi_marcador_$nombreMarcador'), // Cambiado para que cada marcador tenga un ID único
+            position: LatLng(latitud, longitud),
+            infoWindow: InfoWindow(title: nombreMarcador),
+            onTap: () {
+              // Acción que se realiza al tocar el marcador
+              print("Tocaste el marcador: $nombreMarcador");
+              // Agrega aquí la lógica que deseas realizar al tocar el marcador por segunda vez
+            },
+          ),
+        );
+      });
+    }
+  }
+
+
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
@@ -492,12 +568,14 @@ class CarouselWithInfo extends StatefulWidget {
 
 class _CarouselWithInfoState extends State<CarouselWithInfo> {
   List<Widget> carouselItems = [];
+  LatLng marcadorLatLng = LatLng(0.0, 0.0);
 
   @override
   void initState() {
     super.initState();
     fetchData();
   }
+
   Future<void> fetchData() async {
     //Position position = await _determinePosition2();
     //double latitude = position.latitude;
@@ -578,10 +656,10 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
         Map<String, dynamic> jsonData = json.decode(response.body);
         print('${jsonData["places"][0]["location"]["latitude"]}');
         //print('${jsonData["places"][0]["formattedAddress"]}');
-        double latitud = jsonData["places"][0]["location"]["latitude"];
-        double longitud = jsonData["places"][0]["location"]["longitude"];
+        //GoogleMapController mapController = (context.findAncestorStateOfType<_PolylineScreenState>())!.mapController;
 
         // Llama a la función para crear el marcador en el mapa
+
       } else {
         // Hubo un error en la solicitud, puedes manejarlo aquí
         print('Error en la solicitud: ${response.statusCode}');
