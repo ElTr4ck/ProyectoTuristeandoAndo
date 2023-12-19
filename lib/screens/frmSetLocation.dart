@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:turisteando_ando/blocs/geolocation/geolocation_bloc.dart';
 import 'package:turisteando_ando/blocs/place/place_bloc.dart';
 import 'package:turisteando_ando/core/app_export.dart';
@@ -45,7 +46,7 @@ class _FrmSetLocationState extends State<FrmSetLocation> {
                       } else if (state is GeolocationLoaded) {
                         return Gmap(
                           lat: state.position.latitude,
-                          lng: state.position.longitude,
+                          lng: state.position.longitude, onMapCreated: (controller) {  }, addMarker: (LatLng location) {  }, markers: {}, //Modificar cuando se tenga que
                         );
                       } else {
                         return const Text('Algo ha salido mal');
@@ -120,7 +121,7 @@ class _FrmSetLocationState extends State<FrmSetLocation> {
                   //Mapa de google sin geolocalizacion, con el place cargado
                   Gmap(
                     lat: state.place.lat,
-                    lng: state.place.lon,
+                    lng: state.place.lon, onMapCreated: (controller) {  }, addMarker: (LatLng location) {  }, markers: { }, //Modificar cuando sea posible
                   ),
 
                   //Barra de busqueda con autocompletado

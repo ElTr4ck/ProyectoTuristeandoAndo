@@ -28,8 +28,18 @@ class FrmmarcadoresScreen extends StatelessWidget {
         child: Scaffold(
       drawer: SideBar(),
       appBar: AppBar(
-        title: null,
-      ),
+              title: null,
+              backgroundColor: Colors.white,
+              elevation: 0,
+              leading: Builder(builder: (BuildContext context) {
+                return IconButton(
+                    onPressed: () {
+                      Scaffold.of(context).openDrawer();
+                    },
+                    icon: const Icon(Icons.menu,
+                        color: Color.fromARGB(255, 17, 76, 95)));
+              }),
+            ),
       body: SizedBox(
           width: double.maxFinite,
           child: ListView(
@@ -37,37 +47,47 @@ class FrmmarcadoresScreen extends StatelessWidget {
               Column(children: [
                 Container(
                     decoration: AppDecoration.outlineBlack,
-                    child: Text("Estos son tus marcadores",
-                        style: theme.textTheme.headlineMedium)),
+                    child: Text("Marcadores",
+                        style: TextStyle(
+                          fontSize: 40.0,
+                          fontWeight: FontWeight.bold,
+                          fontFamily: 'Nunito',
+                        ))),
+                Container(
+                    decoration: AppDecoration.outlineBlack,
+                    child: Text("Estos son tu marcadores",
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontFamily: 'Nunito',
+                        ))),
                 SizedBox(height: 11.v),
                 CustomElevatedButton(
                     height: 24.v,
                     width: 125.h,
                     text: "Ver en mapa",
-                    buttonStyle: CustomButtonStyles.outlineBlack,
-                    buttonTextStyle:
-                        CustomTextStyles.labelLargeMontserratTeal400,
+                    buttonStyle: CustomButtonStyles.fillPrimary,
+                    buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
                     onPressed: () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => RutaUno(
                                   predictionDescription: 'Mover',
+                                  selectedDate: DateTime.now(),
                                 )),
                       );
                     }),
-                SizedBox(height: 5.v),
+                SizedBox(height: 20.v),
                 _buildComponentDest(context),
-                SizedBox(height: 15.v),
+                SizedBox(height: 30.v),
                 _buildComponentNuev(context),
-                SizedBox(height: 5.v)
+                SizedBox(height: 10.v)
               ]),
             ],
           )),
       //bottomNavigationBar: _buildBottomBar(context)
     ));
   }
-
   /// Section Widget
   Widget _buildComponentDest(BuildContext context) {
     return Padding(
@@ -109,7 +129,6 @@ class CarouselWithInfo9 extends StatefulWidget {
   @override
   _CarouselWithInfoState9 createState() => _CarouselWithInfoState9();
 }
-
 class _CarouselWithInfoState9 extends State<CarouselWithInfo9> {
   bool isHeartRed = false;
   List preferencias = [];
@@ -138,8 +157,7 @@ class _CarouselWithInfoState9 extends State<CarouselWithInfo9> {
         // Preparamos los datos de la solicitud enfocados en turismo
         requestData = {
           "includedTypes": tiposTurismo,
-          "maxResultCount":
-              15, // Puedes ajustar el número de resultados según sea necesario
+          "maxResultCount": 15, // Puedes ajustar el número de resultados según sea necesario
           "languageCode": "es",
           "locationRestriction": {
             "circle": {
@@ -147,8 +165,7 @@ class _CarouselWithInfoState9 extends State<CarouselWithInfo9> {
                 "latitude": latitude,
                 "longitude": longitude,
               },
-              "radius":
-                  5000.0 // Establecemos el radio de búsqueda en 5000 metros
+              "radius": 10000.0 // Establecemos el radio de búsqueda en 5000 metros
             }
           },
         };
@@ -156,10 +173,8 @@ class _CarouselWithInfoState9 extends State<CarouselWithInfo9> {
         // Las cabeceras de la solicitud
         Map<String, String> headers = {
           'Content-Type': 'application/json',
-          'X-Goog-Api-Key':
-              'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM', // Asegúrate de reemplazar esto con tu clave de API real
-          'X-Goog-FieldMask':
-              'places.displayName,places.formattedAddress,places.location,places.currentOpeningHours,places.photos,places.primaryTypeDisplayName,places.id,places.rating',
+          'X-Goog-Api-Key': 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM', // Asegúrate de reemplazar esto con tu clave de API real
+          'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.location,places.currentOpeningHours,places.photos,places.primaryTypeDisplayName,places.id,places.rating',
         };
 
         // Realizamos la solicitud POST
@@ -185,12 +200,11 @@ class _CarouselWithInfoState9 extends State<CarouselWithInfo9> {
       print('Error al obtener la posición o al hacer la solicitud: $e');
     }
   }
-
   void updateCarouselItems(List<dynamic> places) {
     List<Widget> items = [];
     for (var place in places) {
       String title = place["displayName"]
-          ["text"]; // + '-' + place["primaryTypeDisplayName"]["text"];
+      ["text"]; // + '-' + place["primaryTypeDisplayName"]["text"];
       print(title);
       String description = place["rating"].toString();
       print(description);
@@ -224,8 +238,8 @@ class _CarouselWithInfoState9 extends State<CarouselWithInfo9> {
       ),
       items: carouselItems.isEmpty
           ? [
-              buildLoadingItem()
-            ] // Puedes mostrar un indicador de carga mientras se obtienen los datos
+        buildLoadingItem()
+      ] // Puedes mostrar un indicador de carga mientras se obtienen los datos
           : carouselItems,
     );
   }
@@ -314,7 +328,7 @@ class _CarouselWithInfoState9 extends State<CarouselWithInfo9> {
                         ),
                         SizedBox(
                             width:
-                                8), // Ajusta el espacio entre el icono y el texto
+                            8), // Ajusta el espacio entre el icono y el texto
                         Text(
                           description,
                           style: TextStyle(
@@ -385,7 +399,6 @@ class CarouselWithInfo10 extends StatefulWidget {
   @override
   _CarouselWithInfoState10 createState() => _CarouselWithInfoState10();
 }
-
 class _CarouselWithInfoState10 extends State<CarouselWithInfo10> {
   bool isHeartRed = false;
   List preferencias = [];
@@ -407,15 +420,13 @@ class _CarouselWithInfoState10 extends State<CarouselWithInfo10> {
           .collection('favoritos')
           .snapshots()
           .listen((snapshot) {
-        List<String> placeIds =
-            snapshot.docs.map((doc) => doc.data()['id'] as String).toList();
+        List<String> placeIds = snapshot.docs.map((doc) => doc.data()['id'] as String).toList();
         fetchPlacesDetails(placeIds);
       });
     } else {
       print('No hay usuario autenticado');
     }
   }
-
   // Método para obtener los IDs de favoritos desde Firebase
   Future<void> fetchData() async {
     FirebaseAuth auth = FirebaseAuth.instance;
@@ -428,8 +439,7 @@ class _CarouselWithInfoState10 extends State<CarouselWithInfo10> {
             .collection('favoritos')
             .get();
 
-        List<String> placeIds =
-            snapshot.docs.map((doc) => doc.data()['id'] as String).toList();
+        List<String> placeIds = snapshot.docs.map((doc) => doc.data()['id'] as String).toList();
 
         await fetchPlacesDetails(placeIds);
       } catch (e) {
@@ -446,8 +456,7 @@ class _CarouselWithInfoState10 extends State<CarouselWithInfo10> {
     for (String id in placeIds) {
       try {
         Map<String, dynamic> placeDetails = await fetchPlaceDetailsFromApi(id);
-        items.add(buildCarouselItem(placeDetails['title'],
-            placeDetails['description'], placeDetails['image'], id));
+        items.add(buildCarouselItem(placeDetails['title'], placeDetails['description'], placeDetails['image'], id));
       } catch (e) {
         print('Error al obtener detalles del lugar: $e');
       }
@@ -460,18 +469,15 @@ class _CarouselWithInfoState10 extends State<CarouselWithInfo10> {
 
   // Método para hacer una llamada a la API y obtener los detalles de un lugar
   Future<Map<String, dynamic>> fetchPlaceDetailsFromApi(String placeId) async {
-    var url = Uri.parse(
-        'https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM');
+    var url = Uri.parse('https://maps.googleapis.com/maps/api/place/details/json?place_id=$placeId&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM');
     var response = await http.get(url);
 
     if (response.statusCode == 200) {
       var data = json.decode(response.body);
       var result = data['result'];
-
       // Obteniendo el nombre y la calificación del lugar
       String title = result['name']; // Nombre del lugar
-      double rating = result['rating'] ??
-          0.0; // Calificación del lugar, 0.0 si no está disponible
+      double rating = result['rating'] ?? 0.0; // Calificación del lugar, 0.0 si no está disponible
 
       // Construyendo la descripción con la calificación
       String description = '${rating.toStringAsFixed(1)}';
@@ -481,7 +487,11 @@ class _CarouselWithInfoState10 extends State<CarouselWithInfo10> {
           ? 'https://maps.googleapis.com/maps/api/place/photo?maxwidth=400&photoreference=${result['photos'][0]['photo_reference']}&key=AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM'
           : 'URL_imagen_por_defecto';
 
-      return {'title': title, 'description': description, 'image': imageUrl};
+      return {
+        'title': title,
+        'description': description,
+        'image': imageUrl
+      };
     } else {
       return {
         'title': 'Información no disponible',
@@ -495,7 +505,7 @@ class _CarouselWithInfoState10 extends State<CarouselWithInfo10> {
     List<Widget> items = [];
     for (var place in places) {
       String title = place["displayName"]
-          ["text"]; // + '-' + place["primaryTypeDisplayName"]["text"];
+      ["text"]; // + '-' + place["primaryTypeDisplayName"]["text"];
       print(title);
       String description = place["rating"].toString();
       print(description);
@@ -516,27 +526,29 @@ class _CarouselWithInfoState10 extends State<CarouselWithInfo10> {
 
   @override
   Widget build(BuildContext context) {
-    return CarouselSlider(
-      options: CarouselOptions(
-        height: 395.0,
-        enlargeCenterPage: false,
-        autoPlay: true,
-        aspectRatio: 16 / 9,
-        autoPlayCurve: Curves.fastOutSlowIn,
-        enableInfiniteScroll: true,
-        autoPlayAnimationDuration: Duration(milliseconds: 800),
-        viewportFraction: 0.6,
+    return Align(
+      alignment: Alignment.centerLeft,
+      child: CarouselSlider(
+        options: CarouselOptions(
+          height: 395.0,
+          enlargeCenterPage: false,
+          autoPlay: true,
+          aspectRatio: 16 / 9,
+          autoPlayCurve: Curves.fastOutSlowIn,
+          enableInfiniteScroll: false,
+          autoPlayAnimationDuration: Duration(milliseconds: 800),
+          viewportFraction: 0.6, // Ajusta esto para cambiar el tamaño del elemento visible
+          initialPage: 1,
+        ),
+        items: carouselItems.isEmpty
+            ? [buildNoFavoritesMessage()]
+            : carouselItems,
       ),
-      items: carouselItems.isEmpty
-          ? [
-              buildNoFavoritesMessage()
-            ] // Puedes mostrar un indicador de carga mientras se obtienen los datos
-          : carouselItems,
     );
   }
 
-  Widget buildCarouselItem(
-      String title, String description, String image, String id) {
+
+  Widget buildCarouselItem(String title, String description, String image, String id) {
     return GestureDetector(
       onTap: () {
         // Acción a realizar cuando se toca el elemento del carrusel
@@ -619,7 +631,7 @@ class _CarouselWithInfoState10 extends State<CarouselWithInfo10> {
                         ),
                         SizedBox(
                             width:
-                                8), // Ajusta el espacio entre el icono y el texto
+                            8), // Ajusta el espacio entre el icono y el texto
                         Text(
                           description,
                           style: TextStyle(
@@ -648,4 +660,5 @@ class _CarouselWithInfoState10 extends State<CarouselWithInfo10> {
       ),
     );
   }
+
 }

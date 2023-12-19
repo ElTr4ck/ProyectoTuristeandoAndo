@@ -2,12 +2,9 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
-import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_a_page/frmrese_a_page2.dart';
 import 'package:turisteando_ando/widgets/app_bar/appbar_leading_image.dart';
-import 'package:turisteando_ando/widgets/app_bar/appbar_title_searchview.dart';
 import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
-import 'package:turisteando_ando/widgets/custom_bottom_bar.dart';
 import 'package:turisteando_ando/widgets/custom_rating_bar.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_GOOGLE_page/frmrese_GOOGLE_page.dart';
 
@@ -17,15 +14,19 @@ import 'package:http/http.dart' as http;
 
 class FrmreseATabContainerScreen2 extends StatefulWidget {
   final String id;
-  FrmreseATabContainerScreen2({required this.id, Key? key}) : super(key: key);
+  final int index;
+  FrmreseATabContainerScreen2({required this.id, required this.index, Key? key})
+      : super(key: key);
 
   @override
   FrmreseATabContainerScreenState createState() =>
-      FrmreseATabContainerScreenState();
+      FrmreseATabContainerScreenState(index);
 }
 
 class FrmreseATabContainerScreenState extends State<FrmreseATabContainerScreen2>
     with TickerProviderStateMixin {
+  final int index;
+  FrmreseATabContainerScreenState(this.index);
   TextEditingController searchController = TextEditingController();
 
   late TabController tabviewController;
@@ -42,7 +43,8 @@ class FrmreseATabContainerScreenState extends State<FrmreseATabContainerScreen2>
   @override
   void initState() {
     super.initState();
-    tabviewController = TabController(length: 2, vsync: this);
+    tabviewController =
+        TabController(length: 2, vsync: this, initialIndex: index);
     fetchData();
   }
 
@@ -263,11 +265,7 @@ class FrmreseATabContainerScreenState extends State<FrmreseATabContainerScreen2>
                   padding: EdgeInsets.only(top: 7.v, bottom: 16.v),
                   child: GestureDetector(
                       onTap: () {
-                        Navigator.of(context).push(
-                            MaterialPageRoute(builder: (BuildContext context) {
-                          //String aux = '${prediction.lat}, ${prediction.lng}';
-                          return FrminfolugarScreen(id: widget.id);
-                        }));
+                        Navigator.pop(context);
                       },
                       child: Icon(
                         Icons.arrow_back_outlined,
@@ -275,6 +273,7 @@ class FrmreseATabContainerScreenState extends State<FrmreseATabContainerScreen2>
                         color: Colors.grey,
                       ))),
               centerTitle: true,
+
               /*title: AppbarTitleSearchview(
                 hintText: "¿Buscas hacer algo ... ",
                 controller: searchController,
@@ -322,7 +321,7 @@ class FrmreseATabContainerScreenState extends State<FrmreseATabContainerScreen2>
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     CustomRatingBar(
-                      initialRating: jsonData?['rating'],
+                      initialRating: jsonData?['rating'].toDouble(), //error
                       itemSize: 13,
                       color: appTheme.yellow700,
                     ),

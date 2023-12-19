@@ -28,6 +28,7 @@ class FrmnewreseAScreen extends StatefulWidget {
 
 class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
   late Future<String> placeNameFuture;
+  GlobalKey<FormState> _formKey = GlobalKey<FormState>();
   late Future<model.User?> userFuture;
   String name = "";
   int calificacion = 5;
@@ -105,13 +106,7 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
 
   List<Uint8List> _images = [];
 
-  Future<void> uploadImages(String reviewId) async {
-    for (int i = 0; i < _images.length; i++) {
-      String path = 'reviews/$reviewId/image_$i.jpg';
-      String imageUrl = await StoreMethods().uploadImage(_images[i], path);
-      print('Image uploaded: $imageUrl');
-    }
-  }
+  bool _isLoading = false; //variable para mostrar CircularProgressIndicator
 
   @override
   Widget build(BuildContext context) {
@@ -188,22 +183,36 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
                       SizedBox(height: 25.v),
                       CustomElevatedButton(
                           onPressed: () async {
-                            DocumentReference reviewDocRef =
-                                await StoreMethods().review(
-                                    idplace: widget.id,
-                                    comentario: comentarioController.text,
-                                    calificacion: calificacion,
-                                    fecha: Timestamp.fromDate(DateTime.now()),
-                                    nombre: name,
-                                    files: _images);
-                            String reviewId = reviewDocRef.id;
-                            await uploadImages(reviewId);
+                            if (_formKey.currentState!.validate()) {
+                              setState(() {
+                                _isLoading = true;
+                              });
+                              DocumentReference reviewDocRef =
+                                  await StoreMethods().review(
+                                      idplace: widget.id,
+                                      comentario: comentarioController.text,
+                                      calificacion: calificacion,
+                                      fecha: Timestamp.fromDate(DateTime.now()),
+                                      nombre: name,
+                                      files: _images);
 
-                            // ignore: use_build_context_synchronously
-                            print("entro");
-                            Navigator.pop(context);
+                              // ignore: use_build_context_synchronously
+                              print("entro");
+                              Navigator.pop(context);
+                            }
                           },
-                          text: "Aceptar",
+                          text: _isLoading
+                              ? '     Cargando'
+                              : 'Aceptar', //condiciones para CircularProgressIndicator
+                          leftIcon: _isLoading
+                              ? const SizedBox(
+                                  width: 5,
+                                  height: 5,
+                                  child: CircularProgressIndicator(
+                                    color: Colors.white,
+                                  ),
+                                )
+                              : const SizedBox.shrink(),
                           margin: EdgeInsets.only(left: 44.h, right: 45.h),
                           buttonStyle: CustomButtonStyles.fillPrimaryTL16),
                       SizedBox(height: 15.v),
@@ -239,7 +248,7 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
                 Navigator.of(context)
                     .push(MaterialPageRoute(builder: (BuildContext context) {
                   //String aux = '${prediction.lat}, ${prediction.lng}';
-                  return FrmreseATabContainerScreen2(id: widget.id);
+                  return FrmreseATabContainerScreen2(id: widget.id, index: 0,);
                 }));
               },
               child: Icon(
@@ -281,38 +290,49 @@ class _FrmnewreseAScreenState extends State<FrmnewreseAScreen> {
               padding: EdgeInsets.all(12.h),
               decoration: AppDecoration.fillGray
                   .copyWith(borderRadius: BorderRadiusStyle.roundedBorder33),
-              child: Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          CircleAvatar(
-                            radius: 17,
-                            backgroundImage: NetworkImage(avatar),
-                          ),
-                          Padding(
-                              padding: EdgeInsets.only(
-                                  left: 6.h, top: 5.v, bottom: 7.v),
-                              child: Text(name + " " + lastname,
-                                  style: theme.textTheme.titleMedium))
-                        ]),
-                    SizedBox(height: 8.v),
-                    Container(
-                        width: 277.h,
-                        margin: EdgeInsets.only(right: 15.h),
-                        child: TextFormField(
-                          decoration: InputDecoration.collapsed(
-                              hintText: "Comparte tu experiencia"),
-                          minLines:
-                              3, // any number you need (It works as the rows for the textarea)
-                          keyboardType: TextInputType.multiline,
-                          maxLines: null,
-                          controller: comentarioController,
-                        )),
-                    SizedBox(height: 15.v)
-                  ]));
+              child: Form(
+                key: _formKey,
+                child: Column(
+                    mainAxisSize: MainAxisSize.min,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            CircleAvatar(
+                              radius: 17,
+                              backgroundImage: NetworkImage(avatar),
+                            ),
+                            Padding(
+                                padding: EdgeInsets.only(
+                                    left: 6.h, top: 5.v, bottom: 7.v),
+                                child: Text(name + " " + lastname,
+                                    style: theme.textTheme.titleMedium))
+                          ]),
+                      SizedBox(height: 8.v),
+                      Container(
+                          width: 277.h,
+                          margin: EdgeInsets.only(right: 15.h),
+                          child: TextFormField(
+                            autovalidateMode:
+                                AutovalidateMode.onUserInteraction,
+                            decoration: InputDecoration.collapsed(
+                                hintText: "Comparte tu experiencia"),
+                            minLines:
+                                3, // any number you need (It works as the rows for the textarea)
+                            keyboardType: TextInputType.multiline,
+                            maxLines: null,
+                            controller: comentarioController,
+                            validator: (value) {
+                              if (value!.isEmpty) {
+                                return "Campo obligatorio";
+                              }
+                              return null;
+                            },
+                          )),
+                      SizedBox(height: 15.v)
+                    ]),
+              ));
         }
       },
     );

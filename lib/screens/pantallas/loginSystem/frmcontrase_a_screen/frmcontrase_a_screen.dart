@@ -27,89 +27,117 @@ class FrmcontraseAScreen extends StatelessWidget {
 
     mediaQueryData = MediaQuery.of(context);
     return SafeArea(
-        child: Scaffold(
-            body: Form(
-                key: _formKey,
-                child: Container(
-                    width: double.maxFinite,
-                    padding:
-                        EdgeInsets.symmetric(horizontal: 16.h, vertical: 20.v),
-                    child: Column(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          _buildSeventeen(context),
-                          SizedBox(height: 43.v),
-                          _buildTextFieldOutline(context),
-                          SizedBox(height: 51.v),
-                          CustomElevatedButton(
-                              text: "Enviar",
-                              margin: EdgeInsets.only(
-                                  left: 30.h, right: 20.h, bottom: 10.h),
-                              buttonStyle: CustomButtonStyles.fillPrimary,
-                              buttonTextStyle:
-                                  CustomTextStyles.titleMediumOnPrimary17,
-                              onPressed: () async {
-                                if (_formKey.currentState!.validate()) {
-                                  bool res = await sendResetEmail();
-                                  if (res) onTapEnviar(context);
-                                }
-                              }),
-                          SizedBox(height: 14.v),
-                          CustomElevatedButton(
-                              text: "Cancelar",
-                              margin: EdgeInsets.only(
-                                  left: 30.h, right: 20.h, bottom: 10.h),
-                              buttonStyle: CustomButtonStyles.fillTeal,
-                              buttonTextStyle:
-                                  CustomTextStyles.titleMediumOnPrimary17,
-                              onPressed: () {
-                                onTapCancelar(context);
-                              })
-                        ])))));
+      child: Scaffold(
+        body: Center(
+          child: Form(
+            key: _formKey,
+            child: Container(
+              width: double.maxFinite,
+              padding: EdgeInsets.symmetric(horizontal: 16.h, vertical: 20.v),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  CustomImageView(
+                    imagePath: ImageConstant.imgLogo,
+                    height: 150,
+                    width: 150,
+                    alignment: Alignment.topCenter,
+                  ),
+                  _buildSeventeen(context),
+                  SizedBox(height: 20.v),
+                  _buildTextFieldOutline(context),
+                  SizedBox(height: 20.v),
+                  CustomElevatedButton(
+                    text: "Enviar",
+                    margin:
+                        EdgeInsets.only(left: 30.h, right: 20.h, bottom: 10.h),
+                    buttonStyle: CustomButtonStyles.fillPrimary,
+                    buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
+                    onPressed: () async {
+                      if (_formKey.currentState!.validate()) {
+                        bool res = await sendResetEmail();
+                        if (res) onTapEnviar(context);
+                      }
+                    },
+                  ),
+                  SizedBox(height: 5.v),
+                  CustomElevatedButton(
+                    text: "Cancelar",
+                    margin:
+                        EdgeInsets.only(left: 30.h, right: 20.h, bottom: 10.h),
+                    buttonStyle: CustomButtonStyles.fillTeal,
+                    buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
+                    onPressed: () {
+                      onTapCancelar(context);
+                    },
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+      ),
+    );
   }
 
   /// Section Widget
   Widget _buildSeventeen(BuildContext context) {
     return SizedBox(
-        height: 154.v,
-        width: 328.h,
-        child: Stack(alignment: Alignment.bottomCenter, children: [
-          Align(
-              alignment: Alignment.topCenter,
-              child: Container(
-                  width: 328.h,
-                  decoration: AppDecoration.outlineBlack,
-                  child: Text("¿Olvidaste tu contraseña?\n",
-                      textAlign: TextAlign.center,
-                      maxLines: null,
-                      overflow: TextOverflow.ellipsis,
-                      style: CustomTextStyles.titleLargeBlack900
-                          .copyWith(height: 1.41)))),
-          Align(
-              alignment: Alignment.bottomCenter,
-              child: Container(
-                  margin: EdgeInsets.symmetric(horizontal: 26.h),
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 22.h, vertical: 6.v),
-                  decoration: AppDecoration.fillGray.copyWith(
-                      borderRadius: BorderRadiusStyle.roundedBorder12),
-                  child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(height: 1.v),
-                        SizedBox(
-                            width: 230.h,
-                            child: Text(
-                                "Ingresa el correo electrónico con el que te registraste. \nTe enviaremos un link para restablecer tu contraseña",
-                                maxLines: 4,
-                                overflow: TextOverflow.ellipsis,
-                                textAlign: TextAlign.center,
-                                style: CustomTextStyles
-                                    .titleMediumOnPrimaryContainer
-                                    .copyWith(height: 1.41)))
-                      ])))
-        ]));
+      height: 100.v,
+      width: 328.h,
+      child: Stack(alignment: Alignment.bottomCenter, children: [
+        // Ensure CustomImageView is placed before the text widgets
+        Align(
+          alignment: Alignment.topCenter,
+          child: Container(
+            width: 328.h,
+            decoration: AppDecoration.outlineBlack,
+            child: Text(
+              "¿Olvidaste tu contraseña?\n",
+              textAlign: TextAlign.center,
+              maxLines: null,
+              overflow: TextOverflow.ellipsis,
+              style: TextStyle(
+                fontFamily: 'Nunito',
+                fontSize: 18,
+                fontWeight: FontWeight.bold,
+              ),
+            ),
+          ),
+        ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            //margin: EdgeInsets.symmetric(horizontal: 26.h),
+            padding: EdgeInsets.symmetric(horizontal: 22.h, vertical: 6.v),
+            decoration: AppDecoration.fillGray.copyWith(
+              borderRadius: BorderRadiusStyle.roundedBorder12,
+            ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SizedBox(height: 1.v),
+                SizedBox(
+                  width: 230.h,
+                  child: Text(
+                    "Ingresa el correo electrónico con el que te registraste. Te enviaremos un link para restablecer tu contraseña.",
+                    maxLines: 4,
+                    overflow: TextOverflow.ellipsis,
+                    textAlign: TextAlign.center,
+                    style: TextStyle(
+                      fontFamily: 'Nunito',
+                      fontSize: 14,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+        ),
+      ]),
+    );
   }
 
   /// Section Widget CORREO

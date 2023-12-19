@@ -1,43 +1,18 @@
 import 'dart:convert';
-
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/gestures.dart';
-
 import '../frminfolugar_screen/widgets/componentlugares_item_widget.dart';
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
-import 'package:turisteando_ando/widgets/app_bar/appbar_leading_image.dart';
-import 'package:turisteando_ando/widgets/app_bar/appbar_title.dart';
 import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
-import 'package:turisteando_ando/widgets/custom_rating_bar.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
 import 'package:http/http.dart' as http;
 import 'package:url_launcher/url_launcher.dart';
 import 'package:turisteando_ando/pantallas/rutaUno.dart';
 import 'package:turisteando_ando/screens/pantallas/presentation/frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
-
-import 'dart:convert';
-import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:firebase_auth/firebase_auth.dart';
-import 'package:flutter/gestures.dart';
-import 'package:turisteando_ando/screens/frmMapa.dart';
 import 'package:turisteando_ando/screens/frm_ruta_propia.dart';
-
-import '../frminfolugar_screen/widgets/componentlugares_item_widget.dart';
-import 'package:flutter/material.dart';
-import 'package:turisteando_ando/core/app_export.dart';
-import 'package:turisteando_ando/widgets/app_bar/appbar_leading_image.dart';
-import 'package:turisteando_ando/widgets/app_bar/appbar_title.dart';
-import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
-import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
-import 'package:turisteando_ando/screens/pantallas/presentation/frminicio_page/frminicio_page.dart';
-import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
-import 'package:turisteando_ando/pantallas/rutaUno.dart';
-
-import '../frmrese_a_tab_container_screen/frmrese_a_tab_container_screen2.dart';
 
 // ignore_for_file: must_be_immutable
 class FrminfolugarScreen extends StatefulWidget {
@@ -142,19 +117,49 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
       mediaQueryData = MediaQuery.of(context);
       return SafeArea(
         child: Scaffold(
+          extendBodyBehindAppBar: true,
           appBar: _buildAppBar(context),
-          body: SizedBox(
-            width: double.maxFinite,
+          body: Container(
+            width: double.infinity,
             child: ListView(
               children: [
                 Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.center,
                   children: [
+                    Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                          padding: EdgeInsets.symmetric(horizontal: 15.0),
+                          child: Text(jsonData?["displayName"]["text"],
+                              style: TextStyle(
+                                fontSize: 30.0,
+                                fontWeight: FontWeight.bold,
+                                color: const Color.fromARGB(255, 20, 76, 95),
+                                fontFamily: 'Nunito',
+                              )),
+                        )),
+                    SizedBox(height: 5.v),
+                    Align(
+                        alignment: Alignment.center,
+                        child: Padding(
+                            padding: EdgeInsets.symmetric(horizontal: 15.0),
+                            //margin: EdgeInsets.only(left: 14.h, right: 35.h),
+                            child: Text(jsonData?["formattedAddress"],
+                                maxLines: 6,
+                                overflow: TextOverflow.ellipsis,
+                                style: TextStyle(
+                                  fontSize: 18.0,
+                                  fontFamily: 'Nunito',
+                                )))),
                     //_buildComponentLugares(context),
                     SizedBox(height: 21.v),
                     _buildFortyTwo(context),
-                    SizedBox(height: 7.v),
+                    SizedBox(height: 20.v),
                     _buildComponentAcciones(context),
-                    SizedBox(height: 9.v),
+                    SizedBox(height: 10.v),
+                    _buildComponentAcciones2(context),
+                    SizedBox(height: 10.v),
                     _buildComponentInfo(context),
                     SizedBox(height: 9.v),
                   ],
@@ -179,11 +184,8 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
             padding: EdgeInsets.only(top: 7.v, bottom: 16.v),
             child: GestureDetector(
                 onTap: () {
-                  Navigator.of(context)
-                      .push(MaterialPageRoute(builder: (BuildContext context) {
-                    //String aux = '${prediction.lat}, ${prediction.lng}';
-                    return FrminicioPage();
-                  }));
+                  Navigator.pop(
+                      context); //pop para no volver a cargar la pantalla
                 },
                 child: Icon(
                   Icons.arrow_back_outlined,
@@ -194,8 +196,13 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
         title: Text(
           "Información del lugar",
           textAlign: TextAlign.center,
-          style: TextStyle(fontFamily: 'Nunito'),
-        ));
+          style: TextStyle(
+            fontSize: 40.0,
+            fontWeight: FontWeight.bold,
+            fontFamily: 'Nunito',
+          ),
+        ) 
+    );
   }
 
   /// Section Widget
@@ -301,7 +308,7 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
   }
 
   /// Section Widget
-  Widget _buildComponentAcciones(BuildContext context) {
+  Widget _buildComponentAcciones2(BuildContext context) {
     return Padding(
         padding: EdgeInsets.symmetric(horizontal: 26.h),
         child: Row(mainAxisAlignment: MainAxisAlignment.center, children: [
@@ -316,7 +323,6 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                   Icons.star,
                   color: appTheme.yellow700,
                 ),
-
                 SizedBox(
                     width:
                         5), // Ajusta el espacio entre la estrella y el número
@@ -331,64 +337,94 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
               ],
             ),
           ),
-          CustomElevatedButton(
-            height: 17.v,
-            width: 88.h,
-            text: "Ruta",
-            margin: EdgeInsets.only(left: 23.h),
-            leftIcon: Container(
-                margin: EdgeInsets.only(right: 6.h),
-                child: CustomImageView(
-                    imagePath: ImageConstant.imgFlechita,
-                    height: 12.adaptSize,
-                    width: 12.adaptSize)),
-            buttonStyle: CustomButtonStyles.fillPrimary,
-            buttonTextStyle: CustomTextStyles.bodySmallRegular,
-            onPressed: () {
-              Navigator.of(context)
-                  .push(MaterialPageRoute(builder: (BuildContext context) {
-                //String aux = '${prediction.lat}, ${prediction.lng}';
-                return MyApp(jsonData?["displayName"]["text"] as String);
-              }));
-              // Agrega la lógica que deseas ejecutar cuando se presiona el botón
-            },
+          SizedBox(
+            width: 20,
           ),
           CustomElevatedButton(
-            height: 17.v,
-            width: 50.h,
-            text: "Itinerario",
-            margin: EdgeInsets.only(left: 23.h),
-            leftIcon: Container(
-                margin: EdgeInsets.only(right: 0.h),
-                child: CustomImageView(
+              height: 24.v,
+              width: 125.h,
+              text: "Reseñas",
+              margin:
+                  EdgeInsets.only(right: 13.h), //ChIJeTrFnori0YURXup_x_Ws2t8
+              buttonStyle: CustomButtonStyles.fillPrimary,
+              buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
+              onPressed: () {
+                print('Elemento del carrusel presionado: ${widget.id}');
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (BuildContext context) {
+                  //String aux = '${prediction.lat}, ${prediction.lng}';
+                  return FrmreseATabContainerScreen2(id: widget.id, index: 0,);
+                }));
+              },
+              alignment: Alignment.bottomRight),
+        ]));
+  }
+
+  Widget _buildComponentAcciones(BuildContext context) {
+    return Padding(
+        padding: EdgeInsets.symmetric(horizontal: 26.h),
+        child: Center(
+          child:
+              Row(mainAxisAlignment: MainAxisAlignment.spaceAround, children: [
+            CustomElevatedButton(
+              height: 24.v,
+              width: 80.h,
+              text: "Ruta",
+              //margin: EdgeInsets.only(left: 23.h),
+              leftIcon: Container(
+                  margin: EdgeInsets.only(right: 6.h),
+                  child: CustomImageView(
+                      imagePath: ImageConstant.imgFlechita,
+                      height: 12.adaptSize,
+                      width: 12.adaptSize)),
+              buttonStyle: CustomButtonStyles.fillPrimary,
+              buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
+              onPressed: () {
+                Navigator.of(context)
+                    .push(MaterialPageRoute(builder: (BuildContext context) {
+                  //String aux = '${prediction.lat}, ${prediction.lng}';
+                  return MyApp(jsonData?["displayName"]["text"] as String);
+                }));
+                // Agrega la lógica que deseas ejecutar cuando se presiona el botón
+              },
+            ),
+            CustomElevatedButton(
+              height: 24.v,
+              width: 110.h,
+              text: "Itinerario",
+              //margin: EdgeInsets.only(left: 23.h),
+              leftIcon: Container(
+                  margin: EdgeInsets.only(right: 6.h),
+                  child: CustomImageView(
                     imagePath: ImageConstant.imgFrameAgregarruta,
                     height: 12.adaptSize,
-                    width: 12.adaptSize)),
-            buttonStyle: CustomButtonStyles.fillPrimary,
-            buttonTextStyle: CustomTextStyles.bodySmallRegular,
-            onPressed: () {
-              Navigator.of(context).push(
-                  MaterialPageRoute(builder: (context) => FrmRutaPropia()));
-              guardarEnItinerario(widget.id);
-            },
-          ),
-
-          /*CustomImageView(
-              imagePath: ImageConstant.imgFrameAgregarruta,
-              height: 20.v,
-              width: 19.h,
-              margin: EdgeInsets.only(left: 23.h)),*/
-          CustomImageView(
+                    width: 12.adaptSize,
+                    color: Colors.white,
+                  )),
+              buttonStyle: CustomButtonStyles.fillTeal,
+              buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
+              onPressed: () {
+                Navigator.of(context).push(
+                    MaterialPageRoute(builder: (context) => FrmRutaPropia()));
+                guardarEnItinerario(widget.id);
+              },
+            ),
+            CustomImageView(
               imagePath: ImageConstant.imgVectorvisitado,
-              height: 16.v,
-              width: 15.h,
-              margin: EdgeInsets.only(left: 10.h)),
-          CustomImageView(
-              imagePath: ImageConstant.imgVectorfavoritos,
-              height: 16.v,
-              width: 19.h,
-              margin: EdgeInsets.only(left: 10.h))
-        ]));
+              height: 25.v,
+              width: 24.h,
+              color: const Color.fromARGB(255, 20, 76, 95),
+              //margin: EdgeInsets.only(left: 10.h)
+            ),
+            CustomImageView(
+              imagePath: ImageConstant.imgFavoritos,
+              height: 25.v,
+              width: 24.h,
+              color: const Color.fromARGB(255, 20, 76, 95),
+              //margin: EdgeInsets.only(left: 10.h)
+            )
+          ]),
+        ));
   }
 
   /// Section Widget
@@ -407,7 +443,7 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                   color: appTheme.blueGray100,
                   borderRadius: BorderRadius.circular(1.h))),
           SizedBox(height: 3.v),
-          Align(
+          /* Align(
               alignment: Alignment.centerLeft,
               child: Padding(
                   padding: EdgeInsets.only(left: 15.h),
@@ -424,25 +460,31 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                       overflow: TextOverflow.ellipsis,
                       style: CustomTextStyles.bodySmallDMSansOnError
                           .copyWith(height: 1.80)))),
-          SizedBox(height: 2.v),
+          SizedBox(height: 2.v), */
           SizedBox(
               height: 23.v,
               width: 312.h,
               child: Stack(alignment: Alignment.bottomLeft, children: [
-                Align(
+                SizedBox(height: 5.v),
+                /* Align(
                     alignment: Alignment.topCenter,
-                    child: SizedBox(width: 307.h, child: Divider())),
+                    child: SizedBox(width: 307.h, child: Divider())), */
                 Align(
                     alignment: Alignment.bottomLeft,
                     child: Text("Detalles",
-                        style: CustomTextStyles.titleMediumMedium))
+                        style: TextStyle(
+                          fontSize: 20.0,
+                          fontWeight: FontWeight.bold,
+                          color: const Color.fromARGB(255, 20, 76, 95),
+                          fontFamily: 'Nunito',
+                        )))
               ])),
-          SizedBox(height: 8.v),
+          //SizedBox(height: 8.v),
           SizedBox(
-              height: 232.v,
+              height: 320.v,
               width: 315.h,
               child: Stack(alignment: Alignment.topCenter, children: [
-                CustomElevatedButton(
+                /*CustomElevatedButton(
                     height: 16.v,
                     width: 53.h,
                     text: "Reseñas",
@@ -455,10 +497,13 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                       Navigator.of(context).push(
                           MaterialPageRoute(builder: (BuildContext context) {
                         //String aux = '${prediction.lat}, ${prediction.lng}';
-                        return FrmreseATabContainerScreen2(id: widget.id);
+                        return FrmreseATabContainerScreen2(
+                          id: widget.id,
+                          index: 0,
+                        );
                       }));
                     },
-                    alignment: Alignment.bottomRight),
+                    alignment: Alignment.bottomRight),*/
                 Align(
                     alignment: Alignment.topCenter,
                     child: SizedBox(
@@ -468,12 +513,16 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                               TextSpan(
                                   text:
                                       "${jsonData?["editorialSummary"] != null ? '${jsonData?["editorialSummary"]["text"]}' : 'No hay una descripción disponible para este lugar.'}\n\n",
-                                  style: theme.textTheme.bodyMedium),
-                              TextSpan(
-                                  text:
-                                      '${jsonData?["regularOpeningHours"] != null ? '${jsonData?["regularOpeningHours"]["openNow"] == true ? 'Abierto: ' : 'Cerrado: '}' : 'No se conoce el estado actual del lugar (Abierto/Cerrado) '}',
                                   style: TextStyle(
                                     fontSize: 15.0,
+                                    fontFamily: 'Nunito',
+                                    color: Colors.black,
+                                  )),
+                              TextSpan(
+                                  text:
+                                      '${jsonData?["regularOpeningHours"] != null ? '${jsonData?["regularOpeningHours"]["openNow"] == true ? 'Abierto: \n' : 'Cerrado: \n'}' : 'No se conoce el estado actual del lugar (Abierto/Cerrado) \n'}',
+                                  style: TextStyle(
+                                    fontSize: 20.0,
                                     fontWeight: FontWeight.bold,
                                     fontFamily: 'Nunito',
                                     color:
@@ -487,7 +536,7 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                                   )),
                               TextSpan(
                                 text:
-                                    "${jsonData?["regularOpeningHours"] != null ? '${jsonData?["regularOpeningHours"]["weekdayDescriptions"][0]}, ${jsonData?["regularOpeningHours"]["weekdayDescriptions"][1]}, ${jsonData?["regularOpeningHours"]["weekdayDescriptions"][2]}, ${jsonData?["regularOpeningHours"]["weekdayDescriptions"][3]}, ${jsonData?["regularOpeningHours"]["weekdayDescriptions"][4]}, ${jsonData?["regularOpeningHours"]["weekdayDescriptions"][5]}, ${jsonData?["regularOpeningHours"]["weekdayDescriptions"][6]}.' : 'No hay una descripción de horarios disponibles para este lugar.'}\n\n${jsonData?["nationalPhoneNumber"] != null ? '${jsonData?["nationalPhoneNumber"]}' : 'No hay un número de contacto disponible para este lugar.'}\n",
+                                    "${jsonData?["regularOpeningHours"] != null ? '${jsonData?["regularOpeningHours"]["weekdayDescriptions"][0]}\n${jsonData?["regularOpeningHours"]["weekdayDescriptions"][1]}\n${jsonData?["regularOpeningHours"]["weekdayDescriptions"][2]}\n${jsonData?["regularOpeningHours"]["weekdayDescriptions"][3]}\n${jsonData?["regularOpeningHours"]["weekdayDescriptions"][4]}\n${jsonData?["regularOpeningHours"]["weekdayDescriptions"][5]}\n${jsonData?["regularOpeningHours"]["weekdayDescriptions"][6]}.' : 'No hay una descripción de horarios disponibles para este lugar.'}\n\n${jsonData?["nationalPhoneNumber"] != null ? '${jsonData?["nationalPhoneNumber"]}\n' : 'No hay un número de contacto disponible para este lugar.\n'}\n",
                                 style: TextStyle(
                                     fontSize: 15.0,
                                     fontWeight: FontWeight.normal,
@@ -536,7 +585,7 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
           await docRef.set({
             'id': lugarId,
             'fechaSeleccionado':
-                fechaActual.toIso8601String() // Guarda la fecha
+            DateTime(fechaActual.year, fechaActual.month, fechaActual.day).toIso8601String()
           });
           print('Lugar guardado con éxito en el itinerario');
         } else {
