@@ -28,39 +28,46 @@ class FrmregistroScreen extends StatelessWidget {
     mediaQueryData = MediaQuery.of(context);
     return SafeArea(
         child: Scaffold(
-            resizeToAvoidBottomInset: false,
             extendBodyBehindAppBar: true,
             appBar: _buildAppBar(context),
-            body: Form(
-                key: formkey,
+            body: SingleChildScrollView(
+                physics: BouncingScrollPhysics(),
                 child: Container(
-                  width: double.maxFinite,
-                  padding:
-                      EdgeInsets.symmetric(horizontal: 16.h, vertical: 20.v),
-                  child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        CustomImageView(
-                          imagePath: ImageConstant.imgLogo,
-                          height: 150,
-                          width: 150,
-                          alignment: Alignment.topCenter,
-                        ),
-                        SizedBox(height: 20.v),
-                        _buildSeventeen(context),
-                        SizedBox(height: 32.v),
-                        _buildTextFieldOutline(context),
-                        SizedBox(height: 15.v),
-                        _buildTextFieldOutline1(context),
-                        SizedBox(height: 15.v),
-                        _buildTextFieldOutline2(context),
-                        SizedBox(height: 15.v),
-                        _buildTextFieldOutline3(context),
-                        Spacer(),
-                        _buildRegistrarme(context),
-                        SizedBox(height: 8.v),
-                        _buildCancelarQuieroSeguirComo(context)
-                      ]),
+                  width: mediaQueryData.size.width,
+                  height: mediaQueryData.size.height,
+                  margin:
+                      const EdgeInsets.symmetric(horizontal: 20, vertical: 10),
+                  child: Form(
+                      key: formkey,
+                      child: Container(
+                        width: double.maxFinite,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: 16.h, vertical: 20.v),
+                        child: Column(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              CustomImageView(
+                                imagePath: ImageConstant.imgLogo,
+                                height: 150,
+                                width: 150,
+                                alignment: Alignment.topCenter,
+                              ),
+                              SizedBox(height: 20.v),
+                              _buildSeventeen(context),
+                              SizedBox(height: 32.v),
+                              _buildTextFieldOutline(context),
+                              SizedBox(height: 15.v),
+                              _buildTextFieldOutline1(context),
+                              SizedBox(height: 15.v),
+                              _buildTextFieldOutline2(context),
+                              SizedBox(height: 15.v),
+                              _buildTextFieldOutline3(context),
+                              Spacer(),
+                              _buildRegistrarme(context),
+                              SizedBox(height: 8.v),
+                              _buildCancelarQuieroSeguirComo(context)
+                            ]),
+                      )),
                 ))));
   }
 
