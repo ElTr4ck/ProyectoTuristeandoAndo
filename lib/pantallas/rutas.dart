@@ -29,8 +29,58 @@ const kGoogleApiKey = 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
 final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
 class _PolylineScreenState extends State<PolylineScreen> {
-  static const CameraPosition initialPosition = CameraPosition(
-      target: LatLng(19.36965534943562, -98.96226746584259), zoom: 14);
+  List ubicacionActual = [];
+  late CameraPosition initialPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializePosition();
+  }
+
+  Future<void> _initializePosition() async {
+    initialPosition = await fetchdata();
+    setState(() {
+      // Llamada a setState para reconstruir el widget con la nueva posición
+    });
+  }
+  Future<CameraPosition> fetchdata() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    try {
+      // Verificamos si hay un usuario autenticado
+      User? user = auth.currentUser;
+      if (user != null) {
+        // Obtenemos el ID del usuario autenticado
+        String uid = user.uid;
+        // Referencia a la colección "usuarios" y subcolección "ubicacion_actual"
+        CollectionReference ubicacionCollection = FirebaseFirestore.instance
+            .collection('usuarios')
+            .doc(uid)
+            .collection('Ubicacion');
+
+        // Realizamos la consulta para obtener la ubicación actual del usuario
+        QuerySnapshot ubicacionSnapshot = await ubicacionCollection.get();
+
+        // Lista para almacenar la ubicación actual
+
+        // Iteramos sobre los documentos y accedemos a los datos de ubicación actual
+        ubicacionSnapshot.docs.forEach((doc) {
+          // Asegúrate de ajustar según la estructura real de tu documento de ubicación_actual
+          double latitud = doc['latitud'] ?? 0.0;
+          double longitud = doc['longitud'] ?? 0.0;
+          ubicacionActual.add(latitud);
+          ubicacionActual.add(longitud);
+        });
+      } else {
+        print('No hay usuario autenticado');
+      }
+    } catch (e) {
+      print('Error al obtener preferencias: $e');
+    }
+    print(ubicacionActual);
+    return CameraPosition(target: LatLng(ubicacionActual[0], ubicacionActual[1]), zoom: 14);
+  }
 
 
   final Completer<GoogleMapController> _controller = Completer();
@@ -73,11 +123,6 @@ class _PolylineScreenState extends State<PolylineScreen> {
 
   @override
   Widget build(BuildContext context) {
-    //_determinePosition();
-    /*Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
-      return const NearByPlacesScreen();
-    }));*/
-    //Color _iconColor = Colors.grey;
     return Scaffold(
 
       body: Stack(
@@ -129,66 +174,9 @@ class _PolylineScreenState extends State<PolylineScreen> {
                     ),
                   ),
                   placesAutoCompleteTextField(),
-                  // La barra de búsqueda que diseñamos anteriormente
-                  /*Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                        ),
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search),
-                          hintText: 'Sugerencia: Museos',
-                          hintStyle: TextStyle(
-                            color: Colors.grey,
-                            fontFamily: 'Nunito',
-                            fontStyle: FontStyle.italic,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          fillColor: Colors.white,
-                          // Ajusta el color del fondo según tus necesidades
-                          filled: true,
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 16),
-                        ),
-                        onSubmitted: (value) {
-                          _handlePressButton();
-                        },
-                      ),
-                    ),
-                  ),*/
-
                 ],
             ),
           ),
-          /*Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              padding: EdgeInsets.all(10.0),
-              color: Colors.white, // Puedes ajustar el color según tus preferencias
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  buildButtonHome(Icons.home, Colors.grey),
-                  buildButtonMap(Icons.map, Color(0xFF114C5F)),
-                  buildButtonFav(Icons.monitor_heart, Colors.grey),
-                  buildButtonUsser(Icons.person, Colors.grey),
-                ],
-              ),
-            ),
-          ),*/
           Positioned(
             bottom: 0,
             left: 0,
@@ -221,43 +209,10 @@ class _PolylineScreenState extends State<PolylineScreen> {
               ),
             ),
           ),
-          /*Container(
-            //margin: EdgeInsets.only(top: 160),
-
-            padding: EdgeInsets.all(16.0),
-            color: Colors.blue, // Puedes ajustar el color según tus preferencias
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () => print('Acción Botón 1'),
-                  child: Text('Botón 1'),
-                ),
-                ElevatedButton(
-                  onPressed: () => print('Acción Botón 2'),
-                  child: Text('Botón 2'),
-                ),
-                ElevatedButton(
-                  onPressed: () => print('Acción Botón 3'),
-                  child: Text('Botón 3'),
-                ),
-                ElevatedButton(
-                  onPressed: () => print('Acción Botón 4'),
-                  child: Text('Botón 4'),
-                ),
-              ],
-            ),
-          ),*/
         ],
 
       ),
 
-      /*floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          drawPolyline(destinolat, destinolon);
-        },
-        child: const Icon(Icons.directions),
-      ),*/
     );
   }
 
