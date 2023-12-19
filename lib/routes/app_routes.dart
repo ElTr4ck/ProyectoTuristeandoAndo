@@ -127,7 +127,7 @@ class AppRoutes {
 
     frmEditaPerfil: (context) => FrmeditaperfilScreen(),
 
-    frm_ruta_propia: (context) => FrmRutaPropia(),
+    frm_ruta_propia: (context) => FrmRutaPropia(null),
 
     frmfaqsScreen: (context) => FrmfaqsScreen(),
 

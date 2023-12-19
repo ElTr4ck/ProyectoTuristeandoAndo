@@ -396,26 +396,35 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
                   )),
               buttonStyle: CustomButtonStyles.fillTeal,
               buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
-              onPressed: () {
+              onPressed: () async{
+              DateTime hoy = DateTime.now();
+              DateTime? it = await showDatePicker(
+                builder: (context, child) {
+                  return Theme(
+                    data: Theme.of(context).copyWith(
+                      colorScheme: const ColorScheme.light(
+                        primary: Color.fromRGBO(17, 76, 95, 1)
+                      )
+                    ), 
+                    child: child!
+                  );
+                },
+                context: context,
+                initialDate: hoy,
+                firstDate: DateTime(hoy.year-10),
+                lastDate: DateTime(hoy.year+10),
+              );
+              if(it != null){
                 Navigator.of(context).push(
-                    MaterialPageRoute(builder: (context) => FrmRutaPropia()));
-                guardarEnItinerario(widget.id);
-              },
+                  MaterialPageRoute(builder: (context) => FrmRutaPropia(it)));
+                guardarEnItinerario(widget.id, it);
+              }
+              
+            },
             ),
-            CustomImageView(
-              imagePath: ImageConstant.imgVectorvisitado,
-              height: 25.v,
-              width: 24.h,
-              color: const Color.fromARGB(255, 20, 76, 95),
-              //margin: EdgeInsets.only(left: 10.h)
-            ),
-            CustomImageView(
-              imagePath: ImageConstant.imgFavoritos,
-              height: 25.v,
-              width: 24.h,
-              color: const Color.fromARGB(255, 20, 76, 95),
-              //margin: EdgeInsets.only(left: 10.h)
-            )
+            HeartButtonV2(itemId: widget.id),
+            Hecho(itemId: widget.id),
+            
           ]),
         ));
   }
@@ -563,10 +572,10 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
   }
 
   /// Section Widget
-  Future<void> guardarEnItinerario(String lugarId) async {
+  Future<void> guardarEnItinerario(String lugarId, DateTime sel) async {
     var user = FirebaseAuth.instance.currentUser;
     if (user != null) {
-      var fechaActual = DateTime.now(); // Obtiene la fecha y hora actual
+      var fechaActual = sel; // Obtiene la fecha y hora actual
       var docRef = FirebaseFirestore.instance
           .collection('usuarios')
           .doc(user.uid)
@@ -601,5 +610,139 @@ class _FrminfolugarScreenState extends State<FrminfolugarScreen> {
   /// Navigates to the frmnewreseAScreen when the action is triggered.
   onTapReseas(BuildContext context) {
     Navigator.pushNamed(context, AppRoutes.frmnewreseAScreen);
+  }
+}
+
+class HeartButtonV2 extends StatefulWidget {
+  final String itemId;
+  HeartButtonV2({required this.itemId});
+
+  @override
+  _HeartButtonStateV2 createState() => _HeartButtonStateV2();
+}
+class _HeartButtonStateV2 extends State<HeartButtonV2> {
+  bool isFavorited = false;
+
+  @override
+  void initState() {
+    super.initState();
+    checkIfFavorited();
+  }
+
+  void checkIfFavorited() async {
+    // Lógica para verificar si el ítem está en los favoritos del usuario
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var doc = await FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid)
+          .collection('favoritos')
+          .doc(widget.itemId)
+          .get();
+
+      setState(() {
+        isFavorited = doc.exists;
+      });
+    }
+  }
+
+  void toggleFavorite() async {
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var docRef = FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid)
+          .collection('favoritos')
+          .doc(widget.itemId);
+
+      if (isFavorited) {
+        // Si ya es favorito, eliminar de la base de datos
+        await docRef.delete();
+      } else {
+        // Si no es favorito, agregar a la base de datos
+        await docRef.set({'id': widget.itemId});
+      }
+
+      setState(() {
+        isFavorited = !isFavorited;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(isFavorited ? Icons.favorite : Icons.favorite_border),
+      color: isFavorited ? Colors.red : Colors.black87, // Color del icono según el estado
+      onPressed: toggleFavorite, // Llamada a la función para cambiar el estado
+      iconSize: 27.0, // Tamaño del icono
+    );
+  }
+}
+
+class Hecho extends StatefulWidget {
+  final String itemId;
+  Hecho({required this.itemId});
+
+  @override
+  _Hecho createState() => _Hecho();
+}
+class _Hecho extends State<Hecho> {
+  bool isAcompletado = false;
+
+  @override
+  void initState() {
+    super.initState();
+    checkIfAcompletado();
+  }
+
+  void checkIfAcompletado() async {
+    // Lógica para verificar si el ítem está en los favoritos del usuario
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var doc = await FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid)
+          .collection('ViajeCompleto')
+          .doc(widget.itemId)
+          .get();
+
+      setState(() {
+        isAcompletado = doc.exists;
+      });
+    }
+  }
+
+  void toggleFavorite() async {
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var docRef = FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid)
+          .collection('ViajeCompleto')
+          .doc(widget.itemId);
+
+      if (isAcompletado) {
+        // Si ya es favorito, eliminar de la base de datos
+        await docRef.delete();
+      } else {
+        // Si no es favorito, agregar a la base de datos
+        await docRef.set({'id': widget.itemId});
+      }
+
+      setState(() {
+        isAcompletado = !isAcompletado;
+      });
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return IconButton(
+      icon: Icon(isAcompletado ? Icons.check_box_outlined : Icons.check_box_outlined),
+      color: isAcompletado ? Colors.blue : Colors.black87, // Color del icono según el estado
+      onPressed: toggleFavorite, // Llamada a la función para cambiar el estado
+      iconSize: 27.0, // Tamaño del icono
+    );
   }
 }

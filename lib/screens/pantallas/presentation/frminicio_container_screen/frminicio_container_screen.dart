@@ -81,7 +81,7 @@ class FrminicioContainerScreen extends StatelessWidget {
       case AppRoutes.frmEditaPerfil:
         return FrmeditaperfilScreen();
       case AppRoutes.frm_ruta_propia:
-        return FrmRutaPropia();
+        return FrmRutaPropia(null);
       case AppRoutes.frmfaqsScreen:
         return FrmfaqsScreen();
       case AppRoutes.frmtusreseAsScreen:
