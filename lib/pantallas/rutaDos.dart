@@ -4,14 +4,15 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_google_maps_webservices/places.dart';
 import 'package:geolocator/geolocator.dart';
+import 'dart:ui';
 import 'package:http/http.dart' as http;
 import 'package:google_maps_widget/google_maps_widget.dart';
 
-final GoogleMapsPlaces places = GoogleMapsPlaces(apiKey: "AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM");
-final Set<Marker> _markers = {};
-final Set<Marker> _markersItinerario = {};
+final GoogleMapsPlaces places =
+GoogleMapsPlaces(apiKey: "AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM");
 
 class MyApp extends StatelessWidget {
   final String predictionDescription;
@@ -31,9 +32,8 @@ class MyApp extends StatelessWidget {
       initialRoute: 'rutaNav',
       routes: {
         'rutaNav': (_) => RutaUno(
-              predictionDescription: predictionDescription,
-              selectedDate: DateTime.now(),
-            )
+          predictionDescription: predictionDescription,
+        )
       },
     );
   }
@@ -147,7 +147,7 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
         PlacesSearchResult place = response.results.first;
 
         LatLng newLocation =
-            LatLng(place.geometry!.location.lat, place.geometry!.location.lng);
+        LatLng(place.geometry!.location.lat, place.geometry!.location.lng);
         setState(() {
           _currentLocation = newLocation;
           _markers.clear();
@@ -171,7 +171,6 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
       } else {
         //errores
         print('No se encontraron lugares');
-
       }
     } catch (e) {
       print('Error al interactuar con el mapa');
@@ -241,18 +240,18 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
               )),
           Expanded(
               child: GoogleMap(
-            onMapCreated: (controller) => _mapController = controller,
-            onTap: _selectLocation,
-            initialCameraPosition: CameraPosition(
-              target: LatLng(
-                  0, 0), // Posición inicial, podría ser la ubicación actual
-              zoom: 14,
-            ),
-            markers: _markers,
-            onLongPress: _handleLongPress,
-            myLocationButtonEnabled: true,
-            myLocationEnabled: true,
-          ))
+                onMapCreated: (controller) => _mapController = controller,
+                onTap: _selectLocation,
+                initialCameraPosition: CameraPosition(
+                  target: LatLng(
+                      0, 0), // Posición inicial, podría ser la ubicación actual
+                  zoom: 14,
+                ),
+                markers: _markers,
+                onLongPress: _handleLongPress,
+                myLocationButtonEnabled: true,
+                myLocationEnabled: true,
+              ))
         ],
       ),
       floatingActionButton: FloatingActionButton(
@@ -267,13 +266,12 @@ class _SelectLocationScreenState extends State<SelectLocationScreen> {
   }
 }
 
+final Set<Marker> _markers = {};
+
 class RutaUno extends StatefulWidget {
   final String predictionDescription;
-  final DateTime selectedDate;
-  final bool generarRuta;
 
-
-  RutaUno({required this.predictionDescription, required this.selectedDate, this.generarRuta = false});
+  RutaUno({required this.predictionDescription});
   @override
   _RutaUnoState createState() => _RutaUnoState();
 }
@@ -282,17 +280,12 @@ class _RutaUnoState extends State<RutaUno> {
   GoogleMapController? _mapController;
   LatLng _currentLocation = LatLng(0, 0);
   LatLng _secondLocation = LatLng(0, 0); // Para la segunda ubicación
-  String secondLocationName = 'Buscar ubicación'; // Texto inicial del segundo botón
+  String secondLocationName =
+      'Buscar ubicación'; // Texto inicial del segundo botón
   String buttonText = 'Tu ubicacion';
   String travelTimeButton = "0"; // Valor inicial
   double km = 0.0;
   int x = 0;
-  bool isDestinationButtonEnabled = true;
-  String totalTravelTime= "0 min";
-  String totalTravelTimecam= "0 min";
-  String totalTravelTimetrans= "0 min";
-  List<LatLng> routePoints = [];
-  final Set<Polyline> _polylines = {};
 
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
@@ -360,12 +353,12 @@ class _RutaUnoState extends State<RutaUno> {
         "Ubicación seleccionada: $selectedLocation"); // Agregar esta línea para depuración
     if (selectedLocation != null) {
       String placeName =
-          await getPlaceName(selectedLocation); // Obtén el nombre del lugar
+      await getPlaceName(selectedLocation); // Obtén el nombre del lugar
 
       //Eliminar
       setState(() {
         _markers.removeWhere(
-            (marker) => marker.markerId == MarkerId('inicialLocation'));
+                (marker) => marker.markerId == MarkerId('inicialLocation'));
       });
 
       Marker updatedMarker = Marker(
@@ -434,11 +427,12 @@ class _RutaUnoState extends State<RutaUno> {
         "Ubicación seleccionada: $selectedLocation"); // Agregar esta línea para depuración
     if (selectedLocation != null) {
       String placeName =
-          await getPlaceName(selectedLocation); // Obtén el nombre del lugar
+      await getPlaceName(selectedLocation); // Obtén el nombre del lugar
+
       //Eliminar
       setState(() {
         _markers.removeWhere(
-            (marker) => marker.markerId == MarkerId('inicialLocation'));
+                (marker) => marker.markerId == MarkerId('inicialLocation'));
       });
 
       Marker updatedMarker = Marker(
@@ -455,7 +449,8 @@ class _RutaUnoState extends State<RutaUno> {
         //_markers.clear();
         _markers.add(updatedMarker);
       });
-      _updateCameraPosition(selectedLocation); // Centra el mapa en la nueva ubicación
+      _updateCameraPosition(
+          selectedLocation); // Centra el mapa en la nueva ubicación
     }
   }
 
@@ -471,7 +466,7 @@ class _RutaUnoState extends State<RutaUno> {
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'X-Goog-Api-Key':
-          'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM', // Reemplaza 'API_KEY' con tu clave real
+      'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM', // Reemplaza 'API_KEY' con tu clave real
       'X-Goog-FieldMask': 'places.location',
     };
 
@@ -490,10 +485,10 @@ class _RutaUnoState extends State<RutaUno> {
         Map<String, dynamic> jsonData = json.decode(response.body);
         //print('${jsonData["places"][0]["location"]["latitude"]}');
         double lat =
-            double.parse('${jsonData["places"][0]["location"]["latitude"]}');
+        double.parse('${jsonData["places"][0]["location"]["latitude"]}');
         //print('${jsonData["places"][0]["location"]["longitude"]}');
         double lon =
-            double.parse('${jsonData["places"][0]["location"]["longitude"]}');
+        double.parse('${jsonData["places"][0]["location"]["longitude"]}');
         defaults = LatLng(lat, lon);
         //print('AQUI ESTOY $lat');
         //print('${jsonData["places"][0]["formattedAddress"]}');
@@ -527,7 +522,7 @@ class _RutaUnoState extends State<RutaUno> {
 
     if (newLocation != null) {
       String placeName =
-          await getPlaceName(newLocation); // Obtén el nombre del lugar
+      await getPlaceName(newLocation); // Obtén el nombre del lugar
       Marker searchedLocationMarker = Marker(
         markerId: MarkerId('searchedLocation'),
         position: newLocation,
@@ -535,17 +530,13 @@ class _RutaUnoState extends State<RutaUno> {
       );
 
       setState(() {
-        if(widget.generarRuta){
-          _secondLocation = LatLng(0.0, 0.0);
-          secondLocationName = 'RUTA';
-        }else{
-          _secondLocation = newLocation;
-          print(newLocation.latitude);
-          print(newLocation.longitude);
-          secondLocationName = placeName; // Actualiza el texto del segundo botón
-          _polylines.clear();
-          _markers.add(searchedLocationMarker);
-        }
+        _secondLocation = newLocation;
+        print(newLocation.latitude);
+        print(newLocation.longitude);
+        secondLocationName = placeName; // Actualiza el texto del segundo botón
+        _polylines.clear();
+        //_markers.clear();
+        _markers.add(searchedLocationMarker);
       });
     }
   }
@@ -560,7 +551,7 @@ class _RutaUnoState extends State<RutaUno> {
 
     if (newLocation != null) {
       String placeName =
-          await getPlaceName(newLocation); // Obtén el nombre del lugar
+      await getPlaceName(newLocation); // Obtén el nombre del lugar
       Marker searchedLocationMarker = Marker(
         markerId: MarkerId('searchedLocation'),
         position: newLocation,
@@ -620,27 +611,29 @@ class _RutaUnoState extends State<RutaUno> {
 
   void _showRoute() async {
     var directions =
-        await getDirections(_currentLocation, _secondLocation, 'driving');
+    await getDirections(_currentLocation, _secondLocation, 'driving');
     String encodedPolyline =
-        directions['routes'][0]['overview_polyline']['points'];
+    directions['routes'][0]['overview_polyline']['points'];
     showRouteOnMap(encodedPolyline);
   }
 
   void _showRoutePie() async {
     var directions =
-        await getDirections(_currentLocation, _secondLocation, 'walking');
+    await getDirections(_currentLocation, _secondLocation, 'walking');
     String encodedPolyline =
-        directions['routes'][0]['overview_polyline']['points'];
+    directions['routes'][0]['overview_polyline']['points'];
     showRouteOnMap(encodedPolyline);
   }
 
   void _showRouteTrans() async {
     var directions =
-        await getDirections(_currentLocation, _secondLocation, 'transit');
+    await getDirections(_currentLocation, _secondLocation, 'transit');
     String encodedPolyline =
-        directions['routes'][0]['overview_polyline']['points'];
+    directions['routes'][0]['overview_polyline']['points'];
     showRouteOnMap(encodedPolyline);
   }
+
+  final Set<Polyline> _polylines = {};
 
   void showRouteOnMap(String encodedPolyline) {
     Polyline polyline = Polyline(
@@ -697,10 +690,43 @@ class _RutaUnoState extends State<RutaUno> {
         startLocation, endLocation, "driving"); // o "walking"
 
     // Obtener el polilíneo codificado de la respuesta
-    String encodedPolyline = directions['routes'][0]['overview_polyline']['points'];
+    String encodedPolyline =
+    directions['routes'][0]['overview_polyline']['points'];
 
     // Dibujar la ruta en el mapa
     showRouteOnMap(encodedPolyline);
+  }
+
+  Future<String> calculateTravelTime(
+      LatLng start, LatLng end, String mode) async {
+    try {
+      var directions = await getDirections(start, end, mode);
+      if (directions['routes'] != null && directions['routes'].isNotEmpty) {
+        // El tiempo total de viaje está en la primera 'leg' de la ruta
+        var duration = directions['routes'][0]['legs'][0]['duration']['text'];
+        return duration; // Esto devolverá una cadena como "15 mins"
+      } else {
+        return "No disponible";
+      }
+    } catch (e) {
+      print('Error al calcular el tiempo de viaje: $e');
+      return "Error";
+    }
+  }
+
+  void _updateTravelTime() async {
+    String travelTime =
+    await calculateTravelTime(_currentLocation, _secondLocation, "driving");
+    setState(() {
+      travelTimeButton =
+          travelTime; // Actualiza el estado con el tiempo de viaje
+    });
+  }
+
+  void onLocationSelected(LatLng start, LatLng end) {
+    _currentLocation = start;
+    _secondLocation = end;
+    _updateTravelTime();
   }
 
   void fetchPlaces() async {
@@ -718,223 +744,6 @@ class _RutaUnoState extends State<RutaUno> {
         var placeDetails = await fetchPlaceDetailsFromApi(placeId);
         _addMarker(placeDetails, placeId); // Pasar placeId a _addMarker
       }
-    }
-  }
-
-  void _addMarker(Map<String, dynamic> placeDetails, String placeId) {
-    final marker = Marker(
-      markerId:
-      MarkerId(placeId), // Usar placeId como identificador del marcador
-      position: LatLng(placeDetails['latitude'], placeDetails['longitude']),
-      infoWindow: InfoWindow(
-          title: placeDetails['title']), // Usar 'title' que has definido
-      icon: BitmapDescriptor.defaultMarkerWithHue(
-          BitmapDescriptor.hueRose), // Marcador rosa
-    );
-
-    setState(() {
-      _markers.add(marker);
-    });
-  }
-
-  void fetchPlacesItinerario(DateTime selectedDate) async {
-    FirebaseAuth auth = FirebaseAuth.instance;
-    print("El día es: $selectedDate");
-    User? user = auth.currentUser;
-    if (user != null) {
-      var snapshot = await FirebaseFirestore.instance
-          .collection('usuarios')
-          .doc(user.uid)
-          .collection('itinerario')
-          .where("fechaSeleccionado", isEqualTo: DateTime(selectedDate.year, selectedDate.month, selectedDate.day).toIso8601String())
-          .get();
-      print('Documentos encontrados: ${snapshot.docs.length}'); // Imprime la cantidad de documentos encontrados
-      routePoints.clear();
-      routePoints.add(_currentLocation);
-      for (var doc in snapshot.docs) {;
-        String placeId = doc.data()['id'];
-        print('Lugar encontrado por la fecha: $placeId');
-        var placeDetails = await fetchPlaceDetailsFromApi(placeId);
-        _addMarkerItinerario(placeDetails, placeId); // Pasar placeId a
-        print("Route Points: $routePoints");
-        routePoints.add(LatLng(placeDetails['latitude'], placeDetails['longitude'])); // Añadir punto de ruta
-      }
-      drawOptimalRoute();
-    }
-  }
-
-  void _addMarkerItinerario(Map<String, dynamic> placeDetails, String placeId) {
-    final marker = Marker(
-      markerId: MarkerId(placeId), // Usar placeId como identificador del marcador
-      position: LatLng(placeDetails['latitude'], placeDetails['longitude']),
-      infoWindow: InfoWindow(title: placeDetails['title']), // Usar 'title' que has definido
-      icon: BitmapDescriptor.defaultMarkerWithHue(BitmapDescriptor.hueCyan), // Marcador
-    );
-    setState(() {
-      _markers.add(marker);
-      _markersItinerario.add(marker);
-    });
-  }
-
-  Future<void> drawOptimalRoute() async {
-    List<LatLng> points = List.from(routePoints); // Copia para no modificar la lista original
-    List<LatLng> optimalRoute = findOptimalRoute(points, _currentLocation);
-
-    for (int i = 0; i < optimalRoute.length - 1; i++) {
-      var directions = await getDirections(optimalRoute[i], optimalRoute[i + 1], "driving");
-      if (directions != null && directions['routes'] != null && directions['routes'].isNotEmpty) {
-        String encodedPolyline = directions['routes'][0]['overview_polyline']['points'];
-        addPolylineToMap(encodedPolyline);
-      }
-    }
-    totalTravelTime = await calculateTotalTravelTime(optimalRoute, "driving");
-    totalTravelTimecam = await calculateTotalTravelTime(optimalRoute, "walking");
-    totalTravelTimetrans = await calculateTotalTravelTime(optimalRoute, "transit");
-    setState(() {
-      totalTravelTime = totalTravelTime; // Actualiza la variable de estado
-      totalTravelTimecam= totalTravelTimecam;
-      totalTravelTimetrans= totalTravelTimetrans;
-    });
-  }
-
-  void addPolylineToMap(String encodedPolyline) {
-    Polyline polyline = Polyline(
-      polylineId: PolylineId("route_${_polylines.length}"),
-      points: _decodePoly(encodedPolyline),
-      width: 5,
-      color: Colors.blue,
-    );
-
-    setState(() {
-      _polylines.add(polyline);
-    });
-  }
-
-  void _addPolylineToMap() async {
-    _polylines.clear();
-
-    List<LatLng> points = List.from(routePoints); // Copia para no modificar la lista original
-    List<LatLng> optimalRoute = findOptimalRoute(points, _currentLocation);
-
-    for (int i = 0; i < optimalRoute.length - 1; i++) {
-      var directions = await getDirections(optimalRoute[i], optimalRoute[i + 1], "driving");
-      if (directions != null && directions['routes'] != null && directions['routes'].isNotEmpty) {
-        String encodedPolyline = directions['routes'][0]['overview_polyline']['points'];
-        addPolylineToMap(encodedPolyline);
-      }
-    }
-  }
-
-  void _addPolylineToMapPie() async {
-    _polylines.clear();
-
-    List<LatLng> points = List.from(routePoints); // Copia para no modificar la lista original
-    List<LatLng> optimalRoute = findOptimalRoute(points, _currentLocation);
-
-    for (int i = 0; i < optimalRoute.length - 1; i++) {
-      var directions = await getDirections(optimalRoute[i], optimalRoute[i + 1], "walking");
-      if (directions != null && directions['routes'] != null && directions['routes'].isNotEmpty) {
-        String encodedPolyline = directions['routes'][0]['overview_polyline']['points'];
-        addPolylineToMap(encodedPolyline);
-      }
-    }
-  }
-
-  void _addPolylineToMapTrans() async {
-    _polylines.clear();
-
-    List<LatLng> points = List.from(routePoints); // Copia para no modificar la lista original
-    List<LatLng> optimalRoute = findOptimalRoute(points, _currentLocation);
-
-    for (int i = 0; i < optimalRoute.length - 1; i++) {
-      var directions = await getDirections(optimalRoute[i], optimalRoute[i + 1], "transit");
-      if (directions != null && directions['routes'] != null && directions['routes'].isNotEmpty) {
-        String encodedPolyline = directions['routes'][0]['overview_polyline']['points'];
-        addPolylineToMap(encodedPolyline);
-      }
-    }
-  }
-
-  List<LatLng> findOptimalRoute(List<LatLng> points, LatLng start) {
-    List<LatLng> route = [];
-    LatLng currentPoint = start;
-
-    while (points.isNotEmpty) {
-      final closestPoint = findClosestPoint(currentPoint, points);
-      route.add(closestPoint);
-      points.remove(closestPoint);
-      currentPoint = closestPoint;
-    }
-    return route;
-  }
-
-  LatLng findClosestPoint(LatLng currentLocation, List<LatLng> points) {
-    if (points.isEmpty) {
-      throw Exception('La lista de puntos está vacía');
-    }
-
-    // Inicializa con el primer punto de la lista
-    LatLng closestPoint = points.first;
-    double minDistance = _calculateDistance(currentLocation, closestPoint);
-
-    for (var point in points) {
-      double distance = _calculateDistance(currentLocation, point);
-      if (distance < minDistance) {
-        minDistance = distance;
-        closestPoint = point;
-      }
-    }
-    return closestPoint;
-  }
-
-  double _calculateDistance(LatLng point1, LatLng point2) {
-    var earthRadiusKm = 6371.0;
-    var dLat = _degreesToRadians(point2.latitude - point1.latitude);
-    var dLon = _degreesToRadians(point2.longitude - point1.longitude);
-    var lat1 = _degreesToRadians(point1.latitude);
-    var lat2 = _degreesToRadians(point2.latitude);
-    var a = sin(dLat / 2) * sin(dLat / 2) +
-        sin(dLon / 2) * sin(dLon / 2) * cos(lat1) * cos(lat2);
-    var c = 2 * atan2(sqrt(a), sqrt(1 - a));
-    return earthRadiusKm * c;
-  }
-
-  double _degreesToRadians(double degrees) {
-    return degrees * pi / 180.0;
-  }
-
-  Future<String> calculateTotalTravelTime(List<LatLng> route, String mode) async {
-    int totalMinutes = 0;
-
-    for (int i = 0; i < route.length - 1; i++) {
-      String travelTimeSegment = await calculateTravelTime(route[i], route[i + 1], mode);
-      int minutes = extractMinutesFromTravelTime(travelTimeSegment);
-      totalMinutes += minutes;
-    }
-
-    return "$totalMinutes min";
-  }
-
-  int extractMinutesFromTravelTime(String travelTime) {
-    var parts = travelTime.split(' ');
-    if (parts.length >= 2) {
-      return int.tryParse(parts[0]) ?? 0;
-    }
-    return 0;
-  }
-
-  Future<String> calculateTravelTime(LatLng start, LatLng end, String mode) async {
-    try {
-      var directions = await getDirections(start, end, mode); // Asegúrate de que 'mode' se pasa correctamente aquí
-      if (directions['routes'] != null && directions['routes'].isNotEmpty) {
-        var duration = directions['routes'][0]['legs'][0]['duration']['text'];
-        return duration; // Devuelve una cadena como "15 mins"
-      } else {
-        return "No disponible";
-      }
-    } catch (e) {
-      print('Error al calcular el tiempo de viaje: $e');
-      return "Error";
     }
   }
 
@@ -971,6 +780,22 @@ class _RutaUnoState extends State<RutaUno> {
       print('Error al obtener detalles del lugar: $e');
       return {}; // Retorna un mapa vacío o maneja el error como prefieras
     }
+  }
+
+  void _addMarker(Map<String, dynamic> placeDetails, String placeId) {
+    final marker = Marker(
+      markerId:
+      MarkerId(placeId), // Usar placeId como identificador del marcador
+      position: LatLng(placeDetails['latitude'], placeDetails['longitude']),
+      infoWindow: InfoWindow(
+          title: placeDetails['title']), // Usar 'title' que has definido
+      icon: BitmapDescriptor.defaultMarkerWithHue(
+          BitmapDescriptor.hueRose), // Marcador azul
+    );
+
+    setState(() {
+      _markers.add(marker);
+    });
   }
 
   Widget buildButtonHome(IconData icon, Color color) {
@@ -1028,37 +853,15 @@ class _RutaUnoState extends State<RutaUno> {
   @override
   void initState() {
     super.initState();
-    _determineAndSetCurrentLocation().then((_) {
-      _markers.clear();
-      _polylines.clear();
-      fetchPlaces();
-      if(widget.generarRuta){
-        fetchPlacesItinerario(widget.selectedDate);
-        resetDestination();
-      }
-      _selectLocationDefault();
-      _searchAndSelectSecondLocationDefault();
-    });
-  }
-
-  void resetDestination() {
-    setState(() {
-      _secondLocation = LatLng(0.0, 0.0);
-      secondLocationName = 'RUTA';
-      isDestinationButtonEnabled = false; // Deshabilita el botón
-    });
-  }
-  Future<void> _determineAndSetCurrentLocation() async {
-    Position position = await _determinePosition();
-    _updateCameraPosition(LatLng(position.latitude, position.longitude));
-    setState(() {
-      _currentLocation = LatLng(position.latitude, position.longitude);
-    });
+    _markers.clear();
+    _polylines.clear();
+    _selectLocationDefault();
+    _searchAndSelectSecondLocationDefault();
+    fetchPlaces();
   }
 
   Widget build(BuildContext context) {
     print(widget.predictionDescription);
-    print(widget.selectedDate);
     return MaterialApp(
       home: Scaffold(
         //key: _scafoldKey,
@@ -1080,13 +883,13 @@ class _RutaUnoState extends State<RutaUno> {
             mapType: MapType.terrain,
             polylines: Set<Polyline>.of(_polylines),
             initialCameraPosition:
-                CameraPosition(target: _currentLocation, zoom: 14),
+            CameraPosition(target: _currentLocation, zoom: 14),
             myLocationButtonEnabled: false,
             myLocationEnabled: true,
           ),
 
           Container(
-              //padding: const EdgeInsets.all(16.0),
+            //padding: const EdgeInsets.all(16.0),
               height: 180,
               decoration: BoxDecoration(
                 color: Colors.white.withOpacity(0.8),
@@ -1096,6 +899,9 @@ class _RutaUnoState extends State<RutaUno> {
                       blurRadius: 10, color: Colors.black.withOpacity(0.2))
                 ], // Efecto de desenfoque
               ),
+              //width: MediaQuery.of(context).size.width,
+              //height: 140,
+              //padding: const EdgeInsets.only(top: 10.0),
               child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisSize: MainAxisSize.min,
@@ -1104,91 +910,61 @@ class _RutaUnoState extends State<RutaUno> {
                     Container(
                         width: MediaQuery.of(context).size.width,
                         child: Padding(
-                            padding: EdgeInsets.only(
-                                left: 16.0, right: 16.0, top: 9.0),
-                            child: LayoutBuilder(
-                              builder: (BuildContext context,
-                                  BoxConstraints constraints) {
-                                return TextButton(
-                                  onPressed: _selectLocation,
-                                  child: Container(
-                                    constraints: BoxConstraints(
-                                      maxWidth: constraints
-                                          .maxWidth, // Limita el ancho del texto al ancho del botón
-                                    ),
-                                    child: Text(
-                                      'Origen: $buttonText',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 0, 0, 0),
-                                        fontFamily: 'Nunito',
-                                      ),
-                                      overflow: TextOverflow
-                                          .ellipsis, // Añade esta línea
-                                    ),
-                                  ),
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateColor.resolveWith(
-                                            (states) => Colors.white),
-                                    minimumSize: MaterialStateProperty.all(
-                                        Size(150.0, 50.0)),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ))),
+                          padding: EdgeInsets.only(
+                              left: 16.0, right: 16.0, top: 9.0),
+                          child: TextButton(
+                            onPressed: _selectLocation,
+                            child: Text(
+                              'Origen: $buttonText',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 0, 0, 0),
+                                fontFamily: 'Nunito',
+                              ),
+                            ),
+                            style: ButtonStyle(
+                              backgroundColor: MaterialStateColor.resolveWith(
+                                      (states) => Colors.white),
+                              minimumSize:
+                              MaterialStateProperty.all(Size(150.0, 50.0)),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  )),
+                            ),
+                          ),
+                        )),
                     Container(
                         width: MediaQuery.of(context).size.width,
                         child: Padding(
-                            padding: EdgeInsets.only(
-                                left: 16.0, right: 16.0, top: 9.0),
-                            child: LayoutBuilder(
-                              builder: (BuildContext context,
-                                  BoxConstraints constraints) {
-                                return TextButton(
-                                  onPressed: isDestinationButtonEnabled ? _searchAndSelectSecondLocation : null,
-                                  child: Container(
-                                    constraints: BoxConstraints(
-                                      maxWidth: constraints
-                                          .maxWidth, // Limita el ancho del texto al ancho del botón
-                                    ),
-                                    child: Text(
-                                      'Destino: $secondLocationName',
-                                      style: TextStyle(
-                                        fontSize: 15,
-                                        fontWeight: FontWeight.bold,
-                                        color: Color.fromARGB(255, 0, 0, 0),
-                                        fontFamily: 'Nunito',
-                                      ),
-                                      overflow: TextOverflow
-                                          .ellipsis, // Añade esta línea
-                                    ),
-                                  ),
-                                  style: ButtonStyle(
-                                    backgroundColor:
-                                        MaterialStateColor.resolveWith(
-                                            (states) => Colors.white),
-                                    minimumSize: MaterialStateProperty.all(
-                                        Size(150.0, 50.0)),
-                                    shape: MaterialStateProperty.all<
-                                        RoundedRectangleBorder>(
-                                      RoundedRectangleBorder(
-                                        borderRadius:
-                                            BorderRadius.circular(10.0),
-                                      ),
-                                    ),
-                                  ),
-                                );
-                              },
-                            ))),
+                          padding: EdgeInsets.only(
+                              left: 16.0, right: 16.0, top: 9.0),
+                          child: TextButton(
+                            onPressed: _searchAndSelectSecondLocation,
+                            child: Text(
+                              'Destino: $secondLocationName',
+                              style: TextStyle(
+                                fontSize: 12,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(255, 0, 0, 0),
+                                fontFamily: 'Nunito',
+                              ),
+                            ),
+                            style: ButtonStyle(
+                              minimumSize:
+                              MaterialStateProperty.all(Size(150.0, 50.0)),
+                              backgroundColor: MaterialStateColor.resolveWith(
+                                      (states) => Colors.white),
+                              shape: MaterialStateProperty.all<
+                                  RoundedRectangleBorder>(
+                                  RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(10.0),
+                                  )),
+                            ),
+                          ),
+                        )),
                     Container(
                         width: MediaQuery.of(context).size.width,
                         child: Row(
@@ -1203,14 +979,11 @@ class _RutaUnoState extends State<RutaUno> {
                                       left: 8.0, right: 8.0, top: 7.0),
                                   child: ElevatedButton(
                                     //Transporte
-                                    onPressed: (){
-                                      _showRoute();
-                                      _addPolylineToMap();
-                                    },
+                                    onPressed: _showRoute,
                                     style: ButtonStyle(
                                       backgroundColor: MaterialStateProperty
                                           .resolveWith<Color?>(
-                                        (Set<MaterialState> states) {
+                                            (Set<MaterialState> states) {
                                           if (states
                                               .contains(MaterialState.pressed))
                                             return const Color(0xFF114C5F);
@@ -1218,11 +991,11 @@ class _RutaUnoState extends State<RutaUno> {
                                         },
                                       ),
                                       shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
-                                        borderRadius:
+                                            borderRadius:
                                             BorderRadius.circular(10.0),
-                                      )),
+                                          )),
                                     ),
                                     child: Align(
                                         alignment: Alignment.center,
@@ -1230,21 +1003,20 @@ class _RutaUnoState extends State<RutaUno> {
                                           Icon(
                                             Icons.directions_car,
                                             color: const Color(0xFF114C5F),
-                                            size: 18.0,
+                                            size: 20.0,
                                           ), // Tu condición aquí
-                                          Expanded(
-                                              child: Text(
+                                          Text(
                                             //Tiempo de transporte publico
-                                            isDestinationButtonEnabled ? '${((((sqrt(pow((_secondLocation.latitude - _currentLocation.latitude), 2) + pow((_secondLocation.longitude - _currentLocation.longitude), 2))) * 100)) * 5).toStringAsFixed(0)} min': totalTravelTimecam,
+                                            '${((((sqrt(pow((_secondLocation.latitude - _currentLocation.latitude), 2) + pow((_secondLocation.longitude - _currentLocation.longitude), 2))) * 100)) * 5).toStringAsFixed(0)} min',
                                             //travelTimeButton,
                                             style: TextStyle(
-                                              fontSize: 9,
+                                              fontSize: 10,
                                               fontWeight: FontWeight.bold,
                                               color:
-                                                  Color.fromARGB(255, 0, 0, 0),
+                                              Color.fromARGB(255, 0, 0, 0),
                                               fontFamily: 'Nunito',
                                             ),
-                                          ))
+                                          )
                                         ])),
                                   ),
                                 )),
@@ -1256,14 +1028,11 @@ class _RutaUnoState extends State<RutaUno> {
                                       left: 8.0, right: 8.0, top: 7.0),
                                   child: ElevatedButton(
                                     //Transporte
-                                    onPressed: (){
-                                      _showRouteTrans();
-                                      _addPolylineToMapTrans();
-                                    },
+                                    onPressed: _showRouteTrans,
                                     style: ButtonStyle(
                                       backgroundColor: MaterialStateProperty
                                           .resolveWith<Color?>(
-                                        (Set<MaterialState> states) {
+                                            (Set<MaterialState> states) {
                                           if (states
                                               .contains(MaterialState.pressed))
                                             return const Color(0xFF114C5F);
@@ -1271,11 +1040,11 @@ class _RutaUnoState extends State<RutaUno> {
                                         },
                                       ),
                                       shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
-                                        borderRadius:
+                                            borderRadius:
                                             BorderRadius.circular(10.0),
-                                      )),
+                                          )),
                                     ),
 
                                     child: Align(
@@ -1284,20 +1053,19 @@ class _RutaUnoState extends State<RutaUno> {
                                           Icon(
                                             Icons.directions_bus,
                                             color: const Color(0xFF114C5F),
-                                            size: 18.0,
+                                            size: 20.0,
                                           ),
-                                          Expanded(
-                                              child: Text(
+                                          Text(
                                             //Tiempo de transporte publico
-                                            isDestinationButtonEnabled ? '${((((sqrt(pow((_secondLocation.latitude - _currentLocation.latitude), 2) + pow((_secondLocation.longitude - _currentLocation.longitude), 2))) * 100)) * 6).toStringAsFixed(0)} min': totalTravelTimetrans,
+                                            '${((((sqrt(pow((_secondLocation.latitude - _currentLocation.latitude), 2) + pow((_secondLocation.longitude - _currentLocation.longitude), 2))) * 100)) * 6).toStringAsFixed(0)} min',
                                             style: TextStyle(
-                                              fontSize: 9,
+                                              fontSize: 10,
                                               fontWeight: FontWeight.bold,
                                               color:
-                                                  Color.fromARGB(255, 0, 0, 0),
+                                              Color.fromARGB(255, 0, 0, 0),
                                               fontFamily: 'Nunito',
                                             ),
-                                          ))
+                                          )
                                         ])),
                                   ),
                                 )),
@@ -1309,14 +1077,11 @@ class _RutaUnoState extends State<RutaUno> {
                                       left: 8.0, right: 8.0, top: 7.0),
                                   child: ElevatedButton(
                                     //Transporte
-                                    onPressed: (){
-                                      _showRoutePie();
-                                      _addPolylineToMapPie();
-                                    },
+                                    onPressed: _showRoutePie,
                                     style: ButtonStyle(
                                       backgroundColor: MaterialStateProperty
                                           .resolveWith<Color?>(
-                                        (Set<MaterialState> states) {
+                                            (Set<MaterialState> states) {
                                           if (states
                                               .contains(MaterialState.pressed))
                                             return const Color(0xFF114C5F);
@@ -1324,11 +1089,11 @@ class _RutaUnoState extends State<RutaUno> {
                                         },
                                       ),
                                       shape: MaterialStateProperty.all<
-                                              RoundedRectangleBorder>(
+                                          RoundedRectangleBorder>(
                                           RoundedRectangleBorder(
-                                        borderRadius:
+                                            borderRadius:
                                             BorderRadius.circular(10.0),
-                                      )),
+                                          )),
                                     ),
 
                                     child: Align(
@@ -1337,26 +1102,98 @@ class _RutaUnoState extends State<RutaUno> {
                                           Icon(
                                             Icons.directions_walk,
                                             color: const Color(0xFF114C5F),
-                                            size: 18.0,
+                                            size: 20.0,
                                           ),
-                                          Expanded(
-                                              child: Text(
+                                          Text(
                                             //Tiempo de transporte publico
-                                            isDestinationButtonEnabled ? '${((((sqrt(pow((_secondLocation.latitude - _currentLocation.latitude), 2) + pow((_secondLocation.longitude - _currentLocation.longitude), 2))) * 100)) * 16).toStringAsFixed(0)} min': totalTravelTime,
+                                            '${((((sqrt(pow((_secondLocation.latitude - _currentLocation.latitude), 2) + pow((_secondLocation.longitude - _currentLocation.longitude), 2))) * 100)) * 16).toStringAsFixed(0)} min',
                                             style: TextStyle(
-                                              fontSize: 9,
+                                              fontSize: 10,
                                               fontWeight: FontWeight.bold,
                                               color:
-                                                  Color.fromARGB(255, 0, 0, 0),
+                                              Color.fromARGB(255, 0, 0, 0),
                                               fontFamily: 'Nunito',
                                             ),
-                                          ))
+                                          )
                                         ])),
                                   ),
                                 ))
                           ],
                         )),
                   ])),
+
+          // Contenido en la parte inferior
+          /*Align(
+            alignment: Alignment.bottomCenter,
+            child: Container(
+              padding: EdgeInsets.all(10.0),
+              color: Colors.white, // Puedes ajustar el color según tus preferencias
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  buildButtonHome(Icons.home, Colors.grey),
+                  buildButtonMap(Icons.map, Color(0xFF114C5F)),
+                  buildButtonFav(Icons.monitor_heart, Colors.grey),
+                  buildButtonUsser(Icons.person, Colors.grey),
+                ],
+              ),
+            ),
+          ),*/
+          /*Column(mainAxisAlignment: MainAxisAlignment.end, children: <Widget>[
+            Container(
+              color: Colors.white,
+              child: Column(
+                children: <Widget>[
+                  Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment
+                            .start, // Alinea los textos a la izquierda
+                        children: [
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(16, 16, 0, 0),
+                            child: Icon(
+                              Icons.directions_bus,
+                              color: const Color(0xFF114C5F),
+                              size: 24.0,
+                            ),
+                          ),
+                          Padding(
+                            padding: EdgeInsets.fromLTRB(0, 16, 0, 0),
+                            child: Text(
+                              //Tiempo de transporte
+                              '46 min (26km)',
+                              style: TextStyle(
+                                fontSize: 14,
+                                fontWeight: FontWeight.bold,
+                                color: Color.fromARGB(100, 0, 0, 0),
+                                fontFamily: 'Nunito',
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                      Row(children: [
+                        Padding(
+                          padding: EdgeInsets.fromLTRB(20, 14, 10, 10),
+                          child: Text(
+                            //Tiempo de transporte
+                            'La ruta más rápida debido a las condiciones.',
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: Color.fromARGB(100, 0, 0, 0),
+                              fontFamily: 'Nunito',
+                            ),
+                          ),
+                        ),
+                      ])
+                    ],
+                  ),
+                ],
+              ),
+            ),
+          ]),*/
         ]),
       ),
     );

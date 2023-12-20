@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:turisteando_ando/core/app_export.dart';
 import 'package:turisteando_ando/widgets/custom_rating_bar.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -18,6 +19,21 @@ class FrmreseAItemWidget extends StatelessWidget {
       required this.onTapView,
       Key? key})
       : super(key: key);
+  String timeAgoCustom(DateTime d) {
+    // <-- Custom method Time Show  (Display Example  ==> 'Today 7:00 PM')     // WhatsApp Time Show Status Shimila
+    Duration diff = DateTime.now().difference(d);
+    if (diff.inDays > 365)
+      return "Hace ${(diff.inDays / 365).floor()} ${(diff.inDays / 365).floor() == 1 ? "año" : "años"}";
+    if (diff.inDays > 30)
+      return "Hace ${(diff.inDays / 30).floor()} ${(diff.inDays / 30).floor() == 1 ? "mes" : "meses"}";
+    if (diff.inDays > 7)
+      return "Hace ${(diff.inDays / 7).floor()} ${(diff.inDays / 7).floor() == 1 ? "semana" : "semanas"}";
+    if (diff.inDays > 0) return "${DateFormat.E('es').add_jm().format(d)}";
+    if (diff.inHours > 0) return "Hoy ${DateFormat('jm').format(d)}";
+    if (diff.inMinutes > 0)
+      return "Hace ${diff.inMinutes} ${diff.inMinutes == 1 ? "minuto" : "minutos"}";
+    return "Justo ahora";
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -37,8 +53,8 @@ class FrmreseAItemWidget extends StatelessWidget {
         return SizedBox
             .shrink(); // Retorna un contenedor vacío, puedes ajustar esto de acuerdo a tus requerimientos.
       }
-      String formattedDate = "${(review?['fecha']).toDate()}";
-      String dateWithoutNanos = formattedDate.split('.')[0];
+      Timestamp formattedDate = review['fecha'];
+      String dateWithoutNanos = timeAgoCustom(formattedDate.toDate());
       print(dateWithoutNanos);
       return Container(
         padding: EdgeInsets.all(12.h),
@@ -90,7 +106,7 @@ class FrmreseAItemWidget extends StatelessWidget {
                               ),
                             ),
                             Text(
-                              "${dateWithoutNanos}",
+                              "    $dateWithoutNanos",
                               style: theme.textTheme.labelLarge,
                             ),
                           ],

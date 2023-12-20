@@ -1,12 +1,16 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:qr_flutter/qr_flutter.dart';
 import 'package:turisteando_ando/core/app_export.dart';
+import 'package:turisteando_ando/screens/frm_ruta_propia.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 import 'package:turisteando_ando/models/rutaDestacada/rutaDestacadaModel.dart';
-import 'package:turisteando_ando/models/users/user.dart';
+
+ValueNotifier<bool> checkButtonNotifier = ValueNotifier<bool>(false);
 
 class FrmRutaDestacada extends StatelessWidget {
   const FrmRutaDestacada({super.key});
-
 
   @override
   Widget build(BuildContext context) {
@@ -60,20 +64,24 @@ class FrmRutaDestacada extends StatelessWidget {
                 FutureBuilder<DateTime>(
                   future: obtenerFechaInicio(),
                   builder: (context, snapshotFechaInicio) {
-                    if (snapshotFechaInicio.connectionState == ConnectionState.waiting) {
+                    if (snapshotFechaInicio.connectionState ==
+                        ConnectionState.waiting) {
                       return const CircularProgressIndicator();
                     } else if (snapshotFechaInicio.hasError) {
                       return Text('Error: ${snapshotFechaInicio.error}');
                     } else {
-                      final fechaFin = snapshotFechaInicio.data!.add(const Duration(days: 30));
+                      final fechaFin = snapshotFechaInicio.data!
+                          .add(const Duration(days: 30));
                       return Expanded(
                         child: Container(
                           alignment: Alignment.topRight,
                           padding: const EdgeInsets.only(right: 20),
                           child: StreamBuilder(
-                            stream: Stream.periodic(const Duration(seconds: 1), (i) => i),
+                            stream: Stream.periodic(
+                                const Duration(seconds: 1), (i) => i),
                             builder: (context, snapshot) {
-                              final duracion = fechaFin.difference(DateTime.now());
+                              final duracion =
+                                  fechaFin.difference(DateTime.now());
                               final dias = duracion.inDays;
                               final horas = duracion.inHours % 24;
                               final minutos = duracion.inMinutes % 60;
@@ -98,27 +106,26 @@ class FrmRutaDestacada extends StatelessWidget {
             ),
             //Titulo de 'RUTA MENSUAL
             FutureBuilder(
-              future: obtenerNombreRuta(), 
-              builder: (context, snapshot){
-                if(snapshot.connectionState == ConnectionState.waiting){
-                  return const Center(child: CircularProgressIndicator());
-                }
-                else if(snapshot.hasError){
-                  return Text('Error: ${snapshot.error}');
-                }
-                else{
-                  return Container(
-                    padding: const EdgeInsets.only(top: 10, left: 20, bottom: 20),
-                    alignment: Alignment.topLeft,
-                    child: Text(
-                      'Ruta mensual: ${snapshot.data}',
-                      style: CustomTextStyles.titleLargeNunito,
-                      textAlign: TextAlign.left,
-                    ),
-                  );
-                }
-              }),
-           
+                future: obtenerNombreRuta(),
+                builder: (context, snapshot) {
+                  if (snapshot.connectionState == ConnectionState.waiting) {
+                    return const Center(child: CircularProgressIndicator());
+                  } else if (snapshot.hasError) {
+                    return Text('Error: ${snapshot.error}');
+                  } else {
+                    return Container(
+                      padding:
+                          const EdgeInsets.only(top: 10, left: 20, bottom: 20),
+                      alignment: Alignment.topLeft,
+                      child: Text(
+                        'Ruta mensual: ${snapshot.data}',
+                        style: CustomTextStyles.titleLargeNunito,
+                        textAlign: TextAlign.left,
+                      ),
+                    );
+                  }
+                }),
+
             //TARJETAS DE LUGAR
             Expanded(
               child: FutureBuilder<List<LugarDestacado>>(
@@ -131,29 +138,70 @@ class FrmRutaDestacada extends StatelessWidget {
                   } else {
                     return ListView(
                       scrollDirection: Axis.vertical,
-                      children: snapshot.data!.map((lugar) => PlaceCardDestacada(lugar: lugar)).toList(),
+                      children: snapshot.data!
+                          .map((lugar) => PlaceCardDestacada(lugar: lugar))
+                          .toList(),
                     );
                   }
                 },
               ),
             ),
-            CustomElevatedButton(
-              text: 'Agendar ruta completa',
-              buttonStyle: CustomButtonStyles.fillPrimaryTL22,
-              buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
-              margin: EdgeInsets.only(top: 20, left: 25.h, right: 25.h),
-              height: 40.v,
-              onPressed: () {
-                
+            FutureBuilder<List<LugarDestacado>>(
+              future: obtenerDatos(), // Tu función que devuelve Future<List<LugarDestacado>>
+              builder: (BuildContext context, AsyncSnapshot<List<LugarDestacado>> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator(); // Muestra un indicador de carga mientras se espera la respuesta
+                } else if (snapshot.hasError) {
+                  return Text('Error: ${snapshot.error}'); // Muestra un mensaje de error si algo sale mal
+                } else {
+                  return CustomElevatedButton(
+                    text: 'Agendar ruta completa',
+                    buttonStyle: CustomButtonStyles.fillPrimaryTL22,
+                    buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
+                    margin: EdgeInsets.only(top: 20, left: 25.h, right: 25.h),
+                    height: 40.v,
+                    onPressed: () async {
+                      DateTime hoy = DateTime.now();
+                      DateTime? it = await showDatePicker(
+                        builder: (context, child) {
+                          return Theme(
+                            data: Theme.of(context).copyWith(
+                              colorScheme: const ColorScheme.light(
+                                primary: Color.fromRGBO(17, 76, 95, 1)
+                              ),
+                            ),
+                            child: child!,
+                          );
+                        },
+                        context: context,
+                        initialDate: hoy,
+                        firstDate: DateTime(hoy.year - 10),
+                        lastDate: DateTime(hoy.year + 10),
+                      );
+                      if (it != null) {
+                        Navigator.of(context).push(MaterialPageRoute(
+                          builder: (context) => FrmRutaPropia(it)
+                        ));
+                        guardarEnItinerario(snapshot.data!, it,); // Pasa la lista de lugares destacados a guardarEnItinerario
+                      }
+                    },
+                  );
+                }
               },
             ),
-            CustomElevatedButton(
-              text: 'Canjear recompensa',
-              buttonStyle: CustomButtonStyles.fillPrimaryTL22,
-              isDisabled: true,
-              buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
-              margin: EdgeInsets.only(top: 5, left: 25.h, right: 25.h),
-              height: 40.v,
+            FutureBuilder<List<LugarDestacado>>(
+              future: obtenerDatos(),
+              builder: (context, snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return CircularProgressIndicator(); // Muestra un indicador de carga mientras se obtienen los datos
+                } else if (snapshot.hasError) {
+                  return Text(
+                      'Error: ${snapshot.error}'); // Muestra un mensaje de error si algo sale mal
+                } else {
+                  final lugares = snapshot.data;
+                  return BtnCajeaRecompensa(lugares: lugares!);
+                }
+              },
             )
           ],
         ),
@@ -205,7 +253,7 @@ class PlaceCardDestacada extends StatelessWidget {
               children: [
                 Row(
                   children: [
-                     Expanded(
+                    Expanded(
                       child: Align(
                         alignment: Alignment.centerLeft,
                         child: Text(
@@ -222,8 +270,10 @@ class PlaceCardDestacada extends StatelessWidget {
                     const SizedBox(
                       width: 10,
                     ),
-                    const BtnVisitado(), // Ajusta el espacio horizontal aquí
-                    const BtnMarcadores(),
+                    BtnVisitado(
+                      itemId: lugar.id,
+                    ), // Ajusta el espacio horizontal aquí
+                    BtnMarcadores(itemId: lugar.id),
                   ],
                 ),
                 Align(
@@ -252,49 +302,288 @@ class PlaceCardDestacada extends StatelessWidget {
 }
 
 class BtnVisitado extends StatefulWidget {
-  const BtnVisitado({super.key});
+  final String itemId;
+  BtnVisitado({required this.itemId});
 
   @override
   _BtnVisitadoState createState() => _BtnVisitadoState();
 }
 
 class _BtnVisitadoState extends State<BtnVisitado> {
-  bool presionado = false;
+  bool isAcompletado = false;
+
+  @override
+  void initState() {
+    super.initState();
+    checkIfAcompletado();
+  }
+
+  void checkIfAcompletado() async {
+    // Lógica para verificar si el ítem está en los favoritos del usuario
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var doc = await FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid)
+          .collection('ViajeCompleto')
+          .doc(widget.itemId)
+          .get();
+
+      setState(() {
+        isAcompletado = doc.exists;
+      });
+    }
+  }
+
+  void toggleFavorite() async {
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var docRef = FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid)
+          .collection('ViajeCompleto')
+          .doc(widget.itemId);
+
+      if (isAcompletado) {
+        // Si ya es favorito, eliminar de la base de datos
+        await docRef.delete();
+      } else {
+        // Si no es favorito, agregar a la base de datos
+        await docRef.set({'id': widget.itemId});
+      }
+
+      setState(() {
+        isAcompletado = !isAcompletado;
+      });
+
+      // Actualiza el valor del ValueNotifier
+      checkButtonNotifier.value = isAcompletado;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () {
-        setState(() {
-          presionado = !presionado;
-        });
-      },
-      color: presionado ? Colors.green : Colors.grey,
-      icon: presionado ? const Icon(Icons.check_box) : const Icon(Icons.check_box_outlined),
+      icon: Icon(isAcompletado ? Icons.check_box : Icons.check_box_outlined),
+      color: isAcompletado
+          ? Colors.green
+          : Colors.black87, // Color del icono según el estado
+      onPressed: toggleFavorite, // Llamada a la función para cambiar el estado
+      iconSize: 27.0, // Tamaño del icono
     );
   }
 }
 
 class BtnMarcadores extends StatefulWidget {
-  const BtnMarcadores({super.key});
+  final String itemId;
+  BtnMarcadores({required this.itemId});
 
   @override
   _BtnMarcadoresState createState() => _BtnMarcadoresState();
 }
 
 class _BtnMarcadoresState extends State<BtnMarcadores> {
-  bool presionado = false;
+  bool isFavorited = false;
+
+  @override
+  void initState() {
+    super.initState();
+    checkIfFavorited();
+  }
+
+  void checkIfFavorited() async {
+    // Lógica para verificar si el ítem está en los favoritos del usuario
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var doc = await FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid)
+          .collection('favoritos')
+          .doc(widget.itemId)
+          .get();
+
+      setState(() {
+        isFavorited = doc.exists;
+      });
+    }
+  }
+
+  void toggleFavorite() async {
+    var user = FirebaseAuth.instance.currentUser;
+    if (user != null) {
+      var docRef = FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid)
+          .collection('favoritos')
+          .doc(widget.itemId);
+
+      if (isFavorited) {
+        // Si ya es favorito, eliminar de la base de datos
+        await docRef.delete();
+      } else {
+        // Si no es favorito, agregar a la base de datos
+        await docRef.set({'id': widget.itemId});
+      }
+
+      setState(() {
+        isFavorited = !isFavorited;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      onPressed: () {
-        setState(() {
-          presionado = !presionado;
-        });
-      },
-      color: presionado ? Colors.red : Colors.grey,
-      icon: presionado ? const Icon(Icons.favorite) : const Icon(Icons.favorite_border),
+      icon: Icon(isFavorited ? Icons.favorite : Icons.favorite_border),
+      color: isFavorited
+          ? Colors.red
+          : Colors.black87, // Color del icono según el estado
+      onPressed: toggleFavorite, // Llamada a la función para cambiar el estado
+      iconSize: 27.0, // Tamaño del icono
     );
+  }
+}
+
+class BtnCajeaRecompensa extends StatefulWidget {
+  //Crear el constructor con el parametro de la lista de lugares
+  List<LugarDestacado> lugares;
+  BtnCajeaRecompensa({required this.lugares});
+  @override
+  _BtnCajeaRecompensaState createState() =>
+      _BtnCajeaRecompensaState(lugares: lugares);
+}
+
+class _BtnCajeaRecompensaState extends State<BtnCajeaRecompensa> {
+  List<LugarDestacado> lugares;
+  _BtnCajeaRecompensaState({required this.lugares});
+  late Future<bool> verificarRecompensaFuture;
+
+  @override
+  void initState() {
+    super.initState();
+    verificarRecompensaFuture = verificarRecompensa(lugares);
+    checkButtonNotifier.addListener(_updateButtonState);
+  }
+
+  @override
+  void dispose() {
+    checkButtonNotifier.removeListener(_updateButtonState);
+    super.dispose();
+  }
+
+  void _updateButtonState() {
+    setState(() {
+      verificarRecompensaFuture = verificarRecompensa(lugares);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return FutureBuilder<bool>(
+      future: verificarRecompensaFuture,
+      builder: (context, snapshot) {
+        bool isDisabled = true;
+        if (snapshot.connectionState == ConnectionState.done) {
+          if (snapshot.hasError) {
+            // Maneja el error como desees
+            print('Error: ${snapshot.error}');
+          } else {
+            isDisabled = !snapshot.data!;
+          }
+        }
+
+        return CustomElevatedButton(
+          text: 'Canjear recompensa',
+          buttonStyle: CustomButtonStyles.fillTealTL16,
+          isDisabled: isDisabled,
+          buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
+          margin: EdgeInsets.only(top: 5, left: 25.h, right: 25.h),
+          height: 40.v,
+          onPressed: () {
+            showDialog(
+              context: context,
+              builder: (context) {
+                return AlertDialog(
+                  title: const Text(
+                    '¡Aqui tienes tu recompensa!',
+                    textAlign: TextAlign.center,
+                  ),
+                  content: Center(
+                    child: SizedBox(
+                      width: 300,
+                      height: 300,
+                      child: Column(
+                        children: [
+                          QrImageView(
+                            //obtener la data desde el campo de recompensa de la BD
+                            data:
+                                'https://youtu.be/T1S6ZlzLyGs?si=dKX5nBVzomBJRmvf',
+                            version: QrVersions.auto,
+                            size: 200.0,
+                          ),
+                          const SizedBox(height: 10),
+                          const Text(
+                            'Escanea el código QR para obtener un descuento del 20% en restaurantes de: “La casa de Toño” ',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                fontFamily: 'Nunito',
+                                fontSize: 14,
+                                color: Colors.black,
+                                fontWeight: FontWeight.w100),
+                          )
+                        ],
+                      ),
+                    ),
+                  ),
+                  actions: <Widget>[
+                    CustomElevatedButton(
+                      text: '¡Lo tengo!',
+                      buttonStyle: CustomButtonStyles.fillPrimaryTL16,
+                      buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
+                      margin: EdgeInsets.only(top: 5),
+                      onPressed: () {
+                        Navigator.of(context).pop();
+                      },
+                    )
+                  ],
+                );
+              },
+            );
+          },
+        );
+      },
+    );
+  }
+}
+
+Future<void> guardarEnItinerario(List<LugarDestacado> lugares, DateTime sel) async {
+  var user = FirebaseAuth.instance.currentUser;
+  if (user != null) {
+    var fechaActual = sel; // Obtiene la fecha y hora actual
+    for (var lugar in lugares) {
+      var docRef = FirebaseFirestore.instance
+          .collection('usuarios')
+          .doc(user.uid)
+          .collection('itinerario')
+          .doc(lugar.id);
+      try {
+        var doc = await docRef.get();
+        if (!doc.exists) {
+          await docRef.set({
+            'id': lugar.id,
+            'fechaSeleccionado':
+                DateTime(fechaActual.year, fechaActual.month, fechaActual.day)
+                    .toIso8601String()
+          });
+          print('Lugar guardado con éxito en el itinerario');
+        } else {
+          print('El lugar ya está en el itinerario');
+        }
+      } catch (e) {
+        print('Error al guardar en el itinerario: $e');
+      }
+    }
+  } else {
+    print('Usuario no autenticado');
   }
 }

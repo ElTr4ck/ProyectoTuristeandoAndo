@@ -17,6 +17,8 @@ import 'package:turisteando_ando/screens/pantallas/presentation/frminfolugar_scr
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
+
+
 class PolylineScreen extends StatefulWidget {
   const PolylineScreen({Key? key}) : super(key: key);
 
@@ -27,9 +29,65 @@ class PolylineScreen extends StatefulWidget {
 const kGoogleApiKey = 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM';
 final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
+
 class _PolylineScreenState extends State<PolylineScreen> {
-  static const CameraPosition initialPosition = CameraPosition(
-      target: LatLng(19.36965534943562, -98.96226746584259), zoom: 14);
+  late GoogleMapController _mapController;
+
+  GoogleMapController get mapController => _mapController;
+
+  List ubicacionActual = [];
+  late CameraPosition initialPosition;
+
+  @override
+  void initState() {
+    super.initState();
+    _initializePosition();
+  }
+
+  Future<void> _initializePosition() async {
+    initialPosition = await fetchdata();
+    setState(() {
+      // Llamada a setState para reconstruir el widget con la nueva posición
+    });
+  }
+  Future<CameraPosition> fetchdata() async {
+    FirebaseAuth auth = FirebaseAuth.instance;
+
+    try {
+      // Verificamos si hay un usuario autenticado
+      User? user = auth.currentUser;
+      if (user != null) {
+        // Obtenemos el ID del usuario autenticado
+        String uid = user.uid;
+        // Referencia a la colección "usuarios" y subcolección "ubicacion_actual"
+        CollectionReference ubicacionCollection = FirebaseFirestore.instance
+            .collection('usuarios')
+            .doc(uid)
+            .collection('Ubicacion');
+
+        // Realizamos la consulta para obtener la ubicación actual del usuario
+        QuerySnapshot ubicacionSnapshot = await ubicacionCollection.get();
+
+        // Lista para almacenar la ubicación actual
+
+        // Iteramos sobre los documentos y accedemos a los datos de ubicación actual
+        ubicacionSnapshot.docs.forEach((doc) {
+          // Asegúrate de ajustar según la estructura real de tu documento de ubicación_actual
+          double latitud = doc['latitud'] ?? 0.0;
+          double longitud = doc['longitud'] ?? 0.0;
+          ubicacionActual.add(latitud);
+          ubicacionActual.add(longitud);
+        });
+      } else {
+        print('No hay usuario autenticado');
+      }
+    } catch (e) {
+      print('Error al obtener preferencias: $e');
+    }
+    print(ubicacionActual);
+    return CameraPosition(target: LatLng(ubicacionActual[0], ubicacionActual[1]), zoom: 14);
+  }
+
 
   final Completer<GoogleMapController> _controller = Completer();
 
@@ -50,7 +108,6 @@ class _PolylineScreenState extends State<PolylineScreen> {
 
   final homeScaffoldKey = GlobalKey<ScaffoldState>();
 
-  Set<Marker> markersList = {};
 
   late GoogleMapController googleMapController;
 
@@ -67,25 +124,39 @@ class _PolylineScreenState extends State<PolylineScreen> {
   String totalDistances = 'No route';
   Color _iconColor = Colors.grey;
   TextEditingController controller = TextEditingController();
+  GoogleMapController? globalMapController;
+  Set<Marker> markersList = {};
+  bool isLoading = true;
 
   @override
   Widget build(BuildContext context) {
-    //_determinePosition();
-    /*Navigator.of(context).push(MaterialPageRoute(builder: (BuildContext context){
-      return const NearByPlacesScreen();
-    }));*/
-    //Color _iconColor = Colors.grey;
+
     return Scaffold(
       body: Stack(
         children: [
-          GoogleMap(
-            polylines: route.routes,
-            zoomControlsEnabled: false,
-            initialCameraPosition: initialPosition,
-            markers: markersList,
-            mapType: MapType.normal,
-            onMapCreated: (GoogleMapController controller) {
-              googleMapController = controller;
+          FutureBuilder<List<Marker>>(
+            future: _loadMarkers(),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                return Center(child: CircularProgressIndicator());
+              } else if (snapshot.hasError) {
+                return Center(child: CircularProgressIndicator());
+              } else if (!snapshot.hasData || snapshot.data == null) {
+                return Center(child: Text('No hay datos disponibles.'));
+              } else {
+                markersList = Set<Marker>.from(snapshot.data as List<Marker>);
+                return GoogleMap(
+                  polylines: route.routes,
+                  zoomControlsEnabled: false,
+                  initialCameraPosition: initialPosition,
+                  markers: markersList,
+                  mapType: MapType.normal,
+                  onMapCreated: (controller) {
+                    _mapController = controller;
+                    globalMapController = controller;
+                  },
+                );
+              }
             },
           ),
           Container(
@@ -100,88 +171,32 @@ class _PolylineScreenState extends State<PolylineScreen> {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               mainAxisSize: MainAxisSize.min,
-              children: [
-                SizedBox(height: 20), // Espacio interno
-                Container(
-                  alignment: Alignment.center,
-                  // Centrar horizontal y verticalmente
-                  child: Text(
-                    "¿Qué deseas hacer el día de hoy?",
-                    style: TextStyle(
-                      fontSize: 24,
-                      fontWeight: FontWeight.bold,
-                      color: Colors.black,
-                      fontFamily: 'Nunito',
-                    ),
-                  ),
-                ),
-                Container(
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.transparent,
-                    ),
-                  ),
-                ),
-                placesAutoCompleteTextField(),
-                // La barra de búsqueda que diseñamos anteriormente
-                /*Positioned(
-                    top: 0,
-                    left: 0,
-                    right: 0,
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: TextField(
-                        style: TextStyle(
-                          color: Colors.black,
-                          fontSize: 16,
-                        ),
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(Icons.search),
-                          hintText: 'Sugerencia: Museos',
-                          hintStyle: TextStyle(
-                            color: Colors.grey,
-                            fontFamily: 'Nunito',
-                            fontStyle: FontStyle.italic,
-                          ),
-                          focusedBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          enabledBorder: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(20),
-                            borderSide: BorderSide(color: Colors.white),
-                          ),
-                          fillColor: Colors.white,
-                          // Ajusta el color del fondo según tus necesidades
-                          filled: true,
-                          contentPadding: EdgeInsets.symmetric(
-                              vertical: 12, horizontal: 16),
-                        ),
-                        onSubmitted: (value) {
-                          _handlePressButton();
-                        },
+                children: [
+                  SizedBox(height: 20), // Espacio interno
+                  Container(
+                    alignment: Alignment.center,
+                    // Centrar horizontal y verticalmente
+                    child: Text(
+                      "¿Qué deseas hacer el día de hoy?",
+                      style: TextStyle(
+                        fontSize: 24,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.black,
+                        fontFamily: 'Nunito',
                       ),
                     ),
-                  ),*/
-              ],
+                  ),
+                  Container(
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: Colors.transparent,
+                      ),
+                    ),
+                  ),
+                  placesAutoCompleteTextField(),
+                ],
             ),
           ),
-          /*Align(
-            alignment: Alignment.bottomCenter,
-            child: Container(
-              padding: EdgeInsets.all(10.0),
-              color: Colors.white, // Puedes ajustar el color según tus preferencias
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                children: [
-                  buildButtonHome(Icons.home, Colors.grey),
-                  buildButtonMap(Icons.map, Color(0xFF114C5F)),
-                  buildButtonFav(Icons.monitor_heart, Colors.grey),
-                  buildButtonUsser(Icons.person, Colors.grey),
-                ],
-              ),
-            ),
-          ),*/
           Positioned(
             bottom: 0,
             left: 0,
@@ -214,95 +229,118 @@ class _PolylineScreenState extends State<PolylineScreen> {
               ),
             ),
           ),
-          /*Container(
-            //margin: EdgeInsets.only(top: 160),
-
-            padding: EdgeInsets.all(16.0),
-            color: Colors.blue, // Puedes ajustar el color según tus preferencias
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                ElevatedButton(
-                  onPressed: () => print('Acción Botón 1'),
-                  child: Text('Botón 1'),
-                ),
-                ElevatedButton(
-                  onPressed: () => print('Acción Botón 2'),
-                  child: Text('Botón 2'),
-                ),
-                ElevatedButton(
-                  onPressed: () => print('Acción Botón 3'),
-                  child: Text('Botón 3'),
-                ),
-                ElevatedButton(
-                  onPressed: () => print('Acción Botón 4'),
-                  child: Text('Botón 4'),
-                ),
-              ],
-            ),
-          ),*/
         ],
+
       ),
 
-      /*floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          drawPolyline(destinolat, destinolon);
-        },
-        child: const Icon(Icons.directions),
-      ),*/
     );
   }
+  Future<List<Marker>> _loadMarkers() async {
+    List<Marker> newMarkersList = [];
+    String url = 'https://places.googleapis.com/v1/places:searchNearby';
+    // Los datos que enviarás en el cuerpo de la solicitud POST
+    Map<String, dynamic> requestData = {
+      "includedTypes": ["tourist_attraction", "museum", "hotel", "restaurant"],
+      "maxResultCount": 5,
+      //"rankPreference": "DISTANCE",
+      "languageCode": "es",
+      "locationRestriction": {
+        "circle": {
+          "center": {
+            "latitude": ubicacionActual[0],
+            "longitude": ubicacionActual[1],
+          },
+          "radius": 2000.0
+        }
+      },
+    };
 
-  void drawPolyline(double destinationlat, double destinationlon) async {
-    Position position = await _determinePosition();
-    double latitude = position.latitude;
-    double longitude = position.longitude;
-    //origin = LatLng(latitude, longitude);
-    //destination = LatLng(destinationlat, destinationlon);
-    List<LatLng> points = [
-      LatLng(latitude, longitude),
-      LatLng(destinationlat, destinationlon)
-      //LatLng(45.851254420031296, 14.624331708344428),
-      //LatLng(45.84794984187217, 14.605434384742317)
-    ];
-    await route.drawRoute(
-        points, 'Test routes', Color.fromRGBO(130, 78, 210, 1.0), googleApiKey,
-        travelMode: TravelModes.walking);
-    setState(() {
-      totalDistance =
-          distanceCalculator.calculateRouteDistance(points, decimals: 1);
+    // Las cabeceras de la solicitud
+    Map<String, String> headers = {
+      'Content-Type': 'application/json',
+      'X-Goog-Api-Key': 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM', // Reemplaza 'API_KEY' con tu clave real
+      'X-Goog-FieldMask': 'places.displayName,places.formattedAddress,places.location,places.currentOpeningHours,places.photos,places.primaryTypeDisplayName,places.id',
+    };
 
-      //totalTime =
-    });
-    /*var response = await http.post(Uri.parse("https://maps.googleapis.com/maps/api/directions/json?key=" +
-        apiKey +
-        "&units=metric&origin=" +
-        origin.latitude.toString() +
-        "," +
-        origin.longitude.toString() +
-        "&destination=" +
-        destination.latitude.toString() +
-        "," +
-        destination.longitude.toString() +
-        "&mode=driving"));
+    // Realiza la solicitud POST
+    try {
+      var response = await http.post(
+        Uri.parse(url),
+        body: jsonEncode(requestData),
+        headers: headers,
+      );
 
-    print(response.body);
+      // Verifica el código de estado de la respuesta
+      if (response.statusCode == 200) {
+        markersList.clear();
+        // La solicitud fue exitosa, puedes manejar la respuesta aquí
+        //print('Respuesta exitosa: ${response.body}');
+        Map<String, dynamic> jsonData = json.decode(response.body);
+        print('${jsonData["places"][0]["location"]["latitude"]}');
+        //print('${jsonData["places"][0]["formattedAddress"]}');
+        //GoogleMapController mapController = (context.findAncestorStateOfType<_PolylineScreenState>())!.mapController;
+        if (jsonData["places"] is List) {
+          List<dynamic> places = jsonData["places"];
+          if (places.isNotEmpty) {
+            for (var place in places) {
+              double latitud = place["location"]["latitude"];
+              double longitud = place["location"]["longitude"];
+              String nombremarcador = place["displayName"]["text"];
+              crearMarcadorEnMapa(latitud, longitud, nombremarcador);
+              newMarkersList.add(
+                Marker(
+                  markerId: MarkerId('mi_marcador_$nombremarcador'),
+                  position: LatLng(latitud, longitud),
+                  infoWindow: InfoWindow(title: nombremarcador),
+                  onTap: () {
+                    // Acción al tocar el marcador
+                    print("Tocaste el marcador: $nombremarcador");
+                  },
+                ),
+              );
+            }
+          } else {
+            print("La lista de lugares está vacía");
+          }
+        } else {
+          print("La propiedad 'places' no es una lista");
+        }
+        // Llama a la función para crear el marcador en el mapa
 
-    polylineResponse = PolylineResponse.fromJson(jsonDecode(response.body));
-
-    totalDistance = polylineResponse.routes![0].legs![0].distance!.text!;
-    totalTime = polylineResponse.routes![0].legs![0].duration!.text!;
-
-    for (int i = 0; i < polylineResponse.routes![0].legs![0].steps!.length; i++) {
-      polylinePoints.add(Polyline(polylineId: PolylineId(polylineResponse.routes![0].legs![0].steps![i].polyline!.points!), points: [
-        LatLng(
-            polylineResponse.routes![0].legs![0].steps![i].startLocation!.lat!, polylineResponse.routes![0].legs![0].steps![i].startLocation!.lng!),
-        LatLng(polylineResponse.routes![0].legs![0].steps![i].endLocation!.lat!, polylineResponse.routes![0].legs![0].steps![i].endLocation!.lng!),
-      ],width: 3,color: Colors.red));
+      } else {
+        // Hubo un error en la solicitud, puedes manejarlo aquí
+        print('Error en la solicitud: ${response.statusCode}');
+      }
+      return newMarkersList;
+    } catch (e) {
+      print('Error cargando marcadores: $e');
+      throw e;
     }
-
-    setState(() {});*/
   }
+  void crearMarcadorEnMapa(double latitud, double longitud, String nombreMarcador) {
+    print("Hola");
+    if (globalMapController != null) {
+      globalMapController!.animateCamera(
+        CameraUpdate.newLatLng(LatLng(latitud, longitud)),
+      );
+
+      setState(() {
+        markersList.add(
+          Marker(
+            markerId: MarkerId('mi_marcador_$nombreMarcador'), // Cambiado para que cada marcador tenga un ID único
+            position: LatLng(latitud, longitud),
+            infoWindow: InfoWindow(title: nombreMarcador),
+            onTap: () {
+              // Acción que se realiza al tocar el marcador
+              print("Tocaste el marcador: $nombreMarcador");
+              // Agrega aquí la lógica que deseas realizar al tocar el marcador por segunda vez
+            },
+          ),
+        );
+      });
+    }
+  }
+
 
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
@@ -521,8 +559,10 @@ class CarouselWithInfo extends StatefulWidget {
   _CarouselWithInfoState createState() => _CarouselWithInfoState();
 }
 
+
 class _CarouselWithInfoState extends State<CarouselWithInfo> {
   List<Widget> carouselItems = [];
+  LatLng marcadorLatLng = LatLng(0.0, 0.0);
 
   @override
   void initState() {
@@ -610,8 +650,12 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
         // La solicitud fue exitosa, puedes manejar la respuesta aquí
         //print('Respuesta exitosa: ${response.body}');
         Map<String, dynamic> jsonData = json.decode(response.body);
-        //print('${jsonData["places"][0]["displayName"]["text"]}');
+        print('${jsonData["places"][0]["location"]["latitude"]}');
         //print('${jsonData["places"][0]["formattedAddress"]}');
+        //GoogleMapController mapController = (context.findAncestorStateOfType<_PolylineScreenState>())!.mapController;
+
+        // Llama a la función para crear el marcador en el mapa
+
       } else {
         // Hubo un error en la solicitud, puedes manejarlo aquí
         print('Error en la solicitud: ${response.statusCode}');
@@ -733,6 +777,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Nunito'),
+                        maxLines: 3,
                         overflow: TextOverflow.ellipsis),
                     SizedBox(height: 5.0),
                     Text(
@@ -741,6 +786,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
                           fontSize: 14.0,
                           fontFamily: 'Nunito',
                           overflow: TextOverflow.ellipsis),
+                      maxLines: 3,
                     ),
                   ],
                 ),
