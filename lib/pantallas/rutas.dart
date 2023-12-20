@@ -641,6 +641,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
                             fontSize: 18.0,
                             fontWeight: FontWeight.bold,
                             fontFamily: 'Nunito'),
+                        maxLines: 3,
                         overflow: TextOverflow.ellipsis),
                     SizedBox(height: 5.0),
                     Text(
@@ -649,6 +650,7 @@ class _CarouselWithInfoState extends State<CarouselWithInfo> {
                           fontSize: 14.0,
                           fontFamily: 'Nunito',
                           overflow: TextOverflow.ellipsis),
+                      maxLines: 3,
                     ),
                   ],
                 ),
