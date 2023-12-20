@@ -31,7 +31,7 @@ class _FrmRutaPropiaState extends State<FrmRutaPropia> {
     fetchData(selectedDate);
   }
 
-  Future<void> fetchData(DateTime date) async {
+  void fetchData(DateTime date) {
     var user = FirebaseAuth.instance.currentUser;
     if (user != null) {
       DateTime startOfDay = DateTime(date.year, date.month, date.day);
@@ -43,8 +43,8 @@ class _FrmRutaPropiaState extends State<FrmRutaPropia> {
           .collection('itinerario')
           .where('fechaSeleccionado', isGreaterThanOrEqualTo: startOfDay.toIso8601String())
           .where('fechaSeleccionado', isLessThan: endOfDay.toIso8601String());
-      try {
-        var querySnapshot = await docRef.get();
+
+      docRef.snapshots().listen((querySnapshot) {
         print('Documentos obtenidos: ${querySnapshot.docs.length}');
         List<String> placeIds = querySnapshot.docs
             .map((doc) => doc.data()['id'] as String? ?? 'ID predeterminado')
@@ -52,14 +52,10 @@ class _FrmRutaPropiaState extends State<FrmRutaPropia> {
         List<String> fechas = querySnapshot.docs
             .map((doc) => doc.data()['fechaSeleccionado'] as String? ?? 'Fecha predeterminada')
             .toList();
-        await fetchPlacesDetails(placeIds,fechas);
-        // Pasar las fechas también
+        fetchPlacesDetails(placeIds,fechas);
         print('IDs de lugares: $placeIds');
         print('IDs de lugares: $fechas');
-
-      } catch (e) {
-        print('Error al obtener datos de Firestore: $e');
-      }
+      });
     }
   }
 
