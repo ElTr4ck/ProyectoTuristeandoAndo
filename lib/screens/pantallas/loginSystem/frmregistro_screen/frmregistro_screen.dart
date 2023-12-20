@@ -1,17 +1,13 @@
 import 'package:flutter/material.dart';
 import 'package:turisteando_ando/core/app_export.dart';
-import 'package:turisteando_ando/widgets/app_bar/appbar_subtitle.dart';
 import 'package:turisteando_ando/repositories/auth/auth_methods.dart';
 import 'package:turisteando_ando/repositories/auth/controlers/signup_controller.dart';
 import 'package:turisteando_ando/repositories/auth/wrapper.dart';
-import 'package:turisteando_ando/widgets/app_bar/appbar_leading_image.dart';
-import 'package:turisteando_ando/widgets/app_bar/appbar_title.dart';
 import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 import 'package:turisteando_ando/widgets/custom_text_form_field.dart';
 import 'package:turisteando_ando/widgets/app_bar/appbar_title_image.dart';
-import 'package:turisteando_ando/widgets/app_bar/custom_app_bar.dart';
-import 'package:turisteando_ando/widgets/custom_drop_down.dart';
+
 
 // ignore_for_file: must_be_immutable
 class FrmregistroScreen extends StatelessWidget {
@@ -248,7 +244,10 @@ class FrmregistroScreen extends StatelessWidget {
       onPressed: () async {
         if (formkey.currentState!.validate()) {
           bool res = await signup();
-          if (res) Navigator.pop(context);
+          if (res){
+            // ignore: use_build_context_synchronously
+            Navigator.pushNamedAndRemoveUntil(context, AppRoutes.frmwelcomeScreen, (route) => false);
+          } 
         }
       },
     );

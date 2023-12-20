@@ -1,12 +1,11 @@
 import 'dart:convert';
-import 'dart:ffi';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
 import 'package:turisteando_ando/blocs/geolocation/geolocation_bloc.dart';
 import 'package:turisteando_ando/blocs/place/place_bloc.dart';
 import 'package:turisteando_ando/core/app_export.dart';
+import 'package:turisteando_ando/screens/frmCuestionario.dart';
 import 'package:turisteando_ando/widgets/barraBusquedaUbicacion.dart';
 import 'package:turisteando_ando/widgets/custom_elevated_button.dart';
 import 'package:turisteando_ando/widgets/gmap.dart';
@@ -17,7 +16,6 @@ import 'package:google_places_flutter/google_places_flutter.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:geolocator/geolocator.dart';
-
 
 class FrmSetLocation2 extends StatefulWidget {
   const FrmSetLocation2({super.key});
@@ -82,10 +80,11 @@ class _FrmSetLocationState extends State<FrmSetLocation2> {
                       color: Colors.white.withOpacity(0.8),
                       // Ajusta la opacidad y el color del fondo difuminado
                       boxShadow: [
-                        BoxShadow(blurRadius: 10, color: Colors.black.withOpacity(0.2))
+                        BoxShadow(
+                            blurRadius: 10,
+                            color: Colors.black.withOpacity(0.2))
                       ], // Efecto de desenfoque
                     ),
-
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       mainAxisSize: MainAxisSize.min,
@@ -103,7 +102,6 @@ class _FrmSetLocationState extends State<FrmSetLocation2> {
                           ),
                         ),
                         placesAutoCompleteTextField(),
-
                       ],
                     ),
                   ),
@@ -122,7 +120,7 @@ class _FrmSetLocationState extends State<FrmSetLocation2> {
                             },
                             child: Container(
                               margin:
-                              EdgeInsets.only(right: 20.h, bottom: 20.h),
+                                  EdgeInsets.only(right: 20.h, bottom: 20.h),
                               padding: const EdgeInsets.all(11),
                               decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
@@ -135,27 +133,56 @@ class _FrmSetLocationState extends State<FrmSetLocation2> {
                               ),
                             ),
                           ),
-                      CustomElevatedButton(
-                        height: 41.v,
-                        text: "Aceptar",
-                        margin: EdgeInsets.only(left: 30.h, right: 20.h, bottom: 10.h),
-                        buttonStyle: CustomButtonStyles.fillPrimary,
-                        buttonTextStyle: CustomTextStyles.titleMediumOnPrimary17,
-                        onPressed: isButtonEnabled
-                            ? () {
-                          Navigator.of(context).push(
-                            MaterialPageRoute(builder: (BuildContext context) {
-                              // Tu lógica aquí
-                              return FrminicioPage();
-                            }),
-                          );
-                          // Deshabilita el botón después de la acción
-                          setState(() {
-                            isButtonEnabled = false;
-                          });
-                        }
-                            : null,
-                      ),
+                          CustomElevatedButton(
+                            height: 41.v,
+                            text: "Aceptar",
+                            margin: EdgeInsets.only(
+                                left: 30.h, right: 20.h, bottom: 10.h),
+                            buttonStyle: CustomButtonStyles.fillPrimary,
+                            buttonTextStyle:
+                                CustomTextStyles.titleMediumOnPrimary17,
+                            onPressed: isButtonEnabled
+                                ? () async {
+                                    // Deshabilita el botón después de la acción
+                                    setState(() {
+                                      isButtonEnabled = false;
+                                    });
+                                    User? user =
+                                        FirebaseAuth.instance.currentUser;
+                                    DocumentSnapshot userDoc =
+                                        await FirebaseFirestore.instance
+                                            .collection('usuarios')
+                                            .doc(user!.uid)
+                                            .get();
+                                    if (userDoc.data() is Map &&
+                                        (userDoc.data() as Map)
+                                            .containsKey('nuevoUsuario') &&
+                                        (userDoc.data()
+                                                as Map)['nuevoUsuario'] ==
+                                            false) {
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (BuildContext context) {
+                                          return FrminicioPage();
+                                        }),
+                                      );
+                                    } else {
+                                      await FirebaseFirestore.instance
+                                          .collection('usuarios')
+                                          .doc(user.uid)
+                                          .set({'nuevoUsuario': false},
+                                              SetOptions(merge: true));
+
+                                      Navigator.of(context).push(
+                                        MaterialPageRoute(
+                                            builder: (BuildContext context) {
+                                          return FrmCuestionario();
+                                        }),
+                                      );
+                                    }
+                                  }
+                                : null,
+                          ),
                           CustomElevatedButton(
                               height: 41.v,
                               text: "Usar mi ubicación actual",
@@ -163,17 +190,44 @@ class _FrmSetLocationState extends State<FrmSetLocation2> {
                                   left: 30.h, right: 20.h, bottom: 10.h),
                               buttonStyle: CustomButtonStyles.fillTeal,
                               buttonTextStyle:
-                              CustomTextStyles.titleMediumOnPrimary17,
+                                  CustomTextStyles.titleMediumOnPrimary17,
                               onPressed: () async {
                                 Position position = await _determinePosition();
-                                LatLng ubicacion = LatLng(position.latitude, position.longitude);
+                                LatLng ubicacion = LatLng(
+                                    position.latitude, position.longitude);
                                 _loadUbicacion(ubicacion);
-                                Navigator.of(context).push(
-                                  MaterialPageRoute(builder: (BuildContext context) {
-                                    // Tu lógica aquí
-                                    return FrminicioPage();
-                                  }),
-                                );
+                                User? user = FirebaseAuth.instance.currentUser;
+
+                                DocumentSnapshot userDoc =
+                                    await FirebaseFirestore.instance
+                                        .collection('usuarios')
+                                        .doc(user!.uid)
+                                        .get();
+                                if (userDoc.data() is Map &&
+                                    (userDoc.data() as Map)
+                                        .containsKey('nuevoUsuario') &&
+                                    (userDoc.data() as Map)['nuevoUsuario'] ==
+                                        false) {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                      return FrminicioPage();
+                                    }),
+                                  );
+                                } else {
+                                  await FirebaseFirestore.instance
+                                      .collection('usuarios')
+                                      .doc(user.uid)
+                                      .set({'nuevoUsuario': false},
+                                          SetOptions(merge: true));
+
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                      return FrmCuestionario();
+                                    }),
+                                  );
+                                }
                               })
                         ],
                       ),
@@ -215,7 +269,7 @@ class _FrmSetLocationState extends State<FrmSetLocation2> {
                             },
                             child: Container(
                               margin:
-                              EdgeInsets.only(right: 20.h, bottom: 20.h),
+                                  EdgeInsets.only(right: 20.h, bottom: 20.h),
                               padding: const EdgeInsets.all(11),
                               decoration: const BoxDecoration(
                                 shape: BoxShape.circle,
@@ -235,13 +289,40 @@ class _FrmSetLocationState extends State<FrmSetLocation2> {
                                   left: 30.h, right: 20.h, bottom: 10.h),
                               buttonStyle: CustomButtonStyles.fillPrimary,
                               buttonTextStyle:
-                              CustomTextStyles.titleMediumOnPrimary17,
-                              onPressed: () {
-                                Navigator.of(context)
-                                    .push(MaterialPageRoute(builder: (BuildContext context) {
-                                  //String aux = '${prediction.lat}, ${prediction.lng}';
-                                  return FrminicioPage();
-                                }));
+                                  CustomTextStyles.titleMediumOnPrimary17,
+                              onPressed: () async {
+                                User? user = FirebaseAuth.instance.currentUser;
+
+                                DocumentSnapshot userDoc =
+                                    await FirebaseFirestore.instance
+                                        .collection('usuarios')
+                                        .doc(user!.uid)
+                                        .get();
+                                if (userDoc.data() is Map &&
+                                    (userDoc.data() as Map)
+                                        .containsKey('nuevoUsuario') &&
+                                    (userDoc.data() as Map)['nuevoUsuario'] ==
+                                        false) {
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                      return FrminicioPage();
+                                    }),
+                                  );
+                                } else {
+                                  await FirebaseFirestore.instance
+                                      .collection('usuarios')
+                                      .doc(user.uid)
+                                      .set({'nuevoUsuario': false},
+                                          SetOptions(merge: true));
+
+                                  Navigator.of(context).push(
+                                    MaterialPageRoute(
+                                        builder: (BuildContext context) {
+                                      return FrmCuestionario();
+                                    }),
+                                  );
+                                }
                               }),
                           CustomElevatedButton(
                               height: 41.v,
@@ -250,7 +331,7 @@ class _FrmSetLocationState extends State<FrmSetLocation2> {
                                   left: 30.h, right: 20.h, bottom: 10.h),
                               buttonStyle: CustomButtonStyles.fillTeal,
                               buttonTextStyle:
-                              CustomTextStyles.titleMediumOnPrimary17,
+                                  CustomTextStyles.titleMediumOnPrimary17,
                               onPressed: () {})
                         ],
                       ),
@@ -266,6 +347,7 @@ class _FrmSetLocationState extends State<FrmSetLocation2> {
       ),
     );
   }
+
   placesAutoCompleteTextField() {
     return Container(
       padding: EdgeInsets.symmetric(horizontal: 0),
@@ -290,7 +372,8 @@ class _FrmSetLocationState extends State<FrmSetLocation2> {
             borderRadius: BorderRadius.circular(20),
             borderSide: BorderSide(color: Colors.transparent),
           ),
-          border: OutlineInputBorder( // Agrega este bloque para el border general
+          border: OutlineInputBorder(
+            // Agrega este bloque para el border general
             borderRadius: BorderRadius.circular(20),
             borderSide: BorderSide(color: Colors.transparent),
           ),
@@ -298,9 +381,7 @@ class _FrmSetLocationState extends State<FrmSetLocation2> {
           fillColor: Colors.white,
           // Ajusta el color del fondo según tus necesidades
           filled: true,
-          contentPadding: EdgeInsets.symmetric(
-              vertical: 12, horizontal: 16),
-
+          contentPadding: EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         ),
 
         debounceTime: 400,
@@ -320,7 +401,9 @@ class _FrmSetLocationState extends State<FrmSetLocation2> {
             return MyApp(prediction.description as String);
           }));*/
         },
-        seperatedBuilder: Divider(color: Colors.transparent,),
+        seperatedBuilder: Divider(
+          color: Colors.transparent,
+        ),
         // OPTIONAL// If you want to customize list view item builder
         itemBuilder: (context, index, Prediction prediction) {
           return Container(
@@ -337,24 +420,19 @@ class _FrmSetLocationState extends State<FrmSetLocation2> {
                     ),
                   ),
                 ),
-                Expanded(child: Text("${prediction.description??""}"))
-
+                Expanded(child: Text("${prediction.description ?? ""}"))
               ],
-
             ),
-
           );
-
         },
 
         isCrossBtnShown: true,
 
         // default 600 ms ,
       ),
-
     );
-
   }
+
   void _updateCameraPosition(LatLng location) {
     // Mover la cámara
     if (_mapController != null) {
@@ -392,9 +470,7 @@ class _FrmSetLocationState extends State<FrmSetLocation2> {
 
     print(dataloc);
     // Las cabeceras de la solicitud
-    Map<String, dynamic> requestData = {
-      "textQuery" : "$data"
-    };
+    Map<String, dynamic> requestData = {"textQuery": "$data"};
     Map<String, String> headers = {
       'Content-Type': 'application/json',
       'X-Goog-Api-Key': 'AIzaSyBdskHJgjgw7fAn66BFZ6-II0k0ebC9yCM',
@@ -414,12 +490,12 @@ class _FrmSetLocationState extends State<FrmSetLocation2> {
         // La solicitud fue exitosa, puedes manejar la respuesta aquí
         print('Respuesta exitosa: ${response.body}');
         Map<String, dynamic> jsonData = json.decode(response.body);
-          //String aux = '${prediction.lat}, ${prediction.lng}';
+        //String aux = '${prediction.lat}, ${prediction.lng}';
         double lat =
-        double.parse('${jsonData["places"][0]["location"]["latitude"]}');
+            double.parse('${jsonData["places"][0]["location"]["latitude"]}');
         //print('${jsonData["places"][0]["location"]["longitude"]}');
         double lon =
-        double.parse('${jsonData["places"][0]["location"]["longitude"]}');
+            double.parse('${jsonData["places"][0]["location"]["longitude"]}');
         defaults = LatLng(lat, lon);
         _loadUbicacion(defaults);
         _updateCameraPosition(defaults);
@@ -434,6 +510,7 @@ class _FrmSetLocationState extends State<FrmSetLocation2> {
       print('Error: $e');
     }
   }
+
   void _loadUbicacion(LatLng ubica) async {
     final _auth = FirebaseAuth.instance;
     final FirebaseFirestore _firestore = FirebaseFirestore.instance;
@@ -457,6 +534,7 @@ class _FrmSetLocationState extends State<FrmSetLocation2> {
       isButtonEnabled = true;
     });
   }
+
   Future<Position> _determinePosition() async {
     bool serviceEnabled;
     LocationPermission permission;
