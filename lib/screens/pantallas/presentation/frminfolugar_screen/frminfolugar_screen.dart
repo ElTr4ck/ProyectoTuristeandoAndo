@@ -739,7 +739,7 @@ class _Hecho extends State<Hecho> {
   @override
   Widget build(BuildContext context) {
     return IconButton(
-      icon: Icon(isAcompletado ? Icons.check_box_outlined : Icons.check_box_outlined),
+      icon: Icon(isAcompletado ? Icons.add_location_alt_outlined : Icons.add_location_alt_outlined),
       color: isAcompletado ? Colors.blue : Colors.black87, // Color del icono según el estado
       onPressed: toggleFavorite, // Llamada a la función para cambiar el estado
       iconSize: 27.0, // Tamaño del icono

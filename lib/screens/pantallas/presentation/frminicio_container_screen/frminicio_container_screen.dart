@@ -23,16 +23,28 @@ class FrminicioContainerScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     mediaQueryData = MediaQuery.of(context);
-    return SafeArea(
+    return WillPopScope(
+      onWillPop: () async {
+        if (navigatorKey.currentState!.canPop()) {
+          navigatorKey.currentState!.pop();
+          return false;
+        }
+        return true;
+      },
+      child: SafeArea(
         child: Scaffold(
-            body: Navigator(
-                key: navigatorKey,
-                initialRoute: AppRoutes.frminicioPage,
-                onGenerateRoute: (routeSetting) => PageRouteBuilder(
-                    pageBuilder: (ctx, ani, ani1) =>
-                        getCurrentPage(routeSetting.name!),
-                    transitionDuration: Duration(seconds: 0))),
-            bottomNavigationBar: _buildBottomBar(context)));
+          body: Navigator(
+            key: navigatorKey,
+            initialRoute: AppRoutes.frminicioPage,
+            onGenerateRoute: (routeSetting) => PageRouteBuilder(
+              pageBuilder: (ctx, ani, ani1) => getCurrentPage(routeSetting.name!),
+              transitionDuration: Duration(seconds: 0)
+            ),
+          ),
+          bottomNavigationBar: _buildBottomBar(context),
+        ),
+      ),
+    );
   }
 
   /// Section Widget
